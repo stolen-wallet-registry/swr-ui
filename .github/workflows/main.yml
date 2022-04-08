@@ -19,7 +19,7 @@ jobs:
 
       # save the state of the build directory for the worker jobs.
       - name: Save build folder
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build
           if-no-files-found: error
