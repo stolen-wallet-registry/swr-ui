@@ -1,4 +1,5 @@
 import { Flex, FlexProps, Link } from '@chakra-ui/react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
 
 const Nav = () => {
@@ -6,6 +7,7 @@ const Nav = () => {
 		<Flex gap={10} mr={10} border="1 solid black">
 			<Link href="#">First Link</Link>
 			<Link href="#">Second Link</Link>
+			<ConnectButton />
 		</Flex>
 	);
 };
