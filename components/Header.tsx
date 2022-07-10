@@ -1,15 +1,19 @@
-import { Button, Flex, FlexProps, Link, useColorMode } from '@chakra-ui/react';
+import { MoonIcon } from '@chakra-ui/icons';
+import { Button, Flex, FlexProps, Icon, Link, useColorMode } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
+import { FaSun, FaMoon } from 'react-icons/fa';
 
 const Nav = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
 	return (
-		<Flex gap={10} mr={10} border="1 solid black">
+		<Flex gap={5} mr={10} border="1 solid black">
 			<Link href="#">First Link</Link>
 			<Link href="#">Second Link</Link>
-			<Button onClick={toggleColorMode}>Toggle {colorMode === 'light' ? 'dark' : 'light'}</Button>
 			<ConnectButton />
+			<Button onClick={toggleColorMode}>
+				{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
+			</Button>
 		</Flex>
 	);
 };
