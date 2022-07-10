@@ -8,7 +8,7 @@ import React from 'react';
 
 const { chains, provider } = configureChains(
 	[chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum],
-	[infuraProvider({ infuraId: process.env.ALCHEMY_ID })]
+	[infuraProvider({ infuraId: process.env.INFURA_ID })]
 );
 
 const { connectors } = getDefaultWallets({
