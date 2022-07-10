@@ -1,12 +1,14 @@
-import { Flex, FlexProps, Link } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Link, useColorMode } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
 
 const Nav = () => {
+	const { colorMode, toggleColorMode } = useColorMode();
 	return (
 		<Flex gap={10} mr={10} border="1 solid black">
 			<Link href="#">First Link</Link>
 			<Link href="#">Second Link</Link>
+			<Button onClick={toggleColorMode}>Toggle {colorMode === 'light' ? 'dark' : 'light'}</Button>
 			<ConnectButton />
 		</Flex>
 	);
