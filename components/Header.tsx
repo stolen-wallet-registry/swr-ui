@@ -1,4 +1,5 @@
-import { Button, Flex, FlexProps, Icon, Link, useColorMode, Image } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Icon, Link, useColorMode } from '@chakra-ui/react';
+import { Image } from './NextChalkraImage';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
@@ -7,8 +8,6 @@ const Nav = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
 	return (
 		<Flex gap={5} mr={10} border="1 solid black">
-			<Link href="#">First Link</Link>
-			<Link href="#">Second Link</Link>
 			<ConnectButton />
 			<Button onClick={toggleColorMode}>
 				{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
@@ -19,13 +18,20 @@ const Nav = () => {
 
 const Header = (props: FlexProps) => {
 	return (
-		<Flex justifyContent="space-between" alignItems="center" border="1 solid black" {...props}>
+		<Flex
+			justifyContent="space-between"
+			alignItems="center"
+			border="1 solid black"
+			borderRadius={5}
+			{...props}
+		>
 			<Link ml={10} href="#">
 				<Image
-					boxSize="100px"
 					objectFit="cover"
-					src="../assets/logo.png"
+					src="/logo.png"
+					dimensions={[100, 100]}
 					alt="Stolen Wallet Registry Logo"
+					borderRadius={10}
 				/>
 			</Link>
 			<Nav />

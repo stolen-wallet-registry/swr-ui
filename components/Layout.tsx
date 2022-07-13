@@ -1,13 +1,23 @@
-import { Flex } from '@chakra-ui/react';
+import { Divider, Flex } from '@chakra-ui/react';
 import React from 'react';
 import Footer from './Footer';
 import Header from './Header';
 
-const Layout: React.FunctionComponent<{}> = ({ children }) => {
+interface LayoutProps {
+	isDapp?: boolean;
+}
+
+const Layout: React.FunctionComponent<LayoutProps> = ({ isDapp, children }) => {
 	return (
 		<Flex direction="column" w="100%" minH="100vh">
-			<Header p={10} minH="100px" border="1px solid black" />
+			{isDapp && (
+				<>
+					<Header p={5} minH="50px" border="1px solid black" />
+					<Divider borderColor="gray.200" pb={10} />
+				</>
+			)}
 			{children}
+			<Divider borderColor="gray.200" pb={10} />
 			<Footer p={10} borderTop="1px solid black" />
 		</Flex>
 	);

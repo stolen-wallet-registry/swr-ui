@@ -98,7 +98,7 @@ const ImageWithChakra = chakra(
 	}
 );
 
-export const Image = ({ variant, ...props }: ImageProps): ReactElement => {
+export const Image = ({ variant, ...props }: ImageProps & StyleProps): ReactElement => {
 	/**
 	 * ? This components serves as an interface to pass Chakra's styles
 	 * ? You can use the theme and/or styling properties (eg. backgroundColor='red.200')
