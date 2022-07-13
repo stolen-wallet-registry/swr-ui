@@ -1,6 +1,6 @@
 import { ChakraProvider, localStorageManager } from '@chakra-ui/react';
 
-import theme from '../theme';
+import { theme } from '../theme';
 import { AppProps } from 'next/app';
 import RainbowKitWagmiProvider from '../contexts/RainbowWagmiProvider';
 
