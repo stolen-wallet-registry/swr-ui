@@ -6,6 +6,7 @@ import { useState } from 'react';
 import ColorButton from '../components/ColorButton';
 
 import { SectionTitle, SectionBody } from '../components/Home/Section';
+import Head from 'next/head';
 
 type showColorProps = 'home' | 'about' | 'why' | 'how';
 
@@ -25,31 +26,47 @@ const Home: NextPage = () => {
 		};
 
 		return (
-			<GridItem colSpan={3} background={`${color}.400`} p={10} gap={5}>
-				<Heading as="h1" size="lg" color="whiteAlpha.700" letterSpacing="0.1em" textAlign="center">
-					The Stolen Wallet Registry
-				</Heading>
-				<Center>
-					<ColorButton
-						m={[5, 10, 20]}
-						selectedColor={color}
-						buttonText={show === 'why' ? 'Home' : 'Why?'}
-						onClickHandler={() => handleOnClick(show === 'why' ? 'home' : 'why')}
-					/>
-					<ColorButton
-						m={[5, 10, 20]}
-						selectedColor={color}
-						buttonText={show === 'how' ? 'Home' : 'How?'}
-						onClickHandler={() => handleOnClick(show === 'how' ? 'home' : 'how')}
-					/>
-					<ColorButton
-						m={[5, 10, 20]}
-						selectedColor={color}
-						buttonText={show === 'about' ? 'Home' : 'About'}
-						onClickHandler={() => handleOnClick(show === 'about' ? 'home' : 'about')}
-					/>
-				</Center>
-			</GridItem>
+			<>
+				<Head>
+					<title>TESTING</title>
+					<style>{`
+						body {
+							background: var(--chakra-colors-${color}-400) !important;
+						}
+					`}</style>
+				</Head>
+				<GridItem colSpan={3} background={`${color}.400`} p={10} gap={5}>
+					<Heading
+						as="h1"
+						size="lg"
+						color="whiteAlpha.700"
+						letterSpacing="0.1em"
+						textAlign="center"
+					>
+						The Stolen Wallet Registry
+					</Heading>
+					<Center>
+						<ColorButton
+							m={[5, 10, 20]}
+							selectedColor={color}
+							buttonText={show === 'why' ? 'Home' : 'Why?'}
+							onClickHandler={() => handleOnClick(show === 'why' ? 'home' : 'why')}
+						/>
+						<ColorButton
+							m={[5, 10, 20]}
+							selectedColor={color}
+							buttonText={show === 'how' ? 'Home' : 'How?'}
+							onClickHandler={() => handleOnClick(show === 'how' ? 'home' : 'how')}
+						/>
+						<ColorButton
+							m={[5, 10, 20]}
+							selectedColor={color}
+							buttonText={show === 'about' ? 'Home' : 'About'}
+							onClickHandler={() => handleOnClick(show === 'about' ? 'home' : 'about')}
+						/>
+					</Center>
+				</GridItem>
+			</>
 		);
 	};
 
@@ -110,7 +127,7 @@ const Home: NextPage = () => {
 
 	return (
 		<Layout isDapp={false} setBGColor={color}>
-			<Grid h="90vh" templateRows="1fr 3fr" templateColumns="repeat(3, 1fr)">
+			<Grid h="90vh" templateRows="1fr 3fr" templateColumns="repeat(3, 1fr)" ml={40} mr={40}>
 				<Hero />
 				{show === 'home' && <MainSection />}
 				{show === 'why' && <WhySection />}

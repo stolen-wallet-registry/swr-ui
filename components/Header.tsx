@@ -50,7 +50,7 @@ const Header = () => {
 				<Link ml={10} href="/">
 					<Image
 						objectFit="cover"
-						src="/logo.png"
+						src="/logo_transparent.png"
 						dimensions={[100, 100]}
 						alt="Stolen Wallet Registry Logo"
 						borderRadius={10}
