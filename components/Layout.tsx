@@ -47,7 +47,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ isDapp, setBGColor, chil
 	};
 	return (
 		<Box position="absolute" top={0} left={0} right={0} bottom={0}>
-			<Header p={5} minH="50px" border="1px solid black" />
+			<Header />
 			<Box backgroundColor={`${setBGColor}.600`} height={3}></Box>
 			<Box backgroundColor={`${setBGColor}.500`} height={4}></Box>
 			<Box backgroundColor={`${setBGColor}.400`} height={5}></Box>

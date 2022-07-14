@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FlexProps, Icon, Link, useColorMode } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Link, useColorMode } from '@chakra-ui/react';
 import { Image } from './NextChalkraImage';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
@@ -11,7 +11,7 @@ const Nav = () => {
 	const { address, isConnected } = useAccount();
 	const { colorMode, toggleColorMode } = useColorMode();
 
-	const handleClick = (e) => {
+	const handleClick = (e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
 		router.push('/dapp');
 	};
@@ -43,7 +43,7 @@ const Nav = () => {
 	);
 };
 
-const Header = (props: FlexProps) => {
+const Header = () => {
 	return (
 		<>
 			<Box position="absolute" top={20} left={20}>
