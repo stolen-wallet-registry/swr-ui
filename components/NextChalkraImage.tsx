@@ -1,4 +1,4 @@
-import { chakra, ThemingProps, useStyleConfig } from '@chakra-ui/react';
+import { chakra, StyleProps, ThemingProps, useStyleConfig } from '@chakra-ui/react';
 import NextImage, { ImageProps as NextImageProps } from 'next/image';
 import { ReactElement } from 'react';
 import { Sizes } from '../theme/image';
