@@ -1,10 +1,10 @@
-import { ChakraProvider, localStorageManager } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import { theme } from '../theme';
 import { AppProps } from 'next/app';
 import RainbowKitWagmiProvider from '../contexts/RainbowWagmiProvider';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
 	return (
 		<ChakraProvider theme={theme} resetCSS>
 			<RainbowKitWagmiProvider>
@@ -14,4 +14,4 @@ function MyApp({ Component, pageProps }: AppProps) {
 	);
 }
 
-export default MyApp;
+export default App;

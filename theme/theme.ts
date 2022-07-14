@@ -1,8 +1,7 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 import { createBreakpoints } from '@chakra-ui/theme-tools';
 
-const fonts = { mono: `'Menlo', monospace` };
-
+const fonts = { mono: 'Hack, monospace', body: 'Hack, monospace', heading: 'Hack, monospace' };
 const breakpoints = createBreakpoints({
 	sm: '40em',
 	md: '52em',
