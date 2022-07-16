@@ -1,14 +1,23 @@
 import '@rainbow-me/rainbowkit/styles.css';
+import merge from 'lodash.merge';
 
 import {
 	RainbowKitProvider,
 	getDefaultWallets,
 	connectorsForWallets,
 	wallet,
+	lightTheme,
+	darkTheme,
+	DisclaimerComponent,
+	Theme,
 } from '@rainbow-me/rainbowkit';
 import { chain, createClient, configureChains, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
+
+import { Text, Link } from '@chakra-ui/react';
+
+import rainbowLightTheme from '../theme/rainbowkit-themes/light';
 import React from 'react';
 
 const testnets = [
@@ -32,8 +41,18 @@ const { wallets } = getDefaultWallets({
 	chains,
 });
 
+const Disclaimer: DisclaimerComponent = () => (
+	<Text>
+		By connecting your wallet, you agree to the{' '}
+		<Link href="https://termsofservice.xyz">Terms of Service</Link> and acknowledge you have read
+		and understand the protocol <Link href="https://disclaimer.xyz">Disclaimer</Link>
+	</Text>
+);
+
 const demoAppInfo = {
-	appName: 'RainbowKit Demo',
+	appName: 'The Stollen Wallet Registry',
+	learnMoreUrl: 'https://docs.swi.xyz/',
+	disclaimer: Disclaimer,
 };
 
 const connectors = connectorsForWallets([
@@ -55,10 +74,12 @@ type RainbowKitWagmiProviderProps = {
 	children?: React.ReactNode;
 };
 
+const appLightTheme = merge(lightTheme(), rainbowLightTheme) as Theme;
+console.log(appLightTheme);
 const RainbowKitWagmiProvider: React.FC<RainbowKitWagmiProviderProps> = ({ children }) => {
 	return (
 		<WagmiConfig client={wagmiClient}>
-			<RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
+			<RainbowKitProvider chains={chains} appInfo={demoAppInfo} theme={appLightTheme}>
 				{children}
 			</RainbowKitProvider>
 		</WagmiConfig>

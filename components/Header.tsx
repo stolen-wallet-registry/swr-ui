@@ -4,10 +4,11 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
 import { useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
+import { FaMoon, FaSun } from 'react-icons/fa';
 
 export const DappHeader = () => {
-	const { address, isConnected } = useAccount();
 	const router = useRouter();
+	const { colorMode, toggleColorMode } = useColorMode();
 
 	const handleClick = () => {
 		router.push('/');
@@ -24,6 +25,9 @@ export const DappHeader = () => {
 					largeScreen: true,
 				}}
 			/>
+			{/* <Button onClick={toggleColorMode}>
+				{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
+			</Button> */}
 		</Flex>
 	);
 };
