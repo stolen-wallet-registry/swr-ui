@@ -27,6 +27,7 @@ const Home: NextPage = () => {
 		const handleOnClick = (showValue: showColorProps) => {
 			const colorPicks = COLORS.filter((c) => c !== color);
 			const newColor = colorPicks[randomColor()];
+			window.document.body.style.backgroundColor = `var(--chakra-colors-${color}-400) !important;`;
 			setColor(newColor);
 			setShow(showValue);
 		};

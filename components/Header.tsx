@@ -7,16 +7,26 @@ import { useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
 
 export const DappHeader = () => {
-	// const { address, isConnected } = useAccount();
-	// const { colorMode, toggleColorMode } = useColorMode();
+	const { address, isConnected } = useAccount();
+	const router = useRouter();
+
+	const handleClick = () => {
+		router.push('/');
+	};
 
 	return (
-		<Flex gap={5} mr={5} border="1 solid black">
+		<Flex gap={5} p={5} mr={5} alignItems="center" justifyContent="space-between">
+			<Button as={Link} variant="link" onClick={handleClick}>
+				<Image
+					borderRadius={10}
+					background="blackAlpha.700"
+					objectFit="cover"
+					src="/logo_transparent.png"
+					dimensions={[55, 55]}
+					alt="Stolen Wallet Registry Logo"
+				/>
+			</Button>
 			<ConnectButton />
-			<Text>Testing</Text>
-			{/* <Button onClick={toggleColorMode}>
-				{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
-			</Button> */}
 		</Flex>
 	);
 };
@@ -31,13 +41,12 @@ export const HomeHeader = () => {
 	return (
 		<>
 			<Box position="absolute" top={[10, 12, 15, 20]} left={[10, 12, 15, 20]}>
-				<Link ml={10} href="/">
+				<Link ml={10} href="/" borderRadius={10}>
 					<Image
 						objectFit="cover"
 						src="/logo_transparent.png"
 						dimensions={[100, 100]}
 						alt="Stolen Wallet Registry Logo"
-						borderRadius={10}
 					/>
 				</Link>
 			</Box>
