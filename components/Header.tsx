@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Icon, Link, useColorMode } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Link, Text, useColorMode } from '@chakra-ui/react';
 import { Image } from './NextChalkraImage';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
@@ -12,12 +12,11 @@ export const DappHeader = () => {
 
 	return (
 		<Flex gap={5} mr={5} border="1 solid black">
-			<>
-				<ConnectButton />
-				{/* <Button onClick={toggleColorMode}>
-					{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
-				</Button> */}
-			</>
+			<ConnectButton />
+			<Text>Testing</Text>
+			{/* <Button onClick={toggleColorMode}>
+				{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
+			</Button> */}
 		</Flex>
 	);
 };

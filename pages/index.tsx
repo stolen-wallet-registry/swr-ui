@@ -1,8 +1,8 @@
 import Layout, { COLORS, ColorValues } from '../components/Layout';
 
 import type { NextPage } from 'next';
-import { Center, Heading, Grid, GridItem, Box, SimpleGrid } from '@chakra-ui/react';
-import { useState } from 'react';
+import { Center, Heading, Grid, GridItem, Box, SimpleGrid, useColorMode } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import ColorButton from '../components/ColorButton';
 
 import { SectionTitle, SectionBody } from '../components/GridSection';
@@ -17,6 +17,11 @@ const Home: NextPage = () => {
 	const initialColor = COLORS[randomColor()];
 	const [color, setColor] = useState<ColorValues>(initialColor);
 	const [show, setShow] = useState<showColorProps>('home');
+	const { setColorMode } = useColorMode();
+
+	useEffect(() => {
+		setColorMode('light');
+	}, []);
 
 	const Hero = () => {
 		const handleOnClick = (showValue: showColorProps) => {
