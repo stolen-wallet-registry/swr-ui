@@ -1,8 +1,8 @@
-import { Box, HStack, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 import Footer from './Footer';
-import { GiTechnoHeart, GiCoffeeCup } from 'react-icons/gi';
 import { DappHeader } from './Header';
+import MadeFrom from './MadeFrom';
 
 export type ColorValues = 'red' | 'teal' | 'blue' | 'green' | 'purple';
 export const COLORS: ColorValues[] = ['red', 'teal', 'blue', 'green', 'purple'];
@@ -14,13 +14,9 @@ const DappLayout: React.FunctionComponent<DappLayoutProps> = ({ children }) => {
 			<DappHeader />
 			{children}
 			<Footer color="black" opacity={0.8}>
-				<HStack pr={100} letterSpacing="0.1em">
-					<Text fontWeight="bold">Made with </Text>
-					<GiTechnoHeart color="red" />
-					<Text fontWeight="bold">and</Text>
-					<GiCoffeeCup color="brown" />
-					<Text fontWeight="bold">from Denver, CO</Text>
-				</HStack>
+				<Box position="fixed" bottom={2} left="50%" transform="translateX(-50%)">
+					<MadeFrom />
+				</Box>
 			</Footer>
 		</Box>
 	);

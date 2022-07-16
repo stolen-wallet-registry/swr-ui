@@ -1,41 +1,43 @@
-import { Theme } from '@rainbow-me/rainbowkit';
-// import { AccentColor, AccentColorPreset, baseTheme, ThemeOptions } from './base';
+import merge from 'lodash/merge';
+import { Theme, lightTheme } from '@rainbow-me/rainbowkit';
 
 const whiteAlpha = 'RGBA(255, 255, 255, 0.24)';
+const blackAlpha = 'RGBA(0, 0, 0, 0.80)';
+const white = '#FFFFFF';
 
-const rainbowLightTheme: Theme = {
+const rainbowLightTheme = {
 	colors: {
-		accentColor: '#000',
-		accentColorForeground: whiteAlpha,
+		accentColor: whiteAlpha,
+		accentColorForeground: 'none',
 		actionButtonBorder: whiteAlpha,
 		actionButtonBorderMobile: whiteAlpha,
 		actionButtonSecondaryBackground: whiteAlpha,
 		closeButton: whiteAlpha,
 		closeButtonBackground: whiteAlpha,
-		connectButtonBackground: '#FFF',
-		connectButtonBackgroundError: '#000',
+		connectButtonBackground: white,
+		connectButtonBackgroundError: blackAlpha,
 		connectButtonInnerBackground: 'linear-gradient(0deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.06))',
-		connectButtonText: '#25292E',
-		connectButtonTextError: '#FFF',
+		connectButtonText: blackAlpha,
+		connectButtonTextError: white,
 		connectionIndicator: '#38B2AC',
-		error: '#000',
-		generalBorder: 'rgba(0, 0, 0, 0.06)',
-		generalBorderDim: 'rgba(0, 0, 0, 0.03)',
-		menuItemBackground: 'rgba(60, 66, 66, 0.1)',
-		modalBackdrop: 'rgba(0, 0, 0, 0.3)',
-		modalBackground: '#FFF',
+		error: '#FC8181',
+		generalBorder: whiteAlpha,
+		generalBorderDim: blackAlpha,
+		menuItemBackground: 'RGBA(0, 0, 0, 0.04)',
+		modalBackdrop: 'RGBA(255, 255, 255, 0.48)',
+		modalBackground: white,
 		modalBorder: 'transparent',
 		modalText: '#25292E',
 		modalTextDim: 'rgba(60, 66, 66, 0.3)',
 		modalTextSecondary: 'rgba(60, 66, 66, 0.6)',
-		profileAction: '#FFF',
-		profileActionHover: 'rgba(255, 255, 255, 0.5)',
-		profileForeground: 'rgba(60, 66, 66, 0.06)',
+		profileAction: '#F7FAFC',
+		profileActionHover: '#EDF2F7',
+		profileForeground: whiteAlpha,
 		selectedOptionBorder: 'rgba(60, 66, 66, 0.1)',
 		standby: '#F6E05E',
 	},
 	fonts: {
-		body: '#000',
+		body: blackAlpha,
 	},
 };
 
@@ -98,4 +100,6 @@ const rainbowLightTheme: Theme = {
 
 // lightTheme.accentColors = accentColors;
 
-export default rainbowLightTheme;
+const appLightTheme = merge(lightTheme(), rainbowLightTheme) as Theme;
+
+export default appLightTheme;

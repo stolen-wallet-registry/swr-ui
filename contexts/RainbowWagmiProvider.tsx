@@ -1,5 +1,4 @@
 import '@rainbow-me/rainbowkit/styles.css';
-import merge from 'lodash.merge';
 
 import {
 	RainbowKitProvider,
@@ -17,7 +16,7 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import { Text, Link } from '@chakra-ui/react';
 
-import rainbowLightTheme from '../theme/rainbowkit-themes/light';
+import appLightTheme from '../theme/rainbowkit-themes/light';
 import React from 'react';
 
 const testnets = [
@@ -74,8 +73,6 @@ type RainbowKitWagmiProviderProps = {
 	children?: React.ReactNode;
 };
 
-const appLightTheme = merge(lightTheme(), rainbowLightTheme) as Theme;
-console.log(appLightTheme);
 const RainbowKitWagmiProvider: React.FC<RainbowKitWagmiProviderProps> = ({ children }) => {
 	return (
 		<WagmiConfig client={wagmiClient}>
