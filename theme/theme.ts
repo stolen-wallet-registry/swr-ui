@@ -1,6 +1,7 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 import { createBreakpoints } from '@chakra-ui/theme-tools';
 
+export const COLOR_TRANSITION_DELAY = 2000;
 const fonts = { mono: 'Hack, monospace', body: 'Hack, monospace', heading: 'Hack, monospace' };
 const breakpoints = createBreakpoints({
 	sm: '40em',

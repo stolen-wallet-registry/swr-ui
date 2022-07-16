@@ -6,18 +6,29 @@ interface SectionTitleProps {
 	selectedColor: string;
 }
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ title, selectedColor, children }) => {
+const SectionTitle: React.FC<SectionTitleProps> = ({
+	title,
+	selectedColor,
+	children,
+	...props
+}) => {
 	return (
 		<GridItem
+			{...props}
+			borderRadius={10}
 			boxShadow="inner"
 			colSpan={1}
 			background="gray.50"
 			border={`5px solid ${selectedColor}.300`}
 		>
-			<Box backgroundColor={`${selectedColor}.200`} height="15px"></Box>
+			<Box
+				borderRadius="10px 10px 0 0"
+				backgroundColor={`${selectedColor}.200`}
+				height="15px"
+			></Box>
 			<Box backgroundColor={`${selectedColor}.100`} height="15px"></Box>
 			<Heading textAlign="center">{title}</Heading>
-			{children}
+			<Box p={5}>{children}</Box>
 		</GridItem>
 	);
 };
@@ -36,7 +47,7 @@ const SectionBody: React.FC<SectionBodyProps> = ({ selectedColor, children }) =>
 		>
 			<Box backgroundColor={`${selectedColor}.200`} height="15px"></Box>
 			<Box backgroundColor={`${selectedColor}.100`} height="15px"></Box>
-			{children}
+			<Box p={5}>{children}</Box>
 		</GridItem>
 	);
 };

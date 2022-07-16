@@ -1,9 +1,9 @@
-import Layout from '../components/Layout';
+import DappLayout from '../components/DappLayout';
 
 import type { NextPage } from 'next';
 
-const Home: NextPage = () => {
-	return <Layout isDapp={true}></Layout>;
+const Dapp: NextPage = () => {
+	return <DappLayout></DappLayout>;
 };
 
-export default Home;
+export default Dapp;

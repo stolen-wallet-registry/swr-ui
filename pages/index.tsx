@@ -2,11 +2,11 @@ import Layout, { COLORS, ColorValues } from '../components/Layout';
 
 import type { NextPage } from 'next';
 import { Center, Heading, Grid, GridItem, Box } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import ColorButton from '../components/ColorButton';
 
-import { SectionTitle, SectionBody } from '../components/Home/Section';
-import Head from 'next/head';
+import { SectionTitle, SectionBody } from '../components/Section';
+import { COLOR_TRANSITION_DELAY } from '../theme/theme';
 
 type showColorProps = 'home' | 'about' | 'why' | 'how';
 
@@ -15,26 +15,27 @@ const randomColor = () => {
 };
 
 const Home: NextPage = () => {
-	const [color, setColor] = useState<ColorValues>('red');
+	const initialColor = COLORS[randomColor()];
+	const [color, setColor] = useState<ColorValues>(initialColor);
 	const [show, setShow] = useState<showColorProps>('home');
 
 	const Hero = () => {
 		const handleOnClick = (showValue: showColorProps) => {
 			const colorPicks = COLORS.filter((c) => c !== color);
-			setColor(colorPicks[randomColor()]);
+			const newColor = colorPicks[randomColor()];
+			setColor(newColor);
 			setShow(showValue);
 		};
 
 		return (
 			<>
-				<Head>
-					<title>TESTING</title>
-					<style>{`
-						body {
-							background: var(--chakra-colors-${color}-400) !important;
-						}
-					`}</style>
-				</Head>
+				<style jsx global>{`
+					body {
+						background-color: var(--chakra-colors-${color}-400) !important;
+						transition-property: background-color;
+						transition-duration: unset;
+					}
+				`}</style>
 				<GridItem colSpan={3} background={`${color}.400`} p={10} gap={5}>
 					<Heading
 						as="h1"
@@ -48,19 +49,16 @@ const Home: NextPage = () => {
 					<Center>
 						<ColorButton
 							m={[5, 10, 20]}
-							selectedColor={color}
 							buttonText={show === 'why' ? 'Home' : 'Why?'}
 							onClickHandler={() => handleOnClick(show === 'why' ? 'home' : 'why')}
 						/>
 						<ColorButton
 							m={[5, 10, 20]}
-							selectedColor={color}
 							buttonText={show === 'how' ? 'Home' : 'How?'}
 							onClickHandler={() => handleOnClick(show === 'how' ? 'home' : 'how')}
 						/>
 						<ColorButton
 							m={[5, 10, 20]}
-							selectedColor={color}
 							buttonText={show === 'about' ? 'Home' : 'About'}
 							onClickHandler={() => handleOnClick(show === 'about' ? 'home' : 'about')}
 						/>
@@ -126,8 +124,16 @@ const Home: NextPage = () => {
 	};
 
 	return (
-		<Layout isDapp={false} setBGColor={color}>
-			<Grid h="90vh" templateRows="1fr 3fr" templateColumns="repeat(3, 1fr)" ml={40} mr={40}>
+		<Layout setBGColor={color}>
+			<Grid
+				h="90vh"
+				templateRows="1fr 3fr"
+				gap={5}
+				templateColumns="repeat(3, 1fr)"
+				ml={40}
+				mr={40}
+				pb={5}
+			>
 				<Hero />
 				{show === 'home' && <MainSection />}
 				{show === 'why' && <WhySection />}

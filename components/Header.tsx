@@ -6,44 +6,29 @@ import { FaSun, FaMoon } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
 
-const Nav = () => {
-	const router = useRouter();
-	const { address, isConnected } = useAccount();
-	const { colorMode, toggleColorMode } = useColorMode();
+export const DappHeader = () => {
+	// const { address, isConnected } = useAccount();
+	// const { colorMode, toggleColorMode } = useColorMode();
 
+	return (
+		<Flex gap={5} mr={5} border="1 solid black">
+			<>
+				<ConnectButton />
+				{/* <Button onClick={toggleColorMode}>
+					{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
+				</Button> */}
+			</>
+		</Flex>
+	);
+};
+
+export const HomeHeader = () => {
+	const router = useRouter();
 	const handleClick = (e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
 		router.push('/dapp');
 	};
 
-	return (
-		<Flex gap={5} mr={5} border="1 solid black">
-			{isConnected ? (
-				<>
-					<ConnectButton />
-					<Button onClick={toggleColorMode}>
-						{colorMode === 'light' ? <Icon as={FaMoon} /> : <Icon as={FaSun} />}
-					</Button>
-				</>
-			) : (
-				<Button
-					px={8}
-					size="lg"
-					rounded="lg"
-					colorScheme="blackAlpha"
-					boxShadow="2xl"
-					_hover={{ transform: 'scale(1.1)' }}
-					_active={{ transform: 'translateY(-2px)' }}
-					onClick={handleClick}
-				>
-					Enter App
-				</Button>
-			)}
-		</Flex>
-	);
-};
-
-const Header = () => {
 	return (
 		<>
 			<Box position="absolute" top={20} left={20}>
@@ -58,10 +43,19 @@ const Header = () => {
 				</Link>
 			</Box>
 			<Box position="absolute" top={20} right={20}>
-				<Nav />
+				<Button
+					px={8}
+					size="lg"
+					rounded="lg"
+					colorScheme="blackAlpha"
+					boxShadow="2xl"
+					_hover={{ transform: 'scale(1.1)' }}
+					_active={{ transform: 'translateY(-2px)' }}
+					onClick={handleClick}
+				>
+					Enter App
+				</Button>
 			</Box>
 		</>
 	);
 };
-
-export default Header;
