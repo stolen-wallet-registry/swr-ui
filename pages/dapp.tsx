@@ -133,6 +133,7 @@ const Dapp: NextPage = () => {
 						<Button
 							variant="outline"
 							width={200}
+							disabled={showSection === 'register'}
 							onClick={() => handleOnClick('register')}
 							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
 						>
@@ -141,6 +142,7 @@ const Dapp: NextPage = () => {
 						<Button
 							variant="outline"
 							width={200}
+							disabled={showSection === 'selfRelay'}
 							onClick={() => handleOnClick('selfRelay')}
 							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
 						>
@@ -149,6 +151,7 @@ const Dapp: NextPage = () => {
 						<Button
 							variant="outline"
 							width={200}
+							disabled={showSection === 'p2pRelay'}
 							onClick={() => handleOnClick('p2pRelay')}
 							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
 						>

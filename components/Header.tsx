@@ -41,26 +41,26 @@ export const DappHeader = () => {
 							{(() => {
 								if (!mounted || !account || !chain) {
 									return (
-										<button onClick={openConnectModal} type="button">
+										<Button variant="outline" onClick={openConnectModal}>
 											Connect Wallet
-										</button>
+										</Button>
 									);
 								}
 
 								if (chain.unsupported) {
 									return (
-										<button onClick={openChainModal} type="button">
+										<Button variant="outline" onClick={openChainModal}>
 											Wrong network
-										</button>
+										</Button>
 									);
 								}
 
 								return (
 									<div style={{ display: 'flex', gap: 12 }}>
-										<button
+										<Button
+											variant="outline"
 											onClick={openChainModal}
 											style={{ display: 'flex', alignItems: 'center' }}
-											type="button"
 										>
 											{chain.hasIcon && (
 												<div
@@ -83,12 +83,12 @@ export const DappHeader = () => {
 												</div>
 											)}
 											{chain.name}
-										</button>
+										</Button>
 
-										<button onClick={openAccountModal} type="button">
+										<Button variant="outline" onClick={openAccountModal}>
 											{account.displayName}
 											{account.displayBalance ? ` (${account.displayBalance})` : ''}
-										</button>
+										</Button>
 									</div>
 								);
 							})()}
