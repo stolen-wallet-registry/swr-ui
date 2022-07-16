@@ -1,12 +1,11 @@
 import Layout, { COLORS, ColorValues } from '../components/Layout';
 
 import type { NextPage } from 'next';
-import { Center, Heading, Grid, GridItem, Box } from '@chakra-ui/react';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { Center, Heading, Grid, GridItem, Box, SimpleGrid } from '@chakra-ui/react';
+import { useState } from 'react';
 import ColorButton from '../components/ColorButton';
 
-import { SectionTitle, SectionBody } from '../components/Section';
-import { COLOR_TRANSITION_DELAY } from '../theme/theme';
+import { SectionTitle, SectionBody } from '../components/GridSection';
 
 type showColorProps = 'home' | 'about' | 'why' | 'how';
 
@@ -125,21 +124,15 @@ const Home: NextPage = () => {
 
 	return (
 		<Layout setBGColor={color}>
-			<Grid
-				h="90vh"
-				templateRows="1fr 3fr"
-				gap={5}
-				templateColumns="repeat(3, 1fr)"
-				ml={40}
-				mr={40}
-				pb={5}
-			>
+			<Box h="90vh" gap={5} ml={40} mr={40} pb={5}>
 				<Hero />
-				{show === 'home' && <MainSection />}
-				{show === 'why' && <WhySection />}
-				{show === 'how' && <HowSection />}
-				{show === 'about' && <AboutSection />}
-			</Grid>
+				<SimpleGrid minChildWidth={250} gap={10} height={500}>
+					{show === 'home' && <MainSection />}
+					{show === 'why' && <WhySection />}
+					{show === 'how' && <HowSection />}
+					{show === 'about' && <AboutSection />}
+				</SimpleGrid>
+			</Box>
 		</Layout>
 	);
 };

@@ -31,7 +31,7 @@ export const HomeHeader = () => {
 
 	return (
 		<>
-			<Box position="absolute" top={20} left={20}>
+			<Box position="absolute" top={[10, 12, 15, 20]} left={[10, 12, 15, 20]}>
 				<Link ml={10} href="/">
 					<Image
 						objectFit="cover"
@@ -42,7 +42,7 @@ export const HomeHeader = () => {
 					/>
 				</Link>
 			</Box>
-			<Box position="absolute" top={20} right={20}>
+			<Box position="absolute" top={[10, 12, 15, 20]} right={[10, 12, 15, 20]}>
 				<Button
 					px={8}
 					size="lg"
