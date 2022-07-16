@@ -1,8 +1,7 @@
-import { Box, Button, Flex, Icon, Link, Text, useColorMode } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Icon, Link, Text, useColorMode } from '@chakra-ui/react';
 import { Image } from './NextChalkraImage';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
-import { FaSun, FaMoon } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
 
@@ -16,17 +15,15 @@ export const DappHeader = () => {
 
 	return (
 		<Flex gap={5} p={5} mr={5} alignItems="center" justifyContent="space-between">
-			<Button as={Link} variant="link" onClick={handleClick}>
-				<Image
-					borderRadius={10}
-					background="blackAlpha.700"
-					objectFit="cover"
-					src="/logo_transparent.png"
-					dimensions={[55, 55]}
-					alt="Stolen Wallet Registry Logo"
-				/>
+			<Button variant="outline" onClick={handleClick}>
+				Home
 			</Button>
-			<ConnectButton />
+			<ConnectButton
+				showBalance={{
+					smallScreen: false,
+					largeScreen: true,
+				}}
+			/>
 		</Flex>
 	);
 };

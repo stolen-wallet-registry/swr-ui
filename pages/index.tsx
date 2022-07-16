@@ -20,6 +20,7 @@ const Home: NextPage = () => {
 	const { setColorMode } = useColorMode();
 
 	useEffect(() => {
+		window.document.body.style.backgroundColor = `var(--chakra-colors-${color}-400) !important;`;
 		setColorMode('light');
 	}, []);
 

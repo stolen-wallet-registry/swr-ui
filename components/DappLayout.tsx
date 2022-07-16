@@ -1,54 +1,29 @@
-import { Box, ButtonGroup, Flex, IconButton } from '@chakra-ui/react';
+import { Box, HStack, Text } from '@chakra-ui/react';
 import React from 'react';
-import { FaGithubSquare, FaTwitterSquare } from 'react-icons/fa';
+import Footer from './Footer';
+import { GiTechnoHeart, GiCoffeeCup } from 'react-icons/gi';
 import { DappHeader } from './Header';
 
 export type ColorValues = 'red' | 'teal' | 'blue' | 'green' | 'purple';
 export const COLORS: ColorValues[] = ['red', 'teal', 'blue', 'green', 'purple'];
-interface LayoutProps {}
+interface DappLayoutProps {}
 
-const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
-	const Footer = () => {
-		return (
-			<Box position="fixed" bottom={0} right={0}>
-				<ButtonGroup p={2} mr={5}>
-					<IconButton
-						aria-label="Twitter"
-						variant="ghost"
-						opacity={0.8}
-						_hover={{
-							transform: 'scale(2.5)',
-							opacity: 1,
-							borderColor: 'gray.100',
-							color: 'gray.100',
-						}}
-						_active={{ transform: 'translateY(-2px)' }}
-						icon={<FaTwitterSquare color="white" />}
-					/>
-					<IconButton
-						aria-label="Github"
-						variant="ghost"
-						opacity={0.8}
-						_hover={{
-							transform: 'scale(2.5)',
-							opacity: 1,
-							borderColor: 'gray.100',
-							color: 'gray.100',
-						}}
-						_active={{ transform: 'translateY(-2px)' }}
-						icon={<FaGithubSquare color="white" />}
-					/>
-				</ButtonGroup>
-			</Box>
-		);
-	};
+const DappLayout: React.FunctionComponent<DappLayoutProps> = ({ children }) => {
 	return (
-		<Box position="absolute" top={0} left={0} right={0} bottom={0}>
+		<Box minHeight="100vh" height="100%" position="absolute" top={0} left={0} right={0} bottom={0}>
 			<DappHeader />
 			{children}
-			<Footer />
+			<Footer color="black" opacity={0.8}>
+				<HStack pr={100} letterSpacing="0.1em">
+					<Text fontWeight="bold">Made with </Text>
+					<GiTechnoHeart color="red" />
+					<Text fontWeight="bold">and</Text>
+					<GiCoffeeCup color="brown" />
+					<Text fontWeight="bold">from Denver, CO</Text>
+				</HStack>
+			</Footer>
 		</Box>
 	);
 };
 
-export default Layout;
+export default DappLayout;

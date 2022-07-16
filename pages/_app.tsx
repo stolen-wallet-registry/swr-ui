@@ -6,7 +6,7 @@ import RainbowKitWagmiProvider from '../contexts/RainbowWagmiProvider';
 
 function App({ Component, pageProps }: AppProps) {
 	return (
-		<ChakraProvider theme={theme} resetCSS>
+		<ChakraProvider theme={theme}>
 			<RainbowKitWagmiProvider>
 				<Component {...pageProps} />
 			</RainbowKitWagmiProvider>
