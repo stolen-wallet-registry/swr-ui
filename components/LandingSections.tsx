@@ -104,6 +104,7 @@ const OptimismContent: React.FC = () => {
 						Once an address is compromised,{' '}
 						<Bold>access to any future benefit of your past is compromised</Bold>.
 					</ListItem>
+					<ListItem>There are too many damn stollen walets out there.</ListItem>
 				</UnorderedList>
 			</Box>
 		</>

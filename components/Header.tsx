@@ -1,4 +1,14 @@
-import { Box, Button, Flex, HStack, Icon, Link, Text, useColorMode } from '@chakra-ui/react';
+import {
+	Box,
+	Button,
+	Flex,
+	HStack,
+	Icon,
+	Link,
+	Text,
+	useColorMode,
+	VStack,
+} from '@chakra-ui/react';
 import { Image } from './NextChalkraImage';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React from 'react';
@@ -49,7 +59,14 @@ export const DappHeader = () => {
 
 								if (chain.unsupported) {
 									return (
-										<Button variant="outline" onClick={openChainModal}>
+										<Button
+											variant="outline"
+											color="red.400"
+											borderColor="red.400"
+											_hover={{ bgColor: 'red.500', color: 'whiteAlpha.900' }}
+											_active={{ transform: 'scale(1.1)' }}
+											onClick={openChainModal}
+										>
 											Wrong network
 										</Button>
 									);
@@ -57,32 +74,43 @@ export const DappHeader = () => {
 
 								return (
 									<div style={{ display: 'flex', gap: 12 }}>
+										<Flex flexDirection="column">
+											<Text as="span" fontSize="xs" fontWeight="bold" mb="-5px">
+												Network:
+											</Text>
+											<HStack>
+												{chain.hasIcon && (
+													<div
+														style={{
+															background: chain.iconBackground,
+															width: 12,
+															height: 12,
+															filter: 'grayscale(100%)',
+															borderRadius: 999,
+															overflow: 'hidden',
+															marginRight: 2,
+														}}
+													>
+														{chain.iconUrl && (
+															<Image
+																alt={chain.name ?? 'Chain icon'}
+																src={chain.iconUrl}
+																width={12}
+																height={12}
+															/>
+														)}
+													</div>
+												)}
+												<Text>{chain.name}</Text>
+											</HStack>
+										</Flex>
+
 										<Button
 											variant="outline"
 											onClick={openChainModal}
 											style={{ display: 'flex', alignItems: 'center' }}
 										>
-											{chain.hasIcon && (
-												<div
-													style={{
-														background: chain.iconBackground,
-														width: 12,
-														height: 12,
-														borderRadius: 999,
-														overflow: 'hidden',
-														marginRight: 4,
-													}}
-												>
-													{chain.iconUrl && (
-														<img
-															alt={chain.name ?? 'Chain icon'}
-															src={chain.iconUrl}
-															style={{ width: 12, height: 12 }}
-														/>
-													)}
-												</div>
-											)}
-											{chain.name}
+											Switch Networks
 										</Button>
 
 										<Button variant="outline" onClick={openAccountModal}>
