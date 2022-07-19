@@ -50,7 +50,7 @@ const Dapp: NextPage = () => {
 				flexDirection="column"
 				border={'5px solid blackAlpha.900'}
 			>
-				<Heading as="h5" size="md" pb={5} pt={5}>
+				<Heading size="md" pb={5} pt={5}>
 					{title}
 				</Heading>
 				{children}
@@ -77,13 +77,13 @@ const Dapp: NextPage = () => {
 					Standard registration is for you if:
 					<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
 						<ListItem>
-							<Highlight key={1} query={[`${address}`]} styles={HIGHLIGHT_STYLE}>
+							<Highlight key={address} query={[`${address}`]} styles={HIGHLIGHT_STYLE}>
 								{`Your connected Wallet (${address}) is compromised.`}
 							</Highlight>
 						</ListItem>
 						<ListItem>
 							<Highlight
-								key={2}
+								key={minPayment}
 								query={[`${minPayment}Eth for public goods`, 'supported chains']}
 								styles={HIGHLIGHT_STYLE}
 							>{`You have ${minPayment}Eth for public goods in your wallet on one of the supported chains.`}</Highlight>

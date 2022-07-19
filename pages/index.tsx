@@ -1,13 +1,24 @@
 import Layout, { COLORS, ColorValues } from '../components/Layout';
 
 import type { NextPage } from 'next';
-import { Center, Heading, Grid, GridItem, Box, SimpleGrid, useColorMode } from '@chakra-ui/react';
+import {
+	Center,
+	Heading,
+	GridItem,
+	Box,
+	SimpleGrid,
+	useColorMode,
+	Button,
+	VStack,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import ColorButton from '../components/ColorButton';
 
 import { SectionTitle, SectionBody } from '../components/GridSection';
+import { FeaturesSection } from '../components/LandingSections';
+import PrimaryButton from '../components/PrimaryButton';
 
-type showColorProps = 'home' | 'about' | 'why' | 'how';
+type showColorProps = 'home' | 'about' | 'why' | 'how' | 'features';
 
 const randomColor = () => {
 	return Math.floor(Math.random() * 4);
@@ -42,7 +53,7 @@ const Home: NextPage = () => {
 						transition-duration: unset;
 					}
 				`}</style>
-				<GridItem colSpan={3} background={`${color}.400`} p={10} gap={5}>
+				<GridItem colSpan={4} background={`${color}.400`} p={10} gap={5}>
 					<Heading
 						as="h1"
 						size="lg"
@@ -53,6 +64,11 @@ const Home: NextPage = () => {
 						The Stolen Wallet Registry
 					</Heading>
 					<Center>
+						<ColorButton
+							m={[5, 10, 20]}
+							buttonText={show === 'features' ? 'Home' : 'Features'}
+							onClickHandler={() => handleOnClick(show === 'features' ? 'home' : 'features')}
+						/>
 						<ColorButton
 							m={[5, 10, 20]}
 							buttonText={show === 'why' ? 'Home' : 'Why?'}
@@ -135,6 +151,7 @@ const Home: NextPage = () => {
 				<Hero />
 				<SimpleGrid minChildWidth={250} gap={10} height={500}>
 					{show === 'home' && <MainSection />}
+					{show === 'features' && <FeaturesSection color={color} />}
 					{show === 'why' && <WhySection />}
 					{show === 'how' && <HowSection />}
 					{show === 'about' && <AboutSection />}

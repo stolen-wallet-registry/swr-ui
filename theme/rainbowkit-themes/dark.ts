@@ -1,57 +1,43 @@
 import { Theme } from '@rainbow-me/rainbowkit';
+import { RAINBOWKIT_COLORS } from './base';
 
 // import { AccentColor, AccentColorPreset, baseTheme, ThemeOptions } from './base';
 
-// const myCustomTheme: Theme = {
-//   colors: {
-//     accentColor: '...',
-//     accentColorForeground: '...',
-//     actionButtonBorder: '...',
-//     actionButtonBorderMobile: '...',
-//     actionButtonSecondaryBackground: '...',
-//     closeButton: '...',
-//     closeButtonBackground: '...',
-//     connectButtonBackground: '...',
-//     connectButtonBackgroundError: '...',
-//     connectButtonInnerBackground: '...',
-//     connectButtonText: '...',
-//     connectButtonTextError: '...',
-//     connectionIndicator: '...',
-//     error: '...',
-//     generalBorder: '...',
-//     generalBorderDim: '...',
-//     menuItemBackground: '...',
-//     modalBackdrop: '...',
-//     modalBackground: '...',
-//     modalBorder: '...',
-//     modalText: '...',
-//     modalTextDim: '...',
-//     modalTextSecondary: '...',
-//     profileAction: '...',
-//     profileActionHover: '...',
-//     profileForeground: '...',
-//     selectedOptionBorder: '...',
-//     standby: '...',
-//   },
-//   fonts: {
-//     body: '...',
-//   },
-//   radii: {
-//     actionButton: '...',
-//     connectButton: '...',
-//     menuButton: '...',
-//     modal: '...',
-//     modalMobile: '...',
-//   },
-//   shadows: {
-//     connectButton: '...',
-//     dialog: '...',
-//     profileDetailsAction: '...',
-//     selectedOption: '...',
-//     selectedWallet: '...',
-//     walletLogo: '...',
-//   },
-// }
+const rainbowLightTheme = {
+	colors: {
+		accentColor: RAINBOWKIT_COLORS.blackAlpha,
+		accentColorForeground: 'none',
+		actionButtonBorder: RAINBOWKIT_COLORS.blackAlpha,
+		actionButtonBorderMobile: RAINBOWKIT_COLORS.blackAlpha,
+		actionButtonSecondaryBackground: RAINBOWKIT_COLORS.blackAlpha,
+		closeButton: RAINBOWKIT_COLORS.blackAlpha,
+		closeButtonBackground: RAINBOWKIT_COLORS.blackAlpha,
+		connectButtonBackground: RAINBOWKIT_COLORS.white,
+		connectButtonBackgroundError: RAINBOWKIT_COLORS.whiteAlpha,
+		connectButtonInnerBackground: 'linear-gradient(0deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.06))',
+		connectButtonText: RAINBOWKIT_COLORS.whiteAlpha,
+		connectButtonTextError: RAINBOWKIT_COLORS.white,
+		connectionIndicator: '#38B2AC',
+		error: '#FC8181',
+		generalBorder: RAINBOWKIT_COLORS.blackAlpha,
+		generalBorderDim: RAINBOWKIT_COLORS.whiteAlpha,
+		menuItemBackground: 'RGBA(0, 0, 0, 0.04)',
+		modalBackdrop: 'RGBA(255, 255, 255, 0.48)',
+		modalBackground: RAINBOWKIT_COLORS.white,
+		modalBorder: 'transparent',
+		modalText: '#25292E',
+		modalTextDim: 'rgba(60, 66, 66, 0.3)',
+		modalTextSecondary: 'rgba(60, 66, 66, 0.6)',
+		profileAction: '#F7FAFC',
+		profileActionHover: '#EDF2F7',
+		profileForeground: RAINBOWKIT_COLORS.blackAlpha,
+		selectedOptionBorder: 'rgba(60, 66, 66, 0.1)',
+		standby: '#F6E05E',
+	},
+	fonts: {
+		body: RAINBOWKIT_COLORS.whiteAlpha,
+	},
+};
 
 // const darkGrey = '#1A1B1F';
 

@@ -5,13 +5,14 @@ import { FaTwitterSquare, FaGithubSquare } from 'react-icons/fa';
 interface FooterProps {
 	color: string;
 	opacity: number;
+	addBox?: boolean;
 }
 
-const Footer: React.FC<FooterProps> = ({ color, opacity, children }) => {
+const Footer: React.FC<FooterProps> = ({ color, opacity, addBox = false, children }) => {
 	return (
 		<>
-			<Box height={5} mt={10}></Box>
-			<Box position="absolute" bottom={0} right={0}>
+			{addBox && <Box height={5} mt={10}></Box>}
+			<Box position="fixed" bottom={0} right={0}>
 				<ButtonGroup p={2} mt={10} mr={5}>
 					{children}
 					<IconButton

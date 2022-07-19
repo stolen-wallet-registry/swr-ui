@@ -1,7 +1,6 @@
 import { Button, ButtonProps, useColorModeValue } from '@chakra-ui/react';
 
 interface ColorButtonProps extends ButtonProps {
-	selectedColor: string;
 	onClickHandler: any;
 	buttonText: string;
 }

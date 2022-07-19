@@ -1,6 +1,6 @@
 import { Box, ChakraProps, Heading, SimpleGrid } from '@chakra-ui/react';
 
-const Features: React.FC<ChakraProps> = ({ ...props }) => {
+export const Features: React.FC<ChakraProps> = ({ ...props }) => {
 	return (
 		<>
 			<Heading
@@ -24,5 +24,3 @@ const Features: React.FC<ChakraProps> = ({ ...props }) => {
 		</>
 	);
 };
-
-export default Features;

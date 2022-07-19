@@ -1,43 +1,40 @@
 import merge from 'lodash/merge';
 import { Theme, lightTheme } from '@rainbow-me/rainbowkit';
-
-const whiteAlpha = 'RGBA(255, 255, 255, 0.24)';
-const blackAlpha = 'RGBA(0, 0, 0, 0.80)';
-const white = '#FFFFFF';
+import { RAINBOWKIT_COLORS } from './base';
 
 const rainbowLightTheme = {
 	colors: {
-		accentColor: whiteAlpha,
+		accentColor: RAINBOWKIT_COLORS.whiteAlpha,
 		accentColorForeground: 'none',
-		actionButtonBorder: whiteAlpha,
-		actionButtonBorderMobile: whiteAlpha,
-		actionButtonSecondaryBackground: whiteAlpha,
-		closeButton: whiteAlpha,
-		closeButtonBackground: whiteAlpha,
-		connectButtonBackground: white,
-		connectButtonBackgroundError: blackAlpha,
+		actionButtonBorder: RAINBOWKIT_COLORS.whiteAlpha,
+		actionButtonBorderMobile: RAINBOWKIT_COLORS.whiteAlpha,
+		actionButtonSecondaryBackground: RAINBOWKIT_COLORS.whiteAlpha,
+		closeButton: RAINBOWKIT_COLORS.whiteAlpha,
+		closeButtonBackground: RAINBOWKIT_COLORS.whiteAlpha,
+		connectButtonBackground: RAINBOWKIT_COLORS.white,
+		connectButtonBackgroundError: RAINBOWKIT_COLORS.blackAlpha,
 		connectButtonInnerBackground: 'linear-gradient(0deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.06))',
-		connectButtonText: blackAlpha,
-		connectButtonTextError: white,
+		connectButtonText: RAINBOWKIT_COLORS.blackAlpha,
+		connectButtonTextError: RAINBOWKIT_COLORS.white,
 		connectionIndicator: '#38B2AC',
 		error: '#FC8181',
-		generalBorder: whiteAlpha,
-		generalBorderDim: blackAlpha,
+		generalBorder: RAINBOWKIT_COLORS.whiteAlpha,
+		generalBorderDim: RAINBOWKIT_COLORS.blackAlpha,
 		menuItemBackground: 'RGBA(0, 0, 0, 0.04)',
 		modalBackdrop: 'RGBA(255, 255, 255, 0.48)',
-		modalBackground: white,
+		modalBackground: RAINBOWKIT_COLORS.white,
 		modalBorder: 'transparent',
 		modalText: '#25292E',
 		modalTextDim: 'rgba(60, 66, 66, 0.3)',
 		modalTextSecondary: 'rgba(60, 66, 66, 0.6)',
 		profileAction: '#F7FAFC',
 		profileActionHover: '#EDF2F7',
-		profileForeground: whiteAlpha,
+		profileForeground: RAINBOWKIT_COLORS.whiteAlpha,
 		selectedOptionBorder: 'rgba(60, 66, 66, 0.1)',
 		standby: '#F6E05E',
 	},
 	fonts: {
-		body: blackAlpha,
+		body: RAINBOWKIT_COLORS.blackAlpha,
 	},
 };
 

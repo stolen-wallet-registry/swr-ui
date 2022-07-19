@@ -11,6 +11,13 @@ const fontStacks = {
 } as const;
 type FontStack = keyof typeof fontStacks;
 
+export const RAINBOWKIT_COLORS = {
+	whiteAlpha: 'RGBA(255, 255, 255, 0.24)',
+	blackAlpha: 'RGBA(0, 0, 0, 0.80)',
+	white: '#FFFFFF',
+	black: '#000000',
+};
+
 type RadiusScale = 'large' | 'medium' | 'small' | 'none';
 const radiusScales: Record<
 	RadiusScale,

@@ -8,7 +8,7 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 
 export const DappHeader = () => {
 	const router = useRouter();
-	const { colorMode, toggleColorMode } = useColorMode();
+	// const { colorMode, toggleColorMode } = useColorMode();
 
 	const handleClick = () => {
 		router.push('/');
@@ -86,6 +86,7 @@ export const DappHeader = () => {
 										</Button>
 
 										<Button variant="outline" onClick={openAccountModal}>
+											{/* TODO add responsive display of ens name - truncate */}
 											{account.displayName}
 											{account.displayBalance ? ` (${account.displayBalance})` : ''}
 										</Button>

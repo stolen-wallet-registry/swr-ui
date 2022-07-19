@@ -9,6 +9,7 @@ import {
 	darkTheme,
 	DisclaimerComponent,
 	Theme,
+	AvatarComponent,
 } from '@rainbow-me/rainbowkit';
 import { chain, createClient, configureChains, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
@@ -17,7 +18,12 @@ import { publicProvider } from 'wagmi/providers/public';
 import { Text, Link } from '@chakra-ui/react';
 
 import appLightTheme from '../theme/rainbowkit-themes/light';
+
+import { Image } from '../components/NextChalkraImage';
+
 import React from 'react';
+
+import { RAINBOWKIT_COLORS } from '../theme/rainbowkit-themes/base';
 
 const testnets = [
 	chain.rinkeby,
@@ -62,6 +68,21 @@ const connectors = connectorsForWallets([
 	},
 ]);
 
+const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
+	return ensImage ? (
+		<Image src={ensImage} width={size} height={size} borderRadius={999} alt="ens profile" />
+	) : (
+		<div
+			style={{
+				backgroundColor: RAINBOWKIT_COLORS.whiteAlpha,
+				borderRadius: 999,
+				height: size,
+				width: size,
+			}}
+		></div>
+	);
+};
+
 const wagmiClient = createClient({
 	autoConnect: true,
 	connectors,
@@ -76,7 +97,12 @@ type RainbowKitWagmiProviderProps = {
 const RainbowKitWagmiProvider: React.FC<RainbowKitWagmiProviderProps> = ({ children }) => {
 	return (
 		<WagmiConfig client={wagmiClient}>
-			<RainbowKitProvider chains={chains} appInfo={demoAppInfo} theme={appLightTheme}>
+			<RainbowKitProvider
+				chains={chains}
+				appInfo={demoAppInfo}
+				theme={appLightTheme}
+				avatar={CustomAvatar}
+			>
 				{children}
 			</RainbowKitProvider>
 		</WagmiConfig>
