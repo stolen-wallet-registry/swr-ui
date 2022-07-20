@@ -1,6 +1,6 @@
 import Layout, { COLORS, ColorValues } from '../components/Layout';
 
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import {
 	Center,
 	Heading,
@@ -17,15 +17,26 @@ import ColorButton from '../components/ColorButton';
 import { SectionTitle, SectionBody } from '../components/GridSection';
 import { FeaturesSection } from '../components/LandingSections';
 import PrimaryButton from '../components/PrimaryButton';
+import { AppProps } from 'next/app';
 
 type showColorProps = 'home' | 'about' | 'why' | 'how' | 'features';
 
-const randomColor = () => {
+const randomNumber = () => {
 	return Math.floor(Math.random() * 4);
 };
 
-const Home: NextPage = () => {
-	const initialColor = COLORS[randomColor()];
+export const getStaticProps: GetStaticProps = async (context) => {
+	const initialColor = COLORS[randomNumber()];
+	return {
+		props: { initialColor },
+	};
+};
+
+interface HomeProps extends AppProps {
+	initialColor: ColorValues;
+}
+
+const Home: NextPage<HomeProps> = ({ initialColor }) => {
 	const [color, setColor] = useState<ColorValues>(initialColor);
 	const [show, setShow] = useState<showColorProps>('home');
 	const { setColorMode } = useColorMode();
@@ -38,7 +49,7 @@ const Home: NextPage = () => {
 	const Hero = () => {
 		const handleOnClick = (showValue: showColorProps) => {
 			const colorPicks = COLORS.filter((c) => c !== color);
-			const newColor = colorPicks[randomColor()];
+			const newColor = colorPicks[randomNumber()];
 			window.document.body.style.backgroundColor = `var(--chakra-colors-${color}-400) !important;`;
 			setColor(newColor);
 			setShow(showValue);

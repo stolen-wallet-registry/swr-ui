@@ -80,14 +80,19 @@ const OptimismContent: React.FC = () => {
 					One optimism contract using Cross Chain messaging to support multiple chains.
 				</Text>
 			</Box>
-			<Box pb={3}>
+			<Box pb={5}>
 				<Heading size="sm" pb={3}>
-					compatable with ECDSA secp256k1 compliant wallets.
+					The Registry
 				</Heading>
 				<UnorderedList spacing={3}>
 					<ListItem>
-						our goal is to be <Bold>one registry that is on chain</Bold> where wallets from all
-						compatable and supproted chains can catalog their compromised wallet.
+						compatable with <Bold>ECDSA secp256k1 compliant</Bold> wallets.
+					</ListItem>
+					<ListItem>
+						one on chain registry that is <Bold>accessible on chain via Bridge messaging</Bold>.
+					</ListItem>
+					<ListItem>
+						support on multiple chains, <Bold>one subgraph</Bold> for all <Bold>data</Bold>.
 					</ListItem>
 				</UnorderedList>
 			</Box>
@@ -105,6 +110,7 @@ const OptimismContent: React.FC = () => {
 						<Bold>access to any future benefit of your past is compromised</Bold>.
 					</ListItem>
 					<ListItem>There are too many damn stollen walets out there.</ListItem>
+					<ListItem>practice good wallet hygine.</ListItem>
 				</UnorderedList>
 			</Box>
 		</>
@@ -204,7 +210,7 @@ const FeesWtfContent: React.FC = () => {
 					Fees WTF?
 				</Heading>
 				<Text fontSize="md" textAlign="center" fontStyle="italic">
-					we take a small $3 fee and other optional donations and send them to public goods
+					small $3 fee that is required, donated to public goods
 				</Text>
 			</Box>
 			<Box>

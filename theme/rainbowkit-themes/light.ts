@@ -21,7 +21,7 @@ const rainbowLightTheme = {
 		generalBorder: RAINBOWKIT_COLORS.whiteAlpha,
 		generalBorderDim: RAINBOWKIT_COLORS.blackAlpha,
 		menuItemBackground: 'RGBA(0, 0, 0, 0.04)',
-		modalBackdrop: 'RGBA(255, 255, 255, 0.48)',
+		modalBackdrop: 'none',
 		modalBackground: RAINBOWKIT_COLORS.white,
 		modalBorder: 'transparent',
 		modalText: '#25292E',
