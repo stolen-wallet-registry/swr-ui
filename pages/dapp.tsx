@@ -19,6 +19,8 @@ import {
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
+import { buildAcknowledgementStruct, use712Signature } from '../hooks/use712Signature';
+
 interface RegistrationSectionProps {
 	title: string;
 }

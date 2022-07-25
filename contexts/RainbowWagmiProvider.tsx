@@ -25,7 +25,7 @@ import React from 'react';
 
 import { RAINBOWKIT_COLORS } from '../theme/rainbowkit-themes/base';
 
-const testnets = [
+export const testnets = [
 	chain.rinkeby,
 	chain.goerli,
 	chain.optimismKovan,
@@ -34,9 +34,9 @@ const testnets = [
 	chain.foundry,
 ];
 
-const livenets = [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum];
+export const supporttedChains = [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum];
 
-const { chains, provider, webSocketProvider } = configureChains(livenets, [
+const { chains, provider, webSocketProvider } = configureChains(supporttedChains, [
 	infuraProvider({ infuraId: process.env.INFURA_ID }),
 	publicProvider(),
 ]);
