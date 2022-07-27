@@ -34,7 +34,7 @@ export const testnets = [
 	chain.foundry,
 ];
 
-export const supporttedChains = [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum];
+export const supporttedChains = [chain.polygon, chain.optimism, chain.arbitrum];
 
 const { chains, provider, webSocketProvider } = configureChains(supporttedChains, [
 	infuraProvider({ infuraId: process.env.INFURA_ID }),
