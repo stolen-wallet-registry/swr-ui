@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Evmos",
+    "chain": "Evmos"
+  }
+{
+    "name": "Evmos Testnet",
+    "chain": "Evmos"
+  }
+{
+    "name": "Binance Smart Chain Mainnet",
+    "chain": "BSC"
+  }
+{
+    "name": "Moonbeam",
+    "chain": "MOON"
+  }
+{
+    "name": "Moonriver",
+    "chain": "MOON"
+  }
+{
+    "name": "Boba Network Bobabase",
+    "chain": "Bobabase"
+  }
+{
+    "shortName": "CELO",
+    "chain": "CELO"
+  }
+{
+    "name": "Avalanche Fuji Testnet",
+    "chain": "AVAX"
+  }
+{
+    "name": "Avalanche C-Chain",
+    "chain": "AVAX"
+  }
+{
+    "shortName": "ALFA",
+    "chain": "CELO"
+  }
+{
+    "name": "Cronos Mainnet Beta",
+    "chain": "CRO"
+  }
+{
+    "name": "Cronos Testnet",
+    "chain": "CRO"
+  }
+{
+    "name": "Gnosis Chain",
+    "chain": "GNO"
+  }
+]
