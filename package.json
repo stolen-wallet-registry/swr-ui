@@ -20,7 +20,7 @@
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@rainbow-me/rainbowkit": "^0.4.2",
-    "@wallet-hygiene/swr-contracts": "^0.0.6",
+    "@wallet-hygiene/swr-contracts": "^0.0.71",
     "axios": "^0.26.1",
     "ethers": "^5.6.9",
     "framer-motion": "^6.4.3",

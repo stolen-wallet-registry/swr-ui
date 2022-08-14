@@ -1,18 +1,7 @@
-import { useState, useEffect } from 'react';
-import {
-	useSignTypedData,
-	useContract,
-	useAccount,
-	useEnsName,
-	useProvider,
-	useSigner,
-} from 'wagmi';
+import { BigNumber } from 'ethers';
+import { useSignTypedData } from 'wagmi';
 
 import { CONTRACT_ADDRESSES, DOMAIN_SALTS } from '../utils/constants';
-
-import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
-import { BigNumber, ethers } from 'ethers';
-
 interface Domain712 {
 	name: string;
 	version: string;
@@ -21,7 +10,7 @@ interface Domain712 {
 	salt: string;
 }
 
-interface signTypedDataProps {
+export interface signTypedDataProps {
 	domain: Domain712;
 	types: any;
 	value: any;
@@ -34,34 +23,40 @@ interface Domain712Params {
 
 interface AcknowledgementValues extends Domain712Params {
 	forwarder: string;
-	deadline: number;
+	owner: string;
+	nonces: number;
+	deadline: BigNumber;
 }
 
 export const buildAcknowledgementStruct = async ({
 	forwarder,
+	chainId,
+	owner,
+	nonces,
+	deadline,
 }: AcknowledgementValues): Promise<signTypedDataProps> => {
-	const [signer, setSigner] = useState<ethers.Signer>();
-	const provider = useProvider();
-	const { connector, address } = useAccount({
-		onConnect({ address, connector, isReconnected }) {
-			console.log('Connected', { address, connector, isReconnected });
-		},
-	});
-	const ensData = useEnsName({
-		address,
-		chainId: 1,
-	});
+	// const [signer, setSigner] = useState<ethers.Signer>();
+	// const provider = useProvider();
+	// const { connector, address } = useAccount({
+	// 	onConnect({ address, connector, isReconnected }) {
+	// 		console.log('Connected', { address, connector, isReconnected });
+	// 	},
+	// });
+	// const ensData = useEnsName({
+	// 	address,
+	// 	chainId: 1,
+	// });
 
-	useSigner({
-		onSuccess: (wallet) => {
-			setSigner(wallet!);
-		},
-	});
+	// useSigner({
+	// 	onSuccess: (wallet) => {
+	// 		setSigner(wallet!);
+	// 	},
+	// });
 
-	const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-		signer || provider
-	);
+	// const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
+	// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+	// 	signer || provider
+	// );
 
 	// const contract = useContract({
 	// 	addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
@@ -69,13 +64,13 @@ export const buildAcknowledgementStruct = async ({
 	// 	signerOrProvider: signer,
 	// });
 
-	const owner = ensData.data || address;
-	const { deadline, hashStruct } = await stollenWalletRegistry.generateHashStruct(forwarder);
-	const nonces = await stollenWalletRegistry.nonces(address!);
+	// const owner = ensData.data || address;
+	// const { deadline, hashStruct } = await stollenWalletRegistry.generateHashStruct(forwarder);
+	// const nonces = await stollenWalletRegistry.nonces(address!);
 
 	return {
 		domain: {
-			chainId: (await connector?.getChainId()) as number,
+			chainId: chainId,
 			name: 'AcknowledgementOfRegistry',
 			verifyingContract: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
 			version: '4',
@@ -100,7 +95,7 @@ export const buildAcknowledgementStruct = async ({
 		value: {
 			owner,
 			forwarder,
-			nonce: nonces.add(BigNumber.from(1)),
+			nonce: nonces + 1,
 			deadline: deadline,
 		},
 	};

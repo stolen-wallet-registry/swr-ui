@@ -2395,6 +2395,16 @@
   resolved "https://registry.yarnpkg.com/@nomad-xyz/configuration/-/configuration-0.1.0-rc.25.tgz#c48df1873856ecb6b21a51d6246a16bd81720da6"
   integrity sha512-h1j0af7qZfc5Q0XGUW1EZYph3paBG8YmkyJEa3BJH64tmZ0yZ4qjWSOa2IMNfI7d0h2/+mCcUCTyTwfHfSZpFg==
 
+"@openzeppelin/contracts-upgradeable@^4.7.1":
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.7.2.tgz#414096e21f048200cbb7ad4fe4c6de2e822513bf"
+  integrity sha512-3dgc6qVmFch/uOmlmKnw5/v3JxwXcZD4T10/9CI1OUbX8AqjoZrBGKfxN1z3QxnIXRU/X31/BItJezJSDDTe7Q==
+
+"@openzeppelin/contracts@^4.7.1":
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.7.2.tgz#7587416fe2d35abf574193515b8971bfe9f64bc7"
+  integrity sha512-4n/JL9izql8303mPqPdubuna/DWEMbmOzWYUWyCPhjhiEr2w3nQrjE7vZz1fBF+wzzP6dZbIcsgqACk53c9FGA==
+
 "@openzeppelin/hardhat-upgrades@1.17.0":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-1.17.0.tgz#24ea0f366c3b2df985263cf8b1b796afd04d7e13"
@@ -2980,6 +2990,17 @@
   dependencies:
     "@chainlink/contracts" "^0.4.1"
     "@connext/nxtp-contracts" "^0.2.0-beta.17"
+
+"@wallet-hygiene/swr-contracts@^0.0.71":
+  version "0.0.71"
+  resolved "https://registry.yarnpkg.com/@wallet-hygiene/swr-contracts/-/swr-contracts-0.0.71.tgz#f1ea60e2ecc79af75bbfa1fcc5341f3dfb1f3cc4"
+  integrity sha512-cwqaTBOAQaVcHpdF9OPMHJRKk5pjtvhbQQAA85uJr6JScjs6jK+gDcLNygtgqowlY4MJSHV4fxQJJV9I2+VcBw==
+  dependencies:
+    "@chainlink/contracts" "^0.4.1"
+    "@connext/nxtp-contracts" "^0.2.0-beta.17"
+    "@openzeppelin/contracts" "^4.7.1"
+    "@openzeppelin/contracts-upgradeable" "^4.7.1"
+    "@wallet-hygiene/swr-contracts" "^0.0.6"
 
 "@walletconnect/browser-utils@^1.7.8":
   version "1.7.8"

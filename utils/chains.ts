@@ -30,92 +30,92 @@ import {
 
 // gnosis https://rpc.gnosischain.com/, Chain ID: 0x64, Symbol: xDai, Block Explorer URL: https://blockscout.com/xdai/mainnet/
 
-const BLOCK_EXPLORER_URLS = {
-  polygon: etherscanBlockExplorers.polygon,
-  arbitrum: etherscanBlockExplorers.arbitrum,
-  optimism: etherscanBlockExplorers.optimism,
-  ropsten: etherscanBlockExplorers.ropsten,
-  rinkeby: etherscanBlockExplorers.rinkeby,
-  goerli: etherscanBlockExplorers.goerli,
-  kovan: etherscanBlockExplorers.kovan,
-  optimism: etherscanBlockExplorers.optimism,
-  optimismKovan: etherscanBlockExplorers.optimismKovan,
-  polygon: etherscanBlockExplorers.polygon,
-  polygonMumbai: etherscanBlockExplorers.polygonMumbai,
-  arbitrum: etherscanBlockExplorers.arbitrum,
-  arbitrumRinkeby: etherscanBlockExplorers.arbitrumRinkeby,
-  avalanche: {
-    name: 'Snowtrace',
-    url: 'https://snowtrace.io/',
-  },
-  avalancheFuji: {
-    name: 'Snowtrace Testnet',
-    url: 'https://testnet.snowtrace.io/',
-  },
-  aurora: {
-    name: '',
-    url: '',
-  },
-  auroraTestnet: {
-    name: '',
-    url: '',
-  },
-  gnosis: {
-    name: 'Block Scout',
-    url: 'https://blockscout.com/xdai/mainnet/',
-  },
-  fantom: {
-    name: '',
-    url: '',
-  },
-  moonbeam: {
-    name: '',
-    url: '',
-  },
-  moonriver: {
-    name: '',
-    url: '',
-  },
-  evmos: {
-    name: '',
-    url: '',
-  },
-  celo: {
-    name: '',
-    url: '',
-  }
-}
-	//console.log(process.env);
-	if (networkType === 'avalanche') return 'https://api.avax.network/ext/bc/C/rpc';
-	else if (networkType === 'polygon')
-		return `https://polygon-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
-	else if (networkType === 'arbitrum')
-		return `https://arb-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
-	else if (networkType === 'optimism')
-		return `https://opt-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
-	else if (networkType === 'aurora') return `https://aurora-mainnet.infura.io/v3/${alchemyApiKey}`;
-	else if (networkType === 'aurora-testnet')
-		return `https://aurora-testnet.infura.io/v3/${alchemyApiKey}`;
-	else if (networkType === 'gnosis') return `https://rpc.gnosischain.com/`;
-	else if (networkType === 'fantom') return `https://rpc.ftm.tools/`;
-	else return `https://eth-mainnet.alchemyapi.io/v2/${alchemyApiKey}`;
-}
+// const BLOCK_EXPLORER_URLS = {
+//   polygon: etherscanBlockExplorers.polygon,
+//   arbitrum: etherscanBlockExplorers.arbitrum,
+//   optimism: etherscanBlockExplorers.optimism,
+//   ropsten: etherscanBlockExplorers.ropsten,
+//   rinkeby: etherscanBlockExplorers.rinkeby,
+//   goerli: etherscanBlockExplorers.goerli,
+//   kovan: etherscanBlockExplorers.kovan,
+//   optimism: etherscanBlockExplorers.optimism,
+//   optimismKovan: etherscanBlockExplorers.optimismKovan,
+//   polygon: etherscanBlockExplorers.polygon,
+//   polygonMumbai: etherscanBlockExplorers.polygonMumbai,
+//   arbitrum: etherscanBlockExplorers.arbitrum,
+//   arbitrumRinkeby: etherscanBlockExplorers.arbitrumRinkeby,
+//   avalanche: {
+//     name: 'Snowtrace',
+//     url: 'https://snowtrace.io/',
+//   },
+//   avalancheFuji: {
+//     name: 'Snowtrace Testnet',
+//     url: 'https://testnet.snowtrace.io/',
+//   },
+//   aurora: {
+//     name: '',
+//     url: '',
+//   },
+//   auroraTestnet: {
+//     name: '',
+//     url: '',
+//   },
+//   gnosis: {
+//     name: 'Block Scout',
+//     url: 'https://blockscout.com/xdai/mainnet/',
+//   },
+//   fantom: {
+//     name: '',
+//     url: '',
+//   },
+//   moonbeam: {
+//     name: '',
+//     url: '',
+//   },
+//   moonriver: {
+//     name: '',
+//     url: '',
+//   },
+//   evmos: {
+//     name: '',
+//     url: '',
+//   },
+//   celo: {
+//     name: '',
+//     url: '',
+//   }
+// }
+// 	//console.log(process.env);
+// 	if (networkType === 'avalanche') return 'https://api.avax.network/ext/bc/C/rpc';
+// 	else if (networkType === 'polygon')
+// 		return `https://polygon-mainnet.g.alchemy.com/v2/${ process.env.ALCHEMY_API_KEY}`;
+// 	else if (networkType === 'arbitrum')
+// 		return `https://arb-mainnet.g.alchemy.com/v2/${ process.env.ALCHEMY_API_KEY}`;
+// 	else if (networkType === 'optimism')
+// 		return `https://opt-mainnet.g.alchemy.com/v2/${ process.env.ALCHEMY_API_KEY}`;
+// 	else if (networkType === 'aurora') return `https://aurora-mainnet.infura.io/v3/${ process.env.ALCHEMY_API_KEY}`;
+// 	else if (networkType === 'aurora-testnet')
+// 		return `https://aurora-testnet.infura.io/v3/${ process.env.ALCHEMY_API_KEY}`;
+// 	else if (networkType === 'gnosis') return `https://rpc.gnosischain.com/`;
+// 	else if (networkType === 'fantom') return `https://rpc.ftm.tools/`;
+// 	else return `https://eth-mainnet.alchemyapi.io/v2/${ process.env.ALCHEMY_API_KEY}`;
 
 function getNetworkUrl(networkType: string) {
 	//console.log(process.env);
 	if (networkType === 'avalanche') return 'https://api.avax.network/ext/bc/C/rpc';
 	else if (networkType === 'polygon')
-		return `https://polygon-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
+		return `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
 	else if (networkType === 'arbitrum')
-		return `https://arb-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
+		return `https://arb-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
 	else if (networkType === 'optimism')
-		return `https://opt-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
-	else if (networkType === 'aurora') return `https://aurora-mainnet.infura.io/v3/${alchemyApiKey}`;
+		return `https://opt-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
+	else if (networkType === 'aurora')
+		return `https://aurora-mainnet.infura.io/v3/${process.env.ALCHEMY_API_KEY}`;
 	else if (networkType === 'aurora-testnet')
-		return `https://aurora-testnet.infura.io/v3/${alchemyApiKey}`;
+		return `https://aurora-testnet.infura.io/v3/${process.env.ALCHEMY_API_KEY}`;
 	else if (networkType === 'gnosis') return `https://rpc.gnosischain.com/`;
 	else if (networkType === 'fantom') return `https://rpc.ftm.tools/`;
-	else return `https://eth-mainnet.alchemyapi.io/v2/${alchemyApiKey}`;
+	else return `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`;
 }
 
 export const optimism: Chain = {

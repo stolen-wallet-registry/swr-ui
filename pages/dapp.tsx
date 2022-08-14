@@ -15,11 +15,34 @@ import {
 	ListItem,
 	Checkbox,
 	Text,
+	CheckboxGroup,
+	Spacer,
+	useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import {
+	useAccount,
+	useContract,
+	useEnsName,
+	useProvider,
+	useSigner,
+	useNetwork,
+	useContractReads,
+} from 'wagmi';
 
-import { buildAcknowledgementStruct, use712Signature } from '../hooks/use712Signature';
+import {
+	buildAcknowledgementStruct,
+	signTypedDataProps,
+	use712Signature,
+} from '../hooks/use712Signature';
+import { CONTRACT_ADDRESSES } from '../utils/constants';
+import {
+	StolenWalletRegistryAbi,
+	StolenWalletRegistryFactory,
+} from '@wallet-hygiene/swr-contracts';
+import { ethers } from 'ethers';
+import NftDisplayModal from '@components/SWRModal';
+import SWRModal from '@components/SWRModal';
 
 interface RegistrationSectionProps {
 	title: string;
@@ -54,31 +77,67 @@ const HIGHLIGHT_STYLE = {
 };
 
 const Dapp: NextPage = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
-	const minPayment = '0.01';
 	const [showSection, setShowSection] = useState<RegistrationSection>('standard');
-	const { address, isConnected } = useAccount();
+	const [modalTitle, setModalTitle] = useState('');
 	const [isMounted, setIsMounted] = useState(false);
+	const [signer, setSigner] = useState<ethers.Signer>();
+
+	const provider = useProvider();
+	const { chain } = useNetwork();
+
+	const minPayment = '0.01';
+
+	const contract = useContract({
+		addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+		contractInterface: StolenWalletRegistryAbi,
+		signerOrProvider: signer || provider,
+	});
+
+	// const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
+	// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+	// 	signer || provider
+	// );
+
+	const { connector, address, isConnected } = useAccount({
+		onConnect({ address, connector, isReconnected }) {
+			console.log('Connected', { address, connector, isReconnected });
+		},
+	});
+
+	const ensData = useEnsName({
+		address,
+		chainId: 1,
+	});
+
+	useSigner({
+		onSuccess: (wallet) => {
+			setSigner(wallet!);
+			contract.connect(wallet);
+		},
+	});
 
 	useEffect(() => {
 		setColorMode('light');
 		setIsMounted(true);
 	}, []);
 
-	const RegistrationSection: React.FC<RegistrationSectionProps> = ({ title, children }) => {
+	const RegistrationSection: React.FC<RegistrationSectionProps> = (props) => {
 		return (
 			<Flex
+				{...props}
 				width="50%"
 				borderRadius={10}
 				p={5}
 				boxShadow="base"
 				flexDirection="column"
-				border={'5px solid blackAlpha.900'}
+				border="2px solid RGBA(0, 0, 0, 0.50)"
 			>
 				<Heading size="md" pb={5} pt={5}>
-					{title}
+					{props.title}
 				</Heading>
-				{children}
+				{props.children}
 			</Flex>
 		);
 	};
@@ -92,7 +151,8 @@ const Dapp: NextPage = () => {
 	};
 
 	const StandardRegistration = () => {
-		const [includeNFT, setIncludeNFT] = useState<'Yes' | 'No' | null>(null);
+		const [includeWalletNFT, setIncludeWalletNFT] = useState<boolean>();
+		const [includeSupportNFT, setIncludeSupportNFT] = useState<boolean>();
 		const [showStep, setShowStep] = useState<StandardSteps>('requirements');
 
 		const Requirements = () => {
@@ -132,65 +192,183 @@ const Dapp: NextPage = () => {
 			);
 		};
 
-		const CompletionSteps: React.FC = ({ children }) => {
+		const CompletionSteps: React.FC = () => {
 			return (
 				<RegistrationSection title="Completion Steps">
-					<Box pb={10}>
-						<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-							<ListItem>Select value for the optional NFT.</ListItem>
-							<ListItem>Sign and pay an "Acknowledgement of Registration" transaction.</ListItem>
-							<ListItem>Wait 2-4 minutes grace period before you are allowed to register.</ListItem>
-							<ListItem>Sign and pay for your wallet to be added to the Registry.</ListItem>
-						</OrderedList>
-					</Box>
-					{children}
+					<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
+						<ListItem key={1}>Select value for the optional NFT.</ListItem>
+						<ListItem key={2}>
+							Sign and pay an "Acknowledgement of Registration" transaction.
+						</ListItem>
+						<ListItem key={3}>
+							Wait 2-4 minutes grace period before you are allowed to register.
+						</ListItem>
+						<ListItem key={4}>Sign and pay for your wallet to be added to the Registry.</ListItem>
+					</OrderedList>
 				</RegistrationSection>
 			);
 		};
 
 		const StandardAcknowledgement = () => {
-			const [isAcknowledged, setIsAcknowledged] = useState(false);
+			const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
+			const { data, isError, isLoading } = useContractReads({
+				contracts: [
+					{
+						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+						contractInterface: StolenWalletRegistryAbi,
+						functionName: 'generateHashStruct',
+						args: [address],
+					},
+					{
+						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+						contractInterface: StolenWalletRegistryAbi,
+						functionName: 'nonces',
+						args: [address],
+					},
+					{
+						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+						contractInterface: StolenWalletRegistryAbi,
+						functionName: 'ACKNOWLEDGEMENT_TYPEHASH',
+					},
+					{
+						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+						contractInterface: StolenWalletRegistryAbi,
+						functionName: 'REGISTRATION_TYPEHASH',
+					},
+				],
+			});
+
+			useEffect(() => {
+				console.log(isError, isLoading, data);
+				const buildStruct = async () => {
+					// const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
+					// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+					// 	signer || provider
+					// );
+
+					// const contract = useContract({
+					// 	addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+					// 	contractInterface: StolenWalletRegistryAbi,
+					// 	signerOrProvider: signer,
+					// });
+					console.log(data);
+					const owner = ensData.data || address;
+					const { deadline, hashStruct } = await contract.generateHashStruct(address!);
+					// debugger;
+					// const { deadline, hashStruct } = await hshStructTx.wait();
+
+					const nonce = await contract.nonces(address!);
+
+					// const nonce = await noncesTx.wait();
+
+					console.log(owner, nonce, deadline, hashStruct, owner);
+					const struct = await buildAcknowledgementStruct({
+						forwarder: address!,
+						chainId: Number(chain?.id),
+						nonces: nonce.toNumber(),
+						deadline,
+						owner: owner as string,
+					});
+
+					setAcknowledgment(struct);
+					debugger;
+				};
+				if (isConnected && isMounted) {
+					buildStruct();
+				}
+			}, [isConnected, address]);
+
+			console.log(acknowledgement);
 
 			return (
-				<CompletionSteps>
-					<Box>
-						<Box textAlign="right" mr={10}>
-							<Text fontSize="14px">(additional $5)</Text>
-							<Text fontWeight="bold">Include Optional NFT</Text>
-						</Box>
-						<Center justifyContent="right" mt={5}>
+				<RegistrationSection title="Include NFTs?">
+					<Flex>
+						<Text mr={20}>
+							Include{' '}
+							<Text as="span" fontWeight="bold" decoration="underline">
+								Supportive
+							</Text>{' '}
+							NFT?
+						</Text>
+						<Spacer />
+						<CheckboxGroup>
 							<Checkbox
 								width={[100, 100]}
-								isChecked={includeNFT === 'Yes'}
-								onChange={() => setIncludeNFT('Yes')}
+								isChecked={includeWalletNFT}
+								onChange={() => setIncludeWalletNFT(true)}
 							>
 								Yes
 							</Checkbox>
 							<Checkbox
 								width={[100, 100]}
-								isChecked={includeNFT === 'No'}
-								onChange={() => setIncludeNFT('No')}
+								onChange={() => setIncludeWalletNFT(false)}
+								isChecked={includeWalletNFT === false}
 							>
 								No
 							</Checkbox>
-						</Center>
-					</Box>
-					<Flex justifyContent="flex-end">
-						<Button width={[200, 250]} m={5} disabled={includeNFT === null}>
+						</CheckboxGroup>
+					</Flex>
+					<Flex>
+						<Text mr={20}>
+							Include{' '}
+							<Text as="span" fontWeight="bold" decoration="underline">
+								Wallet
+							</Text>{' '}
+							NFT?
+						</Text>
+						<Spacer />
+						<CheckboxGroup>
+							<Checkbox
+								width={[100, 100]}
+								isChecked={includeSupportNFT}
+								onChange={() => setIncludeSupportNFT(true)}
+							>
+								Yes
+							</Checkbox>
+							<Checkbox
+								width={[100, 100]}
+								isChecked={includeSupportNFT === false}
+								onChange={() => setIncludeSupportNFT(false)}
+							>
+								No
+							</Checkbox>
+						</CheckboxGroup>
+					</Flex>
+					<Flex alignSelf="flex-end">
+						<Button width={[200, 250]} m={5}>
+							View NFT
+						</Button>
+						<Button
+							width={[200, 250]}
+							m={5}
+							onClick={() => use712Signature(acknowledgement!)}
+							disabled={
+								includeWalletNFT === undefined &&
+								includeSupportNFT === undefined &&
+								acknowledgement === undefined
+							}
+						>
 							Sign and Pay
 						</Button>
 					</Flex>
-				</CompletionSteps>
+				</RegistrationSection>
 			);
 		};
 
 		return (
 			<>
-				{showStep === 'requirements' && <Requirements />}
-				{showStep === 'acknowledge-and-pay' && <StandardAcknowledgement />}
+				{/* {showStep === 'requirements' && <Requirements />} */}
+				{showStep === 'requirements' && (
+					<>
+						<CompletionSteps />
+						<StandardAcknowledgement />
+					</>
+				)}
 			</>
 		);
 	};
+
+	// acknowledge-and-pay
 
 	const ButtonChoices = () => {
 		const handleOnClick = (section: RegistrationSection) => {
@@ -269,6 +447,7 @@ const Dapp: NextPage = () => {
 				}
 			`}</style>
 			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
+			<SWRModal title={modalTitle} isOpen={isOpen} onOpen={onOpen} onClose={onClose}></SWRModal>
 		</LightMode>
 	);
 };

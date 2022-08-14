@@ -26,15 +26,24 @@ import React from 'react';
 import { RAINBOWKIT_COLORS } from '../theme/rainbowkit-themes/base';
 
 export const testnets = [
-	chain.rinkeby,
+	// chain.rinkeby,
 	chain.goerli,
-	chain.optimismKovan,
-	chain.polygonMumbai,
-	chain.arbitrumRinkeby,
+	// chain.optimismKovan,
+	// chain.polygonMumbai,
+	// chain.arbitrumRinkeby,
 	chain.foundry,
+	// chain.localhost,
 ];
 
-export const supporttedChains = [chain.polygon, chain.optimism, chain.arbitrum];
+export const supporttedChains = [
+	chain.mainnet,
+	chain.polygon,
+	chain.optimism,
+	chain.arbitrum,
+	...testnets,
+];
+
+console.log(supporttedChains);
 
 const { chains, provider, webSocketProvider } = configureChains(supporttedChains, [
 	infuraProvider({ infuraId: process.env.INFURA_ID }),
@@ -43,7 +52,7 @@ const { chains, provider, webSocketProvider } = configureChains(supporttedChains
 
 const { wallets } = getDefaultWallets({
 	appName: 'RainbowKit Demo',
-	chains,
+	chains: chains,
 });
 
 const Disclaimer: DisclaimerComponent = () => (
