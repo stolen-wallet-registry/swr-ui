@@ -1,4 +1,5 @@
 import DappLayout from '../components/DappLayout';
+import StolenWalletSVG from '../assets/stolen-wallet.svg';
 
 import type { NextPage } from 'next';
 import {
@@ -18,6 +19,13 @@ import {
 	CheckboxGroup,
 	Spacer,
 	useDisclosure,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
@@ -41,8 +49,9 @@ import {
 	StolenWalletRegistryFactory,
 } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
-import NftDisplayModal from '@components/SWRModal';
-import SWRModal from '@components/SWRModal';
+import { SWRModal, ModalButton } from '@components/SWRModal';
+import NftModalContent from '@components/NftModalContent';
+import { title } from 'process';
 
 interface RegistrationSectionProps {
 	title: string;
@@ -80,7 +89,6 @@ const Dapp: NextPage = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
 	const [showSection, setShowSection] = useState<RegistrationSection>('standard');
-	const [modalTitle, setModalTitle] = useState('');
 	const [isMounted, setIsMounted] = useState(false);
 	const [signer, setSigner] = useState<ethers.Signer>();
 
@@ -238,6 +246,7 @@ const Dapp: NextPage = () => {
 				],
 			});
 
+			console.log('isOpen', isOpen, onOpen);
 			useEffect(() => {
 				console.log(isError, isLoading, data);
 				const buildStruct = async () => {
@@ -335,11 +344,10 @@ const Dapp: NextPage = () => {
 						</CheckboxGroup>
 					</Flex>
 					<Flex alignSelf="flex-end">
-						<Button width={[200, 250]} m={5}>
+						<Button m={5} onClick={onOpen}>
 							View NFT
 						</Button>
 						<Button
-							width={[200, 250]}
 							m={5}
 							onClick={() => use712Signature(acknowledgement!)}
 							disabled={
@@ -374,7 +382,7 @@ const Dapp: NextPage = () => {
 		const handleOnClick = (section: RegistrationSection) => {
 			setShowSection(section);
 		};
-
+		console.log('isOpen', isOpen, onOpen);
 		return (
 			<Box mt={20} mb={10}>
 				<Heading size="lg" letterSpacing="0.1em" textAlign="center">
@@ -447,7 +455,24 @@ const Dapp: NextPage = () => {
 				}
 			`}</style>
 			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
-			<SWRModal title={modalTitle} isOpen={isOpen} onOpen={onOpen} onClose={onClose}></SWRModal>
+			<Modal isOpen={isOpen} onClose={onClose} isCentered>
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader>Test</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<Flex flexDirection="column">
+							<Box>
+								<Heading as="h1">Support NFT</Heading>
+								<StolenWalletSVG />
+							</Box>
+						</Flex>
+					</ModalBody>
+					<ModalFooter>
+						<Button onClick={onClose}>Close</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
 		</LightMode>
 	);
 };
