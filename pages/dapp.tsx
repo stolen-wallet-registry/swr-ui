@@ -137,7 +137,7 @@ const Dapp: NextPage = () => {
 				{...props}
 				width="50%"
 				borderRadius={10}
-				p={5}
+				p={10}
 				boxShadow="base"
 				flexDirection="column"
 				border="2px solid RGBA(0, 0, 0, 0.50)"
@@ -246,7 +246,6 @@ const Dapp: NextPage = () => {
 				],
 			});
 
-			console.log('isOpen', isOpen, onOpen);
 			useEffect(() => {
 				console.log(isError, isLoading, data);
 				const buildStruct = async () => {
@@ -254,33 +253,27 @@ const Dapp: NextPage = () => {
 					// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
 					// 	signer || provider
 					// );
-
 					// const contract = useContract({
 					// 	addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
 					// 	contractInterface: StolenWalletRegistryAbi,
 					// 	signerOrProvider: signer,
 					// });
-					console.log(data);
-					const owner = ensData.data || address;
-					const { deadline, hashStruct } = await contract.generateHashStruct(address!);
+					// console.log(data);
+					// const owner = ensData.data || address;
+					// const { deadline, hashStruct } = await contract.generateHashStruct(address!);
 					// debugger;
 					// const { deadline, hashStruct } = await hshStructTx.wait();
-
-					const nonce = await contract.nonces(address!);
-
+					// const nonce = await contract.nonces(address!);
 					// const nonce = await noncesTx.wait();
-
-					console.log(owner, nonce, deadline, hashStruct, owner);
-					const struct = await buildAcknowledgementStruct({
-						forwarder: address!,
-						chainId: Number(chain?.id),
-						nonces: nonce.toNumber(),
-						deadline,
-						owner: owner as string,
-					});
-
-					setAcknowledgment(struct);
-					debugger;
+					// console.log(owner, nonce, deadline, hashStruct, owner);
+					// const struct = await buildAcknowledgementStruct({
+					// 	forwarder: address!,
+					// 	chainId: Number(chain?.id),
+					// 	nonces: nonce.toNumber(),
+					// 	deadline,
+					// 	owner: owner as string,
+					// });
+					// setAcknowledgment(struct);
 				};
 				if (isConnected && isMounted) {
 					buildStruct();
@@ -382,7 +375,7 @@ const Dapp: NextPage = () => {
 		const handleOnClick = (section: RegistrationSection) => {
 			setShowSection(section);
 		};
-		console.log('isOpen', isOpen, onOpen);
+
 		return (
 			<Box mt={20} mb={10}>
 				<Heading size="lg" letterSpacing="0.1em" textAlign="center">
@@ -457,14 +450,35 @@ const Dapp: NextPage = () => {
 			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
 			<Modal isOpen={isOpen} onClose={onClose} isCentered>
 				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>Test</ModalHeader>
+				<ModalContent minWidth={1000}>
+					<ModalHeader>Preview of NFTs</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						<Flex flexDirection="column">
+						<Flex p={20}>
 							<Box>
-								<Heading as="h1">Support NFT</Heading>
-								<StolenWalletSVG />
+								<Heading as="h1" mb={10} textAlign="center">
+									Support NFT
+								</Heading>
+								<Center>
+									<StolenWalletSVG />
+								</Center>
+								<OrderedList mt={10} spacing={2} fontWeight="bold">
+									<ListItem>All funds go to public goods</ListItem>
+									<ListItem>Advertise your support of the SWR</ListItem>
+								</OrderedList>
+							</Box>
+							<Spacer />
+							<Box>
+								<Heading as="h1" mb={10} textAlign="center">
+									Wallet NFT
+								</Heading>
+								<Center>
+									<StolenWalletSVG />
+								</Center>
+								<OrderedList mt={10} spacing={2} fontWeight="bold">
+									<ListItem>All funds go to public goods</ListItem>
+									<ListItem>non-burnable, non-tradeable</ListItem>
+								</OrderedList>
 							</Box>
 						</Flex>
 					</ModalBody>
