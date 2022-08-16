@@ -1,8 +1,9 @@
+// es-lint-ignore
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
 	reactStrictMode: true,
-	webpack(config: any) {
+	webpack(config) {
 		config.module.rules.push({
 			test: /\.svg$/,
 			issuer: {
@@ -13,10 +14,6 @@ const nextConfig = {
 
 		return config;
 	},
-	i18n: {
-		locales: ['en', 'de'],
-		defaultLocale: 'en',
-	},
 };
 
-export default nextConfig;
+module.exports = nextConfig;
