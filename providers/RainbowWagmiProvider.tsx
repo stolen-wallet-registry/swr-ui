@@ -43,8 +43,6 @@ export const supporttedChains = [
 	...testnets,
 ];
 
-console.log(supporttedChains);
-
 const { chains, provider, webSocketProvider } = configureChains(supporttedChains, [
 	infuraProvider({ infuraId: process.env.INFURA_ID }),
 	publicProvider(),

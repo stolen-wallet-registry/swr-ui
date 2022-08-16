@@ -1,7 +1,7 @@
 import DappLayout from '../components/DappLayout';
 import StolenWalletSVG from '../assets/stolen-wallet.svg';
 
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import {
 	Box,
 	Button,
@@ -52,6 +52,7 @@ import { ethers } from 'ethers';
 import { SWRModal, ModalButton } from '@components/SWRModal';
 import NftModalContent from '@components/NftModalContent';
 import { title } from 'process';
+import { useLocale } from 'next-intl';
 
 interface RegistrationSectionProps {
 	title: string;
@@ -85,7 +86,18 @@ const HIGHLIGHT_STYLE = {
 	bg: 'blackAlpha.900',
 };
 
-const Dapp: NextPage = () => {
+export const getStaticProps: GetStaticProps = async (context) => {
+	return {
+		props: {
+			// You can get the messages from anywhere you like. The recommended
+			// pattern is to put them in JSON files separated by language and read
+			// the desired one based on the `locale` received from Next.js.
+			messages: (await import(`../messages/dapp/${context.locale}.json`)).default,
+		},
+	};
+};
+
+const Dapp = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
 	const [showSection, setShowSection] = useState<RegistrationSection>('standard');
@@ -94,6 +106,7 @@ const Dapp: NextPage = () => {
 
 	const provider = useProvider();
 	const { chain } = useNetwork();
+	const locale = useLocale();
 
 	const minPayment = '0.01';
 

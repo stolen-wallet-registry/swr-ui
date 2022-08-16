@@ -1,0 +1,14 @@
+{
+	"Preview": {
+		"title": "Aperçu des NFT",
+		"heading": {
+			"supportive": "Prise en charge NFT",
+			"wallet": "Portefeuille NFT"
+		},
+		"features": {
+			"supportive": ["Tous les fonds vont aux biens publics", "Annoncez votre soutien au SWR"],
+			"wallet": ["Tous les fonds vont aux biens publics", "incombustible, non échangeable"]
+		},
+		"lastUpdated": "This example was updated {lastUpdatedRelative} ({lastUpdated, date, short})."
+	}
+}

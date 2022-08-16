@@ -1,17 +1,17 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { NextIntlProvider } from 'next-intl';
 
 import { theme } from '../theme';
 import { AppProps } from 'next/app';
-import RainbowKitWagmiProvider from '../contexts/RainbowWagmiProvider';
+import RainbowKitWagmiProvider from '@providers/RainbowWagmiProvider';
+import NextIntlLocaleProvider from '@providers/NextIntlLocaleProvider';
 
 function App({ Component, pageProps }: AppProps) {
 	return (
 		<ChakraProvider theme={theme}>
 			<RainbowKitWagmiProvider>
-				<NextIntlProvider messages={pageProps.messages}>
+				<NextIntlLocaleProvider pageProps={pageProps}>
 					<Component {...pageProps} />
-				</NextIntlProvider>
+				</NextIntlLocaleProvider>
 			</RainbowKitWagmiProvider>
 		</ChakraProvider>
 	);

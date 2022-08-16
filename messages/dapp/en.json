@@ -1,0 +1,13 @@
+{
+	"Preview": {
+		"title": "Preview of NFTs",
+		"heading": {
+			"supportive": "Support NFT",
+			"wallet": "Wallet NFT"
+		},
+		"features": {
+			"supportive": ["All funds go to public goods", "Advertise your support of the SWR"],
+			"wallet": ["All funds go to public goods", "non-burnable, non-tradeable"]
+		}
+	}
+}
