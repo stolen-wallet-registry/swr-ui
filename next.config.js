@@ -1,4 +1,3 @@
-// es-lint-ignore
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
