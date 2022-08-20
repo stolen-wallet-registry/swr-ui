@@ -53,10 +53,9 @@ import { ethers } from 'ethers';
 import { useLocale } from 'next-intl';
 
 import useTimer from '../hooks/useTimer';
-
-interface RegistrationSectionProps {
-	title: string;
-}
+import { HIGHLIGHT_STYLE } from '@utils/helpers';
+import { RegistrationSectionProps } from '@components/RegistrationSection';
+import Requirements from '@components/StandardRegistration/Requirements';
 
 type RegistrationSection = 'standard' | 'selfRelay' | 'p2pRelay';
 type StandardSteps = 'requirements' | 'acknowledge-and-pay' | 'grace-period' | 'register-and-pay';
@@ -77,14 +76,6 @@ type P2PRelaySteps =
 	| 'sign-register'
 	| 'send-to-peer'
 	| 'wait-for-peer-register-pay';
-
-const HIGHLIGHT_STYLE = {
-	px: '1',
-	py: '1',
-	rounded: 'full',
-	color: 'white',
-	bg: 'blackAlpha.900',
-};
 
 type PreviewMessageKey = 'default' | 'en' | 'es' | 'fr';
 interface DappProps {
@@ -186,43 +177,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		const [includeWalletNFT, setIncludeWalletNFT] = useState<boolean>();
 		const [includeSupportNFT, setIncludeSupportNFT] = useState<boolean>();
 		const [showStep, setShowStep] = useState<StandardSteps>('requirements');
-
-		const Requirements = () => {
-			return (
-				<RegistrationSection title="Standard Registration">
-					<Box pb={10}>
-						Requirements:
-						<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-							<ListItem>
-								<Highlight key={address} query={[`${address}`]} styles={HIGHLIGHT_STYLE}>
-									{`Your connected Wallet (${address}) is compromised.`}
-								</Highlight>
-							</ListItem>
-							<ListItem>Your are connected to one of the supported chains.</ListItem>
-							<ListItem>
-								<Highlight
-									key={minPayment}
-									query={[
-										`${minPayment}(Eth|NativeToken)`,
-										'supported chains',
-										'(Protocol Guild|Retro PG)',
-									]}
-									styles={HIGHLIGHT_STYLE}
-								>{`You have ${minPayment}(Eth|NativeToken) that will go to the (Protocol Guild|Retro PG).`}</Highlight>
-							</ListItem>
-						</OrderedList>
-					</Box>
-					<Button
-						alignSelf="flex-end"
-						width={[200, 250]}
-						m={5}
-						onClick={() => setShowStep('acknowledge-and-pay')}
-					>
-						Begin
-					</Button>
-				</RegistrationSection>
-			);
-		};
 
 		const CompletionSteps: React.FC = () => {
 			return (
@@ -428,7 +382,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		const expiryTimestamp = new Date().getTime() + 1 * 5 * 1000;
 		return (
 			<>
-				{showStep === 'requirements' && <Requirements />}
+				{showStep === 'requirements' && <Requirements setShowStep={setShowStep} />}
 				{showStep !== 'requirements' && <CompletionSteps />}
 				{showStep === 'acknowledge-and-pay' && <StandardAcknowledgement />}
 				{showStep === 'grace-period' && <GracePeriod expiryTimestamp={expiryTimestamp} />}

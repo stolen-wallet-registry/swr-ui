@@ -21,6 +21,7 @@
 			"@messages/*": ["./messages/*"],
 			"@providers/*": ["./providers/*"],
 			"@components/*": ["./components/*"],
+			"@interfaces/*": ["./interfaces/*"],
 			"@containers/*": ["./containers/*"],
 			"@constants/*": ["./constants/*"],
 			"@hooks/*": ["./hooks/*"],
