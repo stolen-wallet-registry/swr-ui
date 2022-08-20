@@ -18,7 +18,7 @@ const getDelayFromExpiryTimestamp = (expiryTimestamp: number) => {
 interface UseTimerProps {
 	expiry: number;
 	onExpire: () => void;
-	autoStart: boolean;
+	autoStart?: boolean;
 }
 
 const useTimer = ({ expiry, onExpire, autoStart = true }: UseTimerProps) => {

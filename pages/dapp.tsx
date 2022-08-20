@@ -52,6 +52,8 @@ import {
 import { ethers } from 'ethers';
 import { useLocale } from 'next-intl';
 
+import useTimer from '../hooks/useTimer';
+
 interface RegistrationSectionProps {
 	title: string;
 }
@@ -376,9 +378,21 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 			);
 		};
 
-		const GracePeriod = () => {
+		const GracePeriod = ({ expiryTimestamp }: { expiryTimestamp: number }) => {
+			const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
+				expiry: expiryTimestamp,
+				onExpire: () => console.warn('onExpire called'),
+			});
+
+			useEffect(() => {
+				start();
+			}, []);
+
 			return (
 				<RegistrationSection title="Grace Period">
+					<div style={{ fontSize: '100px' }}>
+						<span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
+					</div>
 					<Flex>
 						<Text mr={20}>Testing</Text>
 					</Flex>
@@ -390,12 +404,13 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 			return <div></div>;
 		};
 
+		const expiryTimestamp = new Date().getTime() + 2 * 60 * 1000;
 		return (
 			<>
 				{showStep === 'requirements' && <Requirements />}
 				{showStep !== 'requirements' && <CompletionSteps />}
 				{showStep === 'acknowledge-and-pay' && <StandardAcknowledgement />}
-				{showStep === 'grace-period' && <GracePeriod />}
+				{showStep === 'grace-period' && <GracePeriod expiryTimestamp={expiryTimestamp} />}
 				{showStep === 'register-and-pay' && <RegisterAndPay />}
 			</>
 		);
