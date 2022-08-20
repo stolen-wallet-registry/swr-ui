@@ -109,24 +109,6 @@ export const use712Signature = ({ domain, types, value }: signTypedDataProps): s
 	});
 
 	console.log(data, isError, isLoading, isSuccess, signTypedData);
-	// const value = {
-	// 	from: {
-	// 		name: 'Cow',
-	// 		wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
-	// 	},
-	// 	to: {
-	// 		name: 'Bob',
-	// 		wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
-	// 	},
-	// 	contents: 'Hello, Bob!',
-	// };
 
-	// store currenct transaction attributes in local storage
-	// forwarder
-	// nonce
-	// deadline
-	// domain
-	debugger;
-	// return signature
-	return '';
+	return data as string;
 };

@@ -1,7 +1,8 @@
 import DappLayout from '../components/DappLayout';
 import StolenWalletSVG from '../assets/stolen-wallet.svg';
+import pick from 'lodash/pick';
 
-import type { GetStaticProps, NextPage } from 'next';
+import type { GetStaticProps } from 'next';
 import {
 	Box,
 	Button,
@@ -49,9 +50,6 @@ import {
 	StolenWalletRegistryFactory,
 } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
-import { SWRModal, ModalButton } from '@components/SWRModal';
-import NftModalContent from '@components/NftModalContent';
-import { title } from 'process';
 import { useLocale } from 'next-intl';
 
 interface RegistrationSectionProps {
@@ -86,18 +84,30 @@ const HIGHLIGHT_STYLE = {
 	bg: 'blackAlpha.900',
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+type PreviewMessageKey = 'default' | 'en' | 'es' | 'fr';
+interface DappProps {
+	messages: IntlMessages;
+	previewMessages: Record<PreviewMessageKey, IntlMessages>;
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+	const namespaces = ['Preview'];
+	const defaultLanguage = (await import(`../messages/dapp/${locale}.json`)).default;
 	return {
 		props: {
-			// You can get the messages from anywhere you like. The recommended
-			// pattern is to put them in JSON files separated by language and read
-			// the desired one based on the `locale` received from Next.js.
-			messages: (await import(`../messages/dapp/${context.locale}.json`)).default,
+			// importing
+			messages: defaultLanguage,
+			previewMessages: {
+				default: pick(defaultLanguage, namespaces),
+				en: pick((await import(`../messages/dapp/en.json`)).default, namespaces),
+				es: pick((await import(`../messages/dapp/es.json`)).default, namespaces),
+				fr: pick((await import(`../messages/dapp/fr.json`)).default, namespaces),
+			},
 		},
 	};
 };
 
-const Dapp = () => {
+const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
 	const [showSection, setShowSection] = useState<RegistrationSection>('standard');
@@ -106,7 +116,6 @@ const Dapp = () => {
 
 	const provider = useProvider();
 	const { chain } = useNetwork();
-	const locale = useLocale();
 
 	const minPayment = '0.01';
 
@@ -148,7 +157,7 @@ const Dapp = () => {
 		return (
 			<Flex
 				{...props}
-				width="50%"
+				w={[650, 800, 900]}
 				borderRadius={10}
 				p={10}
 				boxShadow="base"
@@ -293,8 +302,6 @@ const Dapp = () => {
 				}
 			}, [isConnected, address]);
 
-			console.log(acknowledgement);
-
 			return (
 				<RegistrationSection title="Include NFTs?">
 					<Flex>
@@ -355,7 +362,7 @@ const Dapp = () => {
 						</Button>
 						<Button
 							m={5}
-							onClick={() => use712Signature(acknowledgement!)}
+							onClick={() => setShowStep('grace-period')} // use712Signature(acknowledgement!)
 							disabled={
 								includeWalletNFT === undefined &&
 								includeSupportNFT === undefined &&
@@ -369,21 +376,99 @@ const Dapp = () => {
 			);
 		};
 
+		const GracePeriod = () => {
+			return (
+				<RegistrationSection title="Grace Period">
+					<Flex>
+						<Text mr={20}>Testing</Text>
+					</Flex>
+				</RegistrationSection>
+			);
+		};
+
+		const RegisterAndPay = () => {
+			return <div></div>;
+		};
+
 		return (
 			<>
-				{/* {showStep === 'requirements' && <Requirements />} */}
-				{showStep === 'requirements' && (
-					<>
-						<CompletionSteps />
-						<StandardAcknowledgement />
-					</>
-				)}
+				{showStep === 'requirements' && <Requirements />}
+				{showStep !== 'requirements' && <CompletionSteps />}
+				{showStep === 'acknowledge-and-pay' && <StandardAcknowledgement />}
+				{showStep === 'grace-period' && <GracePeriod />}
+				{showStep === 'register-and-pay' && <RegisterAndPay />}
 			</>
 		);
 	};
 
-	// acknowledge-and-pay
+	const PreviewModal = () => {
+		const [currentDemoLang, setCurrentDemoLang] = useState(previewMessages.default);
+		const [languages] = useState(Object.keys(previewMessages));
 
+		const onLangChange = () => {
+			if (typeof window === 'undefined') {
+				return;
+			}
+			const languages = [...Object.keys(previewMessages).filter((l) => l !== currentDemoLang)];
+			const newLang = languages[Math.floor(Math.random() * languages.length)];
+			setCurrentDemoLang(previewMessages[newLang as PreviewMessageKey]);
+
+			window.navigator.language = newLang;
+		};
+
+		// console.log(currentDemoLang, window.navigator);
+
+		return (
+			<Modal isOpen={isOpen} onClose={onClose} isCentered>
+				<ModalOverlay />
+				<ModalContent minWidth={1000}>
+					<ModalHeader>Preview of NFTs</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<Flex p={20}>
+							<Box>
+								<Heading as="h1" mb={10} textAlign="center">
+									Support NFT
+								</Heading>
+								<Center>
+									<StolenWalletSVG lang="es" />
+								</Center>
+								<OrderedList mt={10} spacing={2} fontWeight="bold">
+									<ListItem>All funds go to public goods</ListItem>
+									<ListItem>Advertise your support of the SWR</ListItem>
+								</OrderedList>
+							</Box>
+							<Spacer />
+							<Box>
+								<Heading as="h1" mb={10} textAlign="center">
+									Wallet NFT
+								</Heading>
+								<Center>
+									<iframe
+										src="https://svgshare.com/i/kFd.svg"
+										lang="es"
+										width="100%"
+										height="100%"
+									/>
+									{/* <StolenWalletSVG lang={currentDemoLang} /> */}
+								</Center>
+								<OrderedList mt={10} spacing={2} fontWeight="bold">
+									<ListItem>All funds go to public goods</ListItem>
+									<ListItem>non-burnable, non-tradeable</ListItem>
+								</OrderedList>
+							</Box>
+						</Flex>
+					</ModalBody>
+					<ModalFooter>
+						<Button onClick={onLangChange}>Change Language</Button>
+						<Button onClick={onClose}>Close</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+		);
+	};
+
+	// acknowledge-and-pay
 	const ButtonChoices = () => {
 		const handleOnClick = (section: RegistrationSection) => {
 			setShowSection(section);
@@ -461,45 +546,7 @@ const Dapp = () => {
 				}
 			`}</style>
 			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
-			<Modal isOpen={isOpen} onClose={onClose} isCentered>
-				<ModalOverlay />
-				<ModalContent minWidth={1000}>
-					<ModalHeader>Preview of NFTs</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
-						<Flex p={20}>
-							<Box>
-								<Heading as="h1" mb={10} textAlign="center">
-									Support NFT
-								</Heading>
-								<Center>
-									<StolenWalletSVG />
-								</Center>
-								<OrderedList mt={10} spacing={2} fontWeight="bold">
-									<ListItem>All funds go to public goods</ListItem>
-									<ListItem>Advertise your support of the SWR</ListItem>
-								</OrderedList>
-							</Box>
-							<Spacer />
-							<Box>
-								<Heading as="h1" mb={10} textAlign="center">
-									Wallet NFT
-								</Heading>
-								<Center>
-									<StolenWalletSVG />
-								</Center>
-								<OrderedList mt={10} spacing={2} fontWeight="bold">
-									<ListItem>All funds go to public goods</ListItem>
-									<ListItem>non-burnable, non-tradeable</ListItem>
-								</OrderedList>
-							</Box>
-						</Flex>
-					</ModalBody>
-					<ModalFooter>
-						<Button onClick={onClose}>Close</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+			<PreviewModal />
 		</LightMode>
 	);
 };
