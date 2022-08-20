@@ -285,7 +285,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 					// console.log(data);
 					// const owner = ensData.data || address;
 					// const { deadline, hashStruct } = await contract.generateHashStruct(address!);
-					// debugger;
 					// const { deadline, hashStruct } = await hshStructTx.wait();
 					// const nonce = await contract.nonces(address!);
 					// const nonce = await noncesTx.wait();
@@ -381,7 +380,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		const GracePeriod = ({ expiryTimestamp }: { expiryTimestamp: number }) => {
 			const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
 				expiry: expiryTimestamp,
-				onExpire: () => console.warn('onExpire called'),
+				onExpire: () => setShowStep('register-and-pay'),
 			});
 
 			useEffect(() => {
@@ -394,24 +393,46 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 						<span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
 					</div>
 					<Flex>
-						<Text mr={20}>Testing</Text>
+						<Text mr={20}>Testing Grace Period</Text>
 					</Flex>
 				</RegistrationSection>
 			);
 		};
 
-		const RegisterAndPay = () => {
-			return <div></div>;
+		const RegisterAndPay = ({ expiryTimestamp }: { expiryTimestamp: number }) => {
+			const [expired, setExpired] = useState(false);
+			const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
+				expiry: expiryTimestamp,
+				onExpire: () => setExpired(true),
+			});
+
+			useEffect(() => {
+				start();
+			}, []);
+
+			return (
+				<RegistrationSection title="Register and Pay">
+					<div style={{ fontSize: '100px' }}>
+						<span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
+					</div>
+					<Flex>
+						<Text mr={20}>Testing Register And Pay</Text>
+					</Flex>
+					<Button m={5} disabled={expired}>
+						Sign and Pay
+					</Button>
+				</RegistrationSection>
+			);
 		};
 
-		const expiryTimestamp = new Date().getTime() + 2 * 60 * 1000;
+		const expiryTimestamp = new Date().getTime() + 1 * 5 * 1000;
 		return (
 			<>
 				{showStep === 'requirements' && <Requirements />}
 				{showStep !== 'requirements' && <CompletionSteps />}
 				{showStep === 'acknowledge-and-pay' && <StandardAcknowledgement />}
 				{showStep === 'grace-period' && <GracePeriod expiryTimestamp={expiryTimestamp} />}
-				{showStep === 'register-and-pay' && <RegisterAndPay />}
+				{showStep === 'register-and-pay' && <RegisterAndPay expiryTimestamp={expiryTimestamp} />}
 			</>
 		);
 	};
