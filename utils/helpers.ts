@@ -7,3 +7,7 @@ export const HIGHLIGHT_STYLE = {
 };
 
 export const secondsFromNow = (seconds: number) => Math.floor((Date.now() + seconds * 1000) / 1000);
+
+export const randomNumber = () => {
+	return Math.floor(Math.random() * 4);
+};

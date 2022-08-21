@@ -51,20 +51,17 @@ import {
 } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
 
-import Requirements from '@components/StandardRegistration/Requirements';
-import StandardAcknowledgement from '@components/StandardRegistration/StandardAcknowledgement';
-import CompletionSteps from '@components/StandardRegistration/CompletionSteps';
-import GracePeriod from '@components/StandardRegistration/GracePeriod';
-import RegisterAndPay from '@components/StandardRegistration/RegisterAndPay';
+import StandardRegistration from '@components/StandardRegistration';
 
 import {
 	RegistrationSectionRoutes,
 	StandardSteps,
 	SelfRelaySteps,
 	P2PRelaySteps,
+	PreviewMessageKey,
 } from '@utils/types';
-
-type PreviewMessageKey = 'default' | 'en' | 'es' | 'fr';
+import SelfRelayRegistration from '@components/SelfRelayRegistration';
+import WebRtcDirectRelay from '@components/WebRtcDirectRegistration';
 interface DappProps {
 	messages: IntlMessages;
 	previewMessages: Record<PreviewMessageKey, IntlMessages>;
@@ -125,46 +122,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		setColorMode('light');
 		setIsMounted(true);
 	}, []);
-
-	const SelfRelayRegistration = () => {
-		return <div>self relay</div>;
-	};
-
-	const WebRtcDirectRelay = () => {
-		return <div>webrtc-direct</div>;
-	};
-
-	const StandardRegistration = () => {
-		const [showStep, setShowStep] = useState<StandardSteps>('requirements');
-
-		const expiryTimestamp = new Date().getTime() + 1 * 5 * 1000;
-		return (
-			<>
-				{showStep === 'requirements' && (
-					<Requirements
-						setShowStep={setShowStep}
-						address={address as string}
-						isConnected={isConnected}
-					/>
-				)}
-				{showStep !== 'requirements' && <CompletionSteps />}
-				{showStep === 'acknowledge-and-pay' && (
-					<StandardAcknowledgement
-						setShowStep={setShowStep}
-						address={address as string}
-						isConnected={isConnected}
-						onOpen={onOpen}
-					/>
-				)}
-				{showStep === 'grace-period' && (
-					<GracePeriod setShowStep={setShowStep} expiryTimestamp={expiryTimestamp} />
-				)}
-				{showStep === 'register-and-pay' && (
-					<RegisterAndPay setShowStep={setShowStep} expiryTimestamp={expiryTimestamp} />
-				)}
-			</>
-		);
-	};
 
 	const PreviewModal = () => {
 		const [currentDemoLang, setCurrentDemoLang] = useState(previewMessages.default);
@@ -289,9 +246,9 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 				<Center p={10} gap={5}>
 					{isConnected ? (
 						<>
-							{showSection === 'standard' && <StandardRegistration />}
-							{showSection === 'selfRelay' && <SelfRelayRegistration />}
-							{showSection === 'p2pRelay' && <WebRtcDirectRelay />}
+							{showSection === 'standard' && <StandardRegistration onOpen={onOpen} />}
+							{showSection === 'selfRelay' && <SelfRelayRegistration onOpen={onOpen} />}
+							{showSection === 'p2pRelay' && <WebRtcDirectRelay onOpen={onOpen} />}
 						</>
 					) : (
 						<div>Please Connect to your wallet</div>

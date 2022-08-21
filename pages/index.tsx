@@ -18,12 +18,9 @@ import { SectionTitle, SectionBody } from '../components/GridSection';
 import { FeaturesSection } from '../components/LandingSections';
 import PrimaryButton from '../components/PrimaryButton';
 import { AppProps } from 'next/app';
+import { randomNumber } from '@utils/helpers';
 
 type showColorProps = 'home' | 'about' | 'why' | 'how' | 'features';
-
-const randomNumber = () => {
-	return Math.floor(Math.random() * 4);
-};
 
 export const getStaticProps: GetStaticProps = async (context) => {
 	const initialColor = COLORS[randomNumber()];
