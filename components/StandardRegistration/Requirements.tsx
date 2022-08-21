@@ -7,15 +7,12 @@ import { HIGHLIGHT_STYLE } from '@utils/helpers';
 import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { useAccount } from 'wagmi';
 
-interface RequirementProps extends RegistrationStateManagemenetProps {}
+interface RequirementProps extends RegistrationStateManagemenetProps {
+	address: string;
+	isConnected: boolean;
+}
 
-const Requirements: React.FC<RequirementProps> = ({ setShowStep }) => {
-	const { connector, address, isConnected } = useAccount({
-		onConnect({ address, connector, isReconnected }) {
-			console.log('Connected', { address, connector, isReconnected });
-		},
-	});
-
+const Requirements: React.FC<RequirementProps> = ({ setShowStep, address, isConnected }) => {
 	const minPayment = '0.01';
 
 	if (!isConnected) {

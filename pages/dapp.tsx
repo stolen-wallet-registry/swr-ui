@@ -50,32 +50,19 @@ import {
 	StolenWalletRegistryFactory,
 } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
-import { useLocale } from 'next-intl';
 
-import useTimer from '../hooks/useTimer';
-import { HIGHLIGHT_STYLE } from '@utils/helpers';
-import { RegistrationSectionProps } from '@components/RegistrationSection';
 import Requirements from '@components/StandardRegistration/Requirements';
+import StandardAcknowledgement from '@components/StandardRegistration/StandardAcknowledgement';
+import CompletionSteps from '@components/StandardRegistration/CompletionSteps';
+import GracePeriod from '@components/StandardRegistration/GracePeriod';
+import RegisterAndPay from '@components/StandardRegistration/RegisterAndPay';
 
-type RegistrationSection = 'standard' | 'selfRelay' | 'p2pRelay';
-type StandardSteps = 'requirements' | 'acknowledge-and-pay' | 'grace-period' | 'register-and-pay';
-type SelfRelaySteps =
-	| 'requirements'
-	| 'acknowledge'
-	| 'switch-and-pay'
-	| 'grace-period'
-	| 'register-sign'
-	| 'switch-and-pay';
-type P2PRelaySteps =
-	| 'requirements'
-	| 'connect-to-peer'
-	| 'acknowledge'
-	| 'send-to-peer'
-	| 'wait-for-peer-init-pay'
-	| 'grace-period'
-	| 'sign-register'
-	| 'send-to-peer'
-	| 'wait-for-peer-register-pay';
+import {
+	RegistrationSectionRoutes,
+	StandardSteps,
+	SelfRelaySteps,
+	P2PRelaySteps,
+} from '@utils/types';
 
 type PreviewMessageKey = 'default' | 'en' | 'es' | 'fr';
 interface DappProps {
@@ -103,14 +90,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
-	const [showSection, setShowSection] = useState<RegistrationSection>('standard');
+	const [showSection, setShowSection] = useState<RegistrationSectionRoutes>('standard');
 	const [isMounted, setIsMounted] = useState(false);
 	const [signer, setSigner] = useState<ethers.Signer>();
 
 	const provider = useProvider();
 	const { chain } = useNetwork();
-
-	const minPayment = '0.01';
 
 	const contract = useContract({
 		addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
@@ -129,11 +114,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		},
 	});
 
-	const ensData = useEnsName({
-		address,
-		chainId: 1,
-	});
-
 	useSigner({
 		onSuccess: (wallet) => {
 			setSigner(wallet!);
@@ -146,25 +126,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		setIsMounted(true);
 	}, []);
 
-	const RegistrationSection: React.FC<RegistrationSectionProps> = (props) => {
-		return (
-			<Flex
-				{...props}
-				w={[650, 800, 900]}
-				borderRadius={10}
-				p={10}
-				boxShadow="base"
-				flexDirection="column"
-				border="2px solid RGBA(0, 0, 0, 0.50)"
-			>
-				<Heading size="md" pb={5} pt={5}>
-					{props.title}
-				</Heading>
-				{props.children}
-			</Flex>
-		);
-	};
-
 	const SelfRelayRegistration = () => {
 		return <div>self relay</div>;
 	};
@@ -174,219 +135,33 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	};
 
 	const StandardRegistration = () => {
-		const [includeWalletNFT, setIncludeWalletNFT] = useState<boolean>();
-		const [includeSupportNFT, setIncludeSupportNFT] = useState<boolean>();
 		const [showStep, setShowStep] = useState<StandardSteps>('requirements');
-
-		const CompletionSteps: React.FC = () => {
-			return (
-				<RegistrationSection title="Completion Steps">
-					<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-						<ListItem key={1}>Select value for the optional NFT.</ListItem>
-						<ListItem key={2}>
-							Sign and pay an "Acknowledgement of Registration" transaction.
-						</ListItem>
-						<ListItem key={3}>
-							Wait 2-4 minutes grace period before you are allowed to register.
-						</ListItem>
-						<ListItem key={4}>Sign and pay for your wallet to be added to the Registry.</ListItem>
-					</OrderedList>
-				</RegistrationSection>
-			);
-		};
-
-		const StandardAcknowledgement = () => {
-			const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
-			const { data, isError, isLoading } = useContractReads({
-				contracts: [
-					{
-						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-						contractInterface: StolenWalletRegistryAbi,
-						functionName: 'generateHashStruct',
-						args: [address],
-					},
-					{
-						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-						contractInterface: StolenWalletRegistryAbi,
-						functionName: 'nonces',
-						args: [address],
-					},
-					{
-						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-						contractInterface: StolenWalletRegistryAbi,
-						functionName: 'ACKNOWLEDGEMENT_TYPEHASH',
-					},
-					{
-						addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-						contractInterface: StolenWalletRegistryAbi,
-						functionName: 'REGISTRATION_TYPEHASH',
-					},
-				],
-			});
-
-			useEffect(() => {
-				console.log(isError, isLoading, data);
-				const buildStruct = async () => {
-					// const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
-					// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-					// 	signer || provider
-					// );
-					// const contract = useContract({
-					// 	addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-					// 	contractInterface: StolenWalletRegistryAbi,
-					// 	signerOrProvider: signer,
-					// });
-					// console.log(data);
-					// const owner = ensData.data || address;
-					// const { deadline, hashStruct } = await contract.generateHashStruct(address!);
-					// const { deadline, hashStruct } = await hshStructTx.wait();
-					// const nonce = await contract.nonces(address!);
-					// const nonce = await noncesTx.wait();
-					// console.log(owner, nonce, deadline, hashStruct, owner);
-					// const struct = await buildAcknowledgementStruct({
-					// 	forwarder: address!,
-					// 	chainId: Number(chain?.id),
-					// 	nonces: nonce.toNumber(),
-					// 	deadline,
-					// 	owner: owner as string,
-					// });
-					// setAcknowledgment(struct);
-				};
-				if (isConnected && isMounted) {
-					buildStruct();
-				}
-			}, [isConnected, address]);
-
-			return (
-				<RegistrationSection title="Include NFTs?">
-					<Flex>
-						<Text mr={20}>
-							Include{' '}
-							<Text as="span" fontWeight="bold" decoration="underline">
-								Supportive
-							</Text>{' '}
-							NFT?
-						</Text>
-						<Spacer />
-						<CheckboxGroup>
-							<Checkbox
-								width={[100, 100]}
-								isChecked={includeWalletNFT}
-								onChange={() => setIncludeWalletNFT(true)}
-							>
-								Yes
-							</Checkbox>
-							<Checkbox
-								width={[100, 100]}
-								onChange={() => setIncludeWalletNFT(false)}
-								isChecked={includeWalletNFT === false}
-							>
-								No
-							</Checkbox>
-						</CheckboxGroup>
-					</Flex>
-					<Flex>
-						<Text mr={20}>
-							Include{' '}
-							<Text as="span" fontWeight="bold" decoration="underline">
-								Wallet
-							</Text>{' '}
-							NFT?
-						</Text>
-						<Spacer />
-						<CheckboxGroup>
-							<Checkbox
-								width={[100, 100]}
-								isChecked={includeSupportNFT}
-								onChange={() => setIncludeSupportNFT(true)}
-							>
-								Yes
-							</Checkbox>
-							<Checkbox
-								width={[100, 100]}
-								isChecked={includeSupportNFT === false}
-								onChange={() => setIncludeSupportNFT(false)}
-							>
-								No
-							</Checkbox>
-						</CheckboxGroup>
-					</Flex>
-					<Flex alignSelf="flex-end">
-						<Button m={5} onClick={onOpen}>
-							View NFT
-						</Button>
-						<Button
-							m={5}
-							onClick={() => setShowStep('grace-period')} // use712Signature(acknowledgement!)
-							disabled={
-								includeWalletNFT === undefined &&
-								includeSupportNFT === undefined &&
-								acknowledgement === undefined
-							}
-						>
-							Sign and Pay
-						</Button>
-					</Flex>
-				</RegistrationSection>
-			);
-		};
-
-		const GracePeriod = ({ expiryTimestamp }: { expiryTimestamp: number }) => {
-			const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
-				expiry: expiryTimestamp,
-				onExpire: () => setShowStep('register-and-pay'),
-			});
-
-			useEffect(() => {
-				start();
-			}, []);
-
-			return (
-				<RegistrationSection title="Grace Period">
-					<div style={{ fontSize: '100px' }}>
-						<span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
-					</div>
-					<Flex>
-						<Text mr={20}>Testing Grace Period</Text>
-					</Flex>
-				</RegistrationSection>
-			);
-		};
-
-		const RegisterAndPay = ({ expiryTimestamp }: { expiryTimestamp: number }) => {
-			const [expired, setExpired] = useState(false);
-			const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
-				expiry: expiryTimestamp,
-				onExpire: () => setExpired(true),
-			});
-
-			useEffect(() => {
-				start();
-			}, []);
-
-			return (
-				<RegistrationSection title="Register and Pay">
-					<div style={{ fontSize: '100px' }}>
-						<span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
-					</div>
-					<Flex>
-						<Text mr={20}>Testing Register And Pay</Text>
-					</Flex>
-					<Button m={5} disabled={expired}>
-						Sign and Pay
-					</Button>
-				</RegistrationSection>
-			);
-		};
 
 		const expiryTimestamp = new Date().getTime() + 1 * 5 * 1000;
 		return (
 			<>
-				{showStep === 'requirements' && <Requirements setShowStep={setShowStep} />}
+				{showStep === 'requirements' && (
+					<Requirements
+						setShowStep={setShowStep}
+						address={address as string}
+						isConnected={isConnected}
+					/>
+				)}
 				{showStep !== 'requirements' && <CompletionSteps />}
-				{showStep === 'acknowledge-and-pay' && <StandardAcknowledgement />}
-				{showStep === 'grace-period' && <GracePeriod expiryTimestamp={expiryTimestamp} />}
-				{showStep === 'register-and-pay' && <RegisterAndPay expiryTimestamp={expiryTimestamp} />}
+				{showStep === 'acknowledge-and-pay' && (
+					<StandardAcknowledgement
+						setShowStep={setShowStep}
+						address={address as string}
+						isConnected={isConnected}
+						onOpen={onOpen}
+					/>
+				)}
+				{showStep === 'grace-period' && (
+					<GracePeriod setShowStep={setShowStep} expiryTimestamp={expiryTimestamp} />
+				)}
+				{showStep === 'register-and-pay' && (
+					<RegisterAndPay setShowStep={setShowStep} expiryTimestamp={expiryTimestamp} />
+				)}
 			</>
 		);
 	};
@@ -460,7 +235,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 
 	// acknowledge-and-pay
 	const ButtonChoices = () => {
-		const handleOnClick = (section: RegistrationSection) => {
+		const handleOnClick = (section: RegistrationSectionRoutes) => {
 			setShowSection(section);
 		};
 
