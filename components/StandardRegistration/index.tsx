@@ -1,10 +1,10 @@
 import { StandardSteps } from '@utils/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import CompletionSteps from './CompletionSteps';
-import GracePeriod from './GracePeriod';
+import CompletionSteps from '../SharedRegistration/CompletionSteps';
+import GracePeriod from '../SharedRegistration/GracePeriod';
+import Requirements from '../SharedRegistration/Requirements';
 import RegisterAndPay from './RegisterAndPay';
-import Requirements from './Requirements';
 import StandardAcknowledgement from './StandardAcknowledgement';
 
 // TODO expract this out into useModal
@@ -19,21 +19,24 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ onOpen 
 		},
 	});
 
-	const [expiryTimestamp, setExpiryTimestamp] = useState<number>(
-		new Date().getTime() + 1 * 5 * 1000
-	);
+	const [expiryTimestamp, setExpiryTimestamp] = useState<number>(0);
 	const [showStep, setShowStep] = useState<StandardSteps>('requirements');
+
+	useEffect(() => {
+		setExpiryTimestamp(new Date().getTime() + 1 * 5 * 1000);
+	}, []);
 
 	return (
 		<>
 			{showStep === 'requirements' && (
 				<Requirements
+					registrationType="standard"
 					setShowStep={setShowStep}
 					address={address as string}
 					isConnected={isConnected}
 				/>
 			)}
-			{showStep !== 'requirements' && <CompletionSteps />}
+			{showStep !== 'requirements' && <CompletionSteps registrationType="standard" />}
 			{showStep === 'acknowledge-and-pay' && (
 				<StandardAcknowledgement
 					setShowStep={setShowStep}

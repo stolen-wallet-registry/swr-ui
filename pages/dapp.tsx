@@ -54,7 +54,7 @@ import { ethers } from 'ethers';
 import StandardRegistration from '@components/StandardRegistration';
 
 import {
-	RegistrationSectionRoutes,
+	RegistrationTypes,
 	StandardSteps,
 	SelfRelaySteps,
 	P2PRelaySteps,
@@ -87,7 +87,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
-	const [showSection, setShowSection] = useState<RegistrationSectionRoutes>('standard');
+	const [showSection, setShowSection] = useState<RegistrationTypes>('standard');
 	const [isMounted, setIsMounted] = useState(false);
 	const [signer, setSigner] = useState<ethers.Signer>();
 
@@ -192,7 +192,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 
 	// acknowledge-and-pay
 	const ButtonChoices = () => {
-		const handleOnClick = (section: RegistrationSectionRoutes) => {
+		const handleOnClick = (section: RegistrationTypes) => {
 			setShowSection(section);
 		};
 

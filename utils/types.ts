@@ -1,4 +1,4 @@
-export type RegistrationSectionRoutes = 'standard' | 'selfRelay' | 'p2pRelay';
+export type RegistrationTypes = 'standard' | 'selfRelay' | 'p2pRelay';
 
 export type StandardSteps =
 	| 'requirements'
@@ -8,16 +8,16 @@ export type StandardSteps =
 
 export type SelfRelaySteps =
 	| 'requirements'
-	| 'acknowledge'
+	| 'acknowledge-and-sign'
 	| 'switch-and-pay'
 	| 'grace-period'
-	| 'register-sign'
+	| 'register-and-sign'
 	| 'switch-and-pay';
 
 export type P2PRelaySteps =
 	| 'requirements'
 	| 'connect-to-peer'
-	| 'acknowledge'
+	| 'acknowledge-and-pay'
 	| 'send-to-peer'
 	| 'wait-for-peer-init-pay'
 	| 'grace-period'

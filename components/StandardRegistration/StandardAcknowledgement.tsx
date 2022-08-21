@@ -5,7 +5,7 @@ import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
 import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
 import { useState, useEffect } from 'react';
-import { useContractReads } from 'wagmi';
+import { useContractReads, useEnsName } from 'wagmi';
 
 interface StadandardAcknowledgementProps extends RegistrationStateManagemenetProps {
 	address: string;
@@ -22,6 +22,12 @@ const StandardAcknowledgement: React.FC<StadandardAcknowledgementProps> = ({
 	const [includeWalletNFT, setIncludeWalletNFT] = useState<boolean>();
 	const [includeSupportNFT, setIncludeSupportNFT] = useState<boolean>();
 	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
+
+	const ensData = useEnsName({
+		address,
+		chainId: 1,
+	});
+
 	const [isMounted, setIsMounted] = useState(false);
 	const { data, isError, isLoading } = useContractReads({
 		contracts: [
