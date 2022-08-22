@@ -5,7 +5,7 @@ import CompletionSteps from '../SharedRegistration/CompletionSteps';
 import GracePeriod from '../SharedRegistration/GracePeriod';
 import Requirements from '../SharedRegistration/Requirements';
 import RegisterAndPay from './RegisterAndPay';
-import StandardAcknowledgement from './StandardAcknowledgement';
+import Acknowledgement from '../SharedRegistration/Acknowledgement';
 
 // TODO expract this out into useModal
 interface StandardRegistrationInterface {
@@ -19,17 +19,13 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ onOpen 
 		},
 	});
 
-	const [expiryTimestamp, setExpiryTimestamp] = useState<number>(0);
 	const [showStep, setShowStep] = useState<StandardSteps>('requirements');
-
-	useEffect(() => {
-		setExpiryTimestamp(new Date().getTime() + 1 * 5 * 1000);
-	}, []);
 
 	return (
 		<>
 			{showStep === 'requirements' && (
 				<Requirements
+					handleBegin={() => setShowStep('acknowledge-and-pay')}
 					registrationType="standard"
 					setShowStep={setShowStep}
 					address={address as string}
@@ -38,19 +34,16 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ onOpen 
 			)}
 			{showStep !== 'requirements' && <CompletionSteps registrationType="standard" />}
 			{showStep === 'acknowledge-and-pay' && (
-				<StandardAcknowledgement
-					setShowStep={setShowStep}
+				<Acknowledgement
+					registrationType="standard"
+					setNextStep={() => setShowStep('grace-period')}
 					address={address as string}
 					isConnected={isConnected}
 					onOpen={onOpen}
 				/>
 			)}
-			{showStep === 'grace-period' && (
-				<GracePeriod setShowStep={setShowStep} expiryTimestamp={expiryTimestamp} />
-			)}
-			{showStep === 'register-and-pay' && (
-				<RegisterAndPay setShowStep={setShowStep} expiryTimestamp={expiryTimestamp} />
-			)}
+			{showStep === 'grace-period' && <GracePeriod setShowStep={setShowStep} />}
+			{showStep === 'register-and-pay' && <RegisterAndPay setShowStep={setShowStep} />}
 		</>
 	);
 };

@@ -4,11 +4,10 @@ import useTimer from '@hooks/useTimer';
 import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { useState, useEffect } from 'react';
 
-interface GracePeriodProps extends RegistrationStateManagemenetProps {
-	expiryTimestamp: number;
-}
-
-const RegisterAndPay: React.FC<GracePeriodProps> = ({ setShowStep, expiryTimestamp }) => {
+const RegisterAndPay: React.FC<RegistrationStateManagemenetProps> = ({ setShowStep }) => {
+	const [expiryTimestamp, setExpiryTimestamp] = useState<number>(
+		new Date().getTime() + 1 * 5 * 1000
+	);
 	const [expired, setExpired] = useState(false);
 	const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
 		expiry: expiryTimestamp,

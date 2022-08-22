@@ -9,10 +9,10 @@ export type StandardSteps =
 export type SelfRelaySteps =
 	| 'requirements'
 	| 'acknowledge-and-sign'
-	| 'switch-and-pay'
+	| 'switch-and-pay-one'
 	| 'grace-period'
 	| 'register-and-sign'
-	| 'switch-and-pay';
+	| 'switch-and-pay-two';
 
 export type P2PRelaySteps =
 	| 'requirements'

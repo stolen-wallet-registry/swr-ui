@@ -1,23 +1,41 @@
-import { Flex, Spacer, CheckboxGroup, Checkbox, Button, Text } from '@chakra-ui/react';
+import { PhoneIcon } from '@chakra-ui/icons';
+import {
+	Flex,
+	Spacer,
+	CheckboxGroup,
+	Checkbox,
+	Button,
+	Text,
+	Input,
+	InputGroup,
+	InputLeftElement,
+	Box,
+} from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { signTypedDataProps } from '@hooks/use712Signature';
 import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
+import { RegistrationTypes } from '@utils/types';
 import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
+import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
+import { FaWallet } from 'react-icons/fa';
 import { useContractReads, useEnsName } from 'wagmi';
 
-interface StadandardAcknowledgementProps extends RegistrationStateManagemenetProps {
+interface AcknowledgementProps {
+	registrationType: RegistrationTypes;
 	address: string;
 	isConnected: boolean;
 	onOpen: () => void;
+	setNextStep: () => void;
 }
 
-const StandardAcknowledgement: React.FC<StadandardAcknowledgementProps> = ({
-	setShowStep,
+const Acknowledgement: React.FC<AcknowledgementProps> = ({
+	registrationType,
 	address,
 	isConnected,
 	onOpen,
+	setNextStep,
 }) => {
 	const [includeWalletNFT, setIncludeWalletNFT] = useState<boolean>();
 	const [includeSupportNFT, setIncludeSupportNFT] = useState<boolean>();
@@ -27,6 +45,9 @@ const StandardAcknowledgement: React.FC<StadandardAcknowledgementProps> = ({
 		address,
 		chainId: 1,
 	});
+
+	const [trustedRelayer, setTrustedRelayer] = useState('');
+	const [relayerIsValid, setRelayerIsValid] = useState(true);
 
 	const [isMounted, setIsMounted] = useState(false);
 	const { data, isError, isLoading } = useContractReads({
@@ -55,6 +76,18 @@ const StandardAcknowledgement: React.FC<StadandardAcknowledgementProps> = ({
 			},
 		],
 	});
+
+	const handleChangeRelayer = (e: any) => {
+		// TODO handle ens address
+		setTrustedRelayer(e.target.value);
+		setRelayerIsValid(ethers.utils.isAddress(e.target.value));
+	};
+
+	const handleSignAndPay = async () => {
+		// use712Signature(acknowledgement!)
+		localStorage.setItem('trustedRelayer', trustedRelayer);
+		setNextStep();
+	};
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -121,7 +154,7 @@ const StandardAcknowledgement: React.FC<StadandardAcknowledgementProps> = ({
 					</Checkbox>
 				</CheckboxGroup>
 			</Flex>
-			<Flex>
+			<Flex mb={5}>
 				<Text mr={20}>
 					Include{' '}
 					<Text as="span" fontWeight="bold" decoration="underline">
@@ -147,17 +180,41 @@ const StandardAcknowledgement: React.FC<StadandardAcknowledgementProps> = ({
 					</Checkbox>
 				</CheckboxGroup>
 			</Flex>
+			{registrationType !== 'standard' && (
+				<Flex flexDirection="column">
+					<Text>What is your other wallet address?</Text>
+					<InputGroup>
+						<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
+						<Input
+							value={trustedRelayer}
+							placeholder="Trusted Relayer"
+							size="md"
+							isRequired
+							focusBorderColor="black.700"
+							isInvalid={!relayerIsValid}
+							onChange={handleChangeRelayer}
+						/>
+					</InputGroup>
+					<Text fontSize="sm">
+						*Once you sign, you will need to Switch to this wallet before proceeding.
+					</Text>
+					<Text fontSize="sm">
+						**you will use the "Trusted Relayer" wallet to pay for the Registration.
+					</Text>
+				</Flex>
+			)}
 			<Flex alignSelf="flex-end">
 				<Button m={5} onClick={onOpen}>
 					View NFT
 				</Button>
 				<Button
 					m={5}
-					onClick={() => setShowStep('grace-period')} // use712Signature(acknowledgement!)
+					onClick={handleSignAndPay}
 					disabled={
-						includeWalletNFT === undefined &&
-						includeSupportNFT === undefined &&
-						acknowledgement === undefined
+						includeWalletNFT === undefined ||
+						includeSupportNFT === undefined ||
+						// acknowledgement === undefined ||
+						!relayerIsValid
 					}
 				>
 					Sign and Pay
@@ -167,4 +224,4 @@ const StandardAcknowledgement: React.FC<StadandardAcknowledgementProps> = ({
 	);
 };
 
-export default StandardAcknowledgement;
+export default Acknowledgement;

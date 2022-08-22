@@ -2,13 +2,13 @@ import { Flex, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import useTimer from '@hooks/useTimer';
 import { RegistrationStateManagemenetProps } from '@interfaces/index';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-interface GracePeriodProps extends RegistrationStateManagemenetProps {
-	expiryTimestamp: number;
-}
+const GracePeriod: React.FC<RegistrationStateManagemenetProps> = ({ setShowStep }) => {
+	const [expiryTimestamp, setExpiryTimestamp] = useState<number>(
+		new Date().getTime() + 1 * 5 * 1000
+	);
 
-const GracePeriod: React.FC<GracePeriodProps> = ({ setShowStep, expiryTimestamp }) => {
 	const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
 		expiry: expiryTimestamp,
 		onExpire: () => setShowStep('register-and-pay'),

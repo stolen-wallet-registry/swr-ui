@@ -13,10 +13,11 @@ interface RequirementProps extends RegistrationStateManagemenetProps {
 	address: string;
 	isConnected: boolean;
 	registrationType: RegistrationTypes;
+	handleBegin: () => void;
 }
 
 const Requirements: React.FC<RequirementProps> = ({
-	setShowStep,
+	handleBegin,
 	address,
 	isConnected,
 	registrationType,
@@ -110,12 +111,7 @@ const Requirements: React.FC<RequirementProps> = ({
 			{registrationType === 'standard' && <StandardRequirements />}
 			{registrationType === 'selfRelay' && <SelfRelayRequirements />}
 			{registrationType === 'p2pRelay' && <PeerToPeerRelayRequirements />}
-			<Button
-				alignSelf="flex-end"
-				width={[200, 250]}
-				m={5}
-				onClick={() => setShowStep('acknowledge-and-pay')}
-			>
+			<Button alignSelf="flex-end" width={[200, 250]} m={5} onClick={handleBegin}>
 				Begin
 			</Button>
 		</RegistrationSection>
