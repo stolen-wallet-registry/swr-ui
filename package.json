@@ -19,7 +19,7 @@
 		"@chakra-ui/theme-tools": "^2.0.12",
 		"@emotion/react": "^11.10.4",
 		"@emotion/styled": "^11.10.4",
-		"@rainbow-me/rainbowkit": "^0.4.2",
+		"@rainbow-me/rainbowkit": "^0.7.1",
 		"@svgr/webpack": "^6.4.0",
 		"@wallet-hygiene/swr-contracts": "^0.0.71",
 		"axios": "^0.26.1",
