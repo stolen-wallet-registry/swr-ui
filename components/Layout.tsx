@@ -8,6 +8,7 @@ export type ColorValues = 'red' | 'teal' | 'blue' | 'green' | 'purple';
 export const COLORS: ColorValues[] = ['red', 'teal', 'blue', 'green', 'purple'];
 interface LayoutProps {
 	setBGColor: ColorValues;
+	children: React.ReactNode;
 }
 
 const Layout: React.FunctionComponent<LayoutProps> = ({ setBGColor, children }) => {

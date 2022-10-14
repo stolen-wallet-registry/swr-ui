@@ -20,7 +20,11 @@ const BUTTON_PROPS = {
 	_hover: { transform: 'scale(1.1)', bgColor: 'blackAlpha.800' },
 };
 
-const Bold: React.FC = ({ children }) => (
+interface BoldProps {
+	children: React.ReactNode;
+}
+
+const Bold: React.FC<BoldProps> = ({ children }) => (
 	<Text as="span" fontWeight="bold">
 		{children}
 	</Text>

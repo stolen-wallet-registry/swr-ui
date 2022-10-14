@@ -3,6 +3,7 @@ import React from 'react';
 
 interface PrimaryButtonProps extends ButtonProps {
 	colorScheme?: string;
+	children: React.ReactNode;
 }
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({ colorScheme, children, ...props }) => {

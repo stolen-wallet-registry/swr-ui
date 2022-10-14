@@ -4,6 +4,7 @@ import React from 'react';
 interface SectionTitleProps {
 	title: string;
 	selectedColor: string;
+	children: React.ReactNode;
 }
 
 const SectionTitle: React.FC<SectionTitleProps> = ({
@@ -35,6 +36,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
 
 interface SectionBodyProps {
 	selectedColor: string;
+	children: React.ReactNode;
 }
 
 const SectionBody: React.FC<SectionBodyProps> = ({ selectedColor, children }) => {
