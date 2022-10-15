@@ -3,6 +3,7 @@ import React from 'react';
 import DappLayout from '../components/DappLayout';
 import StolenWalletSVG from '../assets/stolen-wallet.svg';
 import pick from 'lodash/pick';
+// import { setLocalState, getLocalState } from '@utils/localStore';
 
 import type { GetStaticProps } from 'next';
 import {
@@ -72,6 +73,8 @@ import {
 	LANGUAGE_OPTIONS,
 	LANGUAGE_DISPLAY,
 } from '@components/NftDisplay/languageData';
+import useLocalStorage from '@hooks/useLocalStorage';
+import { ACCOUNTS_KEY } from '@utils/localStore';
 
 interface DappProps {
 	messages: IntlMessages;
@@ -98,7 +101,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
-	const [showSection, setShowSection] = useState<RegistrationTypes>('standard');
 	const [isMounted, setIsMounted] = useState(false);
 	const [signer, setSigner] = useState<ethers.Signer>();
 
@@ -255,9 +257,14 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 
 	// acknowledge-and-pay
 	const ButtonChoices = () => {
+		const [localState, setLocalState] = useLocalStorage(ACCOUNTS_KEY, {});
 		const handleOnClick = (section: RegistrationTypes) => {
-			setShowSection(section);
+			setLocalState({ registrationType: section });
 		};
+
+		if (!isMounted) {
+			return null;
+		}
 
 		return (
 			<Box mt={20} mb={10}>
@@ -280,7 +287,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 						<Button
 							variant="outline"
 							width={200}
-							disabled={showSection === 'standard'}
+							disabled={localState?.registrationType === 'standard'}
 							onClick={() => handleOnClick('standard')}
 							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
 						>
@@ -289,7 +296,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 						<Button
 							variant="outline"
 							width={200}
-							disabled={showSection === 'selfRelay'}
+							disabled={localState?.registrationType === 'selfRelay'}
 							onClick={() => handleOnClick('selfRelay')}
 							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
 						>
@@ -298,7 +305,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 						<Button
 							variant="outline"
 							width={200}
-							disabled={showSection === 'p2pRelay'}
+							disabled={localState?.registrationType === 'p2pRelay'}
 							onClick={() => handleOnClick('p2pRelay')}
 							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
 						>
@@ -309,9 +316,13 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 				<Center p={10} gap={5}>
 					{isConnected ? (
 						<>
-							{showSection === 'standard' && <StandardRegistration onOpen={onOpen} />}
-							{showSection === 'selfRelay' && <SelfRelayRegistration onOpen={onOpen} />}
-							{showSection === 'p2pRelay' && <WebRtcDirectRelay onOpen={onOpen} />}
+							{localState?.registrationType === 'standard' && (
+								<StandardRegistration onOpen={onOpen} />
+							)}
+							{localState?.registrationType === 'selfRelay' && (
+								<SelfRelayRegistration onOpen={onOpen} />
+							)}
+							{localState?.registrationType === 'p2pRelay' && <WebRtcDirectRelay onOpen={onOpen} />}
 						</>
 					) : (
 						<div>Please Connect to your wallet</div>

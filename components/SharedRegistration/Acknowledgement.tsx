@@ -13,8 +13,10 @@ import {
 } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { signTypedDataProps } from '@hooks/use712Signature';
+import useLocalStorage from '@hooks/useLocalStorage';
 import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
+import { ACCOUNTS_KEY } from '@utils/localStore';
 import { RegistrationTypes } from '@utils/types';
 import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
@@ -37,8 +39,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 	onOpen,
 	setNextStep,
 }) => {
-	const [includeWalletNFT, setIncludeWalletNFT] = useState<boolean>();
-	const [includeSupportNFT, setIncludeSupportNFT] = useState<boolean>();
+	const [localState, setLocalState] = useLocalStorage(ACCOUNTS_KEY, {});
 	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
 
 	const ensData = useEnsName({
@@ -85,7 +86,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 
 	const handleSignAndPay = async () => {
 		// use712Signature(acknowledgement!)
-		localStorage.setItem('trustedRelayer', trustedRelayer);
+		setLocalState({ trustedRelayer });
 		setNextStep();
 	};
 
@@ -140,15 +141,17 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				<CheckboxGroup>
 					<Checkbox
 						width={[100, 100]}
-						isChecked={includeWalletNFT}
-						onChange={() => setIncludeWalletNFT(true)}
+						isChecked={localState.includeWalletNFT === true}
+						isInvalid={localState.includeWalletNFT === undefined}
+						onChange={() => setLocalState({ includeWalletNFT: true })}
 					>
 						Yes
 					</Checkbox>
 					<Checkbox
 						width={[100, 100]}
-						onChange={() => setIncludeWalletNFT(false)}
-						isChecked={includeWalletNFT === false}
+						onChange={() => setLocalState({ includeWalletNFT: false })}
+						isInvalid={localState.includeWalletNFT === undefined}
+						isChecked={localState.includeWalletNFT === false}
 					>
 						No
 					</Checkbox>
@@ -166,15 +169,17 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				<CheckboxGroup>
 					<Checkbox
 						width={[100, 100]}
-						isChecked={includeSupportNFT}
-						onChange={() => setIncludeSupportNFT(true)}
+						isChecked={localState.includeSupportNFT === true}
+						isInvalid={localState.includeSupportNFT === undefined}
+						onChange={() => setLocalState({ includeSupportNFT: true })}
 					>
 						Yes
 					</Checkbox>
 					<Checkbox
 						width={[100, 100]}
-						isChecked={includeSupportNFT === false}
-						onChange={() => setIncludeSupportNFT(false)}
+						isChecked={localState.includeSupportNFT === false}
+						isInvalid={localState.includeWalletNFT === undefined}
+						onChange={() => setLocalState({ includeSupportNFT: false })}
 					>
 						No
 					</Checkbox>
@@ -211,8 +216,8 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					m={5}
 					onClick={handleSignAndPay}
 					disabled={
-						includeWalletNFT === undefined ||
-						includeSupportNFT === undefined ||
+						localState.includeWalletNFT === undefined ||
+						localState.includeSupportNFT === undefined ||
 						// acknowledgement === undefined ||
 						!relayerIsValid
 					}

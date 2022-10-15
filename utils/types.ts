@@ -25,6 +25,8 @@ export type P2PRelaySteps =
 	| 'send-to-peer'
 	| 'wait-for-peer-register-pay';
 
-export type PreviewMessageKey = 'default' | 'en' | 'es' | 'fr';
+// TODO add logic for RegistrationTypes against RegistrationSteps
+export type RegistrationValues = StandardSteps | SelfRelaySteps | P2PRelaySteps;
 
+export type PreviewMessageKey = 'default' | 'en' | 'es' | 'fr';
 export type showColorProps = 'home' | 'about' | 'why' | 'how' | 'features';

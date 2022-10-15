@@ -1,3 +1,4 @@
+import { StateConfig } from '@utils/localStore';
 import { useState } from 'react';
 // Usage
 // function App() {
@@ -15,10 +16,10 @@ import { useState } from 'react';
 //   );
 // }
 
-const useLocalStorage = <T extends unknown>(
+const useLocalStorage = <T extends StateConfig>(
 	key: string,
-	initialValue: T
-): [T, (val: T) => void] => {
+	initialValue: Partial<T>
+): [T, (val: Partial<T>) => void] => {
 	// State to store our value
 	// Pass initial state function to useState so logic is only executed once
 	const [storedValue, setStoredValue] = useState<T>(() => {
@@ -38,10 +39,10 @@ const useLocalStorage = <T extends unknown>(
 	});
 	// Return a wrapped version of useState's setter function that ...
 	// ... persists the new value to localStorage.
-	const setValue = (value: T | ((val: T) => T)) => {
+	const setValue = (value: Partial<T>) => {
 		try {
 			// Allow value to be a function so we have same API as useState
-			const valueToStore = value instanceof Function ? value(storedValue) : value;
+			const valueToStore = { ...storedValue, ...value };
 			// Save state
 			setStoredValue(valueToStore);
 			// Save to local storage
@@ -53,5 +54,7 @@ const useLocalStorage = <T extends unknown>(
 			console.log(error);
 		}
 	};
-	return [storedValue, setValue] as [T, (val: T) => void];
+	return [storedValue, setValue] as [T, (val: Partial<T>) => void];
 };
+
+export default useLocalStorage;

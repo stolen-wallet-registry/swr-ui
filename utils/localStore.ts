@@ -3,7 +3,7 @@ import { RegistrationTypes, RegistrationValues } from './types';
 export const ACCOUNTS_KEY = '0xswraccts0x';
 const ADDRESS_KEY = 'a';
 
-const buildKey = (address: string, network: number) => {
+const buildKey = (address: string, network: number): string => {
 	return `${ADDRESS_KEY}-${address}-${network}`;
 };
 
@@ -29,31 +29,30 @@ export const initialState: StateConfig = {
 	includeSupportNFT: null,
 };
 
-localStorage.setDriver(localStorage.LOCALSTORAGE);
+// localStorage.setDriver(localStorage.LOCALSTORAGE);
 
-const getState = (): StateConfig => {
+const getLocalState = (): StateConfig => {
 	const state = JSON.parse(localStorage.getItem(ACCOUNTS_KEY as string) as string);
 
-    // if (!state) {
-    //   console.log('no state found');
-    //   localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(initialState));
-    //   return initialState;
-    // }
+	// if (!state) {
+	//   console.log('no state found');
+	//   localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(initialState));
+	//   return initialState;
+	// }
 
-  return state;
+	return state;
 };
 
-const setCurrentState = (args: Partial<StateConfig>) => {
-  try {
-    const currentState = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) as string);
-    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify({ ...currentState, ...args }));
-  }
-  catch (e) {
-    console.log(e)
-  }
+const setLocalState = (args: Partial<StateConfig>) => {
+	try {
+		const currentState = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) as string);
+		localStorage.setItem(ACCOUNTS_KEY, JSON.stringify({ ...currentState, ...args }));
+	} catch (e) {
+		console.log(e);
+	}
 };
 
-const resetState = (address?: string, network?: number) => {
+const resetLocalState = (address?: string, network?: number) => {
 	localStorage.removeItem(ACCOUNTS_KEY);
 
 	const user = {
@@ -109,23 +108,27 @@ const resetState = (address?: string, network?: number) => {
 
 const setAddress = (state: StateConfig) => {
 	try {
-		localStorage.setItem(buildKey(state.address!, state.network!), JSON.stringify({
-			address: state.address,
-			trustedRelayer: state.trustedRelayer,
-			network: state.network,
-			registrationType: state.registrationType,
-			currentStep: state.step,
-			includeWalletNFT: state.includeWalletNFT,
-			includeSupportNFT: state.includeSupportNFT,
-		}));
+		localStorage.setItem(
+			buildKey(state.address!, state.network!),
+			JSON.stringify({
+				address: state.address,
+				trustedRelayer: state.trustedRelayer,
+				network: state.network,
+				registrationType: state.registrationType,
+				currentStep: state.step,
+				includeWalletNFT: state.includeWalletNFT,
+				includeSupportNFT: state.includeSupportNFT,
+			})
+		);
 	} catch (error) {
 		console.log(error);
 	}
 };
 
-const getAddress = (address: string, network: number): StateConfig| undefined> => {
+const getAddress = (address: string, network: number): StateConfig | unknown => {
 	try {
-		return localStorage.getItem(buildKey(address, network)) as StateConfig;
+		const config = localStorage.getItem(buildKey(address, network))!;
+		return JSON.parse(config) as StateConfig;
 	} catch (error) {
 		console.log(error);
 	}
@@ -173,8 +176,4 @@ const getAddress = (address: string, network: number): StateConfig| undefined> =
 // 	}
 // };
 
-export default {
-	getState,
-	setState,
-	resetState,
-};
+export { getLocalState, setLocalState, resetLocalState };
