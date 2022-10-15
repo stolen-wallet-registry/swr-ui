@@ -1,3 +1,5 @@
+import React from 'react';
+
 import DappLayout from '../components/DappLayout';
 import StolenWalletSVG from '../assets/stolen-wallet.svg';
 import pick from 'lodash/pick';
@@ -27,6 +29,8 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
+	Select,
+	Container,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
@@ -38,7 +42,7 @@ import {
 	useNetwork,
 	useContractReads,
 } from 'wagmi';
-
+import SoulBound from '../components/NftDisplay/SoulBound';
 import {
 	buildAcknowledgementStruct,
 	signTypedDataProps,
@@ -62,6 +66,13 @@ import {
 } from '@utils/types';
 import SelfRelayRegistration from '@components/SelfRelayRegistration';
 import WebRtcDirectRelay from '@components/WebRtcDirectRegistration';
+import {
+	LANGUAGE_MAP,
+	LanguageAttributes,
+	LANGUAGE_OPTIONS,
+	LANGUAGE_DISPLAY,
+} from '@components/NftDisplay/languageData';
+
 interface DappProps {
 	messages: IntlMessages;
 	previewMessages: Record<PreviewMessageKey, IntlMessages>;
@@ -124,55 +135,108 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	}, []);
 
 	const PreviewModal = () => {
-		const [currentDemoLang, setCurrentDemoLang] = useState(previewMessages.default);
-		const [languages] = useState(Object.keys(previewMessages));
+		const windowLang = (typeof window !== 'undefined' && window.navigator.language) || 'en-US';
+		const [languageKey, setLanguageKey] = useState<string>(windowLang);
+		const [selectedLanguage, setSelectedLanguage] = useState<LanguageAttributes>(
+			LANGUAGE_MAP[languageKey]
+		);
+		const [demoAllClicked, setDemoAllClicked] = useState(false);
+
+		const handleLanguageChange = ({ event }: { event: any }) => {
+			const lang = event?.currentTarget?.value;
+
+			if (process.env.NDOE_ENVIRONMENT === 'development') {
+				console.info({ lang });
+			}
+
+			setLanguageKey(lang);
+		};
 
 		const onLangChange = () => {
 			if (typeof window === 'undefined') {
 				return;
 			}
-			const languages = [...Object.keys(previewMessages).filter((l) => l !== currentDemoLang)];
-			const newLang = languages[Math.floor(Math.random() * languages.length)];
-			setCurrentDemoLang(previewMessages[newLang as PreviewMessageKey]);
 
-			window.navigator.language = newLang;
+			setDemoAllClicked(true);
 		};
 
-		// console.log(currentDemoLang, window.navigator);
+		useEffect(() => {
+			const lang = LANGUAGE_MAP[languageKey];
+			setSelectedLanguage(lang);
+		}, [languageKey]);
+
+		if (process.env.NDOE_ENVIRONMENT === 'development') {
+			console.info({ selectedLanguage, navigator: window.navigator });
+		}
 
 		return (
 			<Modal isOpen={isOpen} onClose={onClose} isCentered>
 				<ModalOverlay />
 				<ModalContent minWidth={1000}>
-					<ModalHeader>Preview of NFTs</ModalHeader>
+					<ModalHeader pt={3}>
+						<Container textAlign="center" pb={3}>
+							<Heading as="h2" pb={3}>
+								Preview of NFTs
+							</Heading>
+							<Text fontSize="14px" overflowWrap="break-word">
+								The SVGs served from these NFTs will detect a viewers screen reader and display the
+								content in their preferred language.
+							</Text>
+						</Container>
+						<Flex flexDirection="row" justifyContent="center">
+							<Select
+								colorScheme="blackAlpha"
+								variant="filled"
+								fontWeight="bolder"
+								width="fit-content"
+								onChange={(event) => handleLanguageChange({ event })}
+								placeholder="Select Language"
+								value={languageKey}
+							>
+								{LANGUAGE_DISPLAY.map((lang, i) => {
+									return (
+										<option key={`${lang[0]}-${i}`} value={lang[0]}>
+											{lang[1]}
+										</option>
+									);
+								})}
+							</Select>
+							<Button ml={5} textAlign="center" onClick={onLangChange}>
+								Demo Random Languages
+							</Button>
+						</Flex>
+					</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						<Flex p={20}>
+						<Flex p={5} justifyContent="space-around">
 							<Box>
 								<Heading as="h1" mb={10} textAlign="center">
 									Support NFT
 								</Heading>
 								<Center>
-									<StolenWalletSVG lang="es" />
+									<SoulBound
+										selectedLanguage={selectedLanguage}
+										demoAllClicked={demoAllClicked}
+										setDemoAllClicked={setDemoAllClicked}
+										setSelectedLanguage={setSelectedLanguage}
+									/>
 								</Center>
 								<OrderedList mt={10} spacing={2} fontWeight="bold">
 									<ListItem>All funds go to public goods</ListItem>
 									<ListItem>Advertise your support of the SWR</ListItem>
 								</OrderedList>
 							</Box>
-							<Spacer />
 							<Box>
 								<Heading as="h1" mb={10} textAlign="center">
 									Wallet NFT
 								</Heading>
 								<Center>
-									<iframe
-										src="https://svgshare.com/i/kFd.svg"
-										lang="es"
-										width="100%"
-										height="100%"
+									<SoulBound
+										selectedLanguage={selectedLanguage}
+										demoAllClicked={demoAllClicked}
+										setDemoAllClicked={setDemoAllClicked}
+										setSelectedLanguage={setSelectedLanguage}
 									/>
-									{/* <StolenWalletSVG lang={currentDemoLang} /> */}
 								</Center>
 								<OrderedList mt={10} spacing={2} fontWeight="bold">
 									<ListItem>All funds go to public goods</ListItem>
@@ -182,7 +246,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 						</Flex>
 					</ModalBody>
 					<ModalFooter>
-						<Button onClick={onLangChange}>Change Language</Button>
 						<Button onClick={onClose}>Close</Button>
 					</ModalFooter>
 				</ModalContent>

@@ -1,0 +1,709 @@
+{
+	"af": {
+		"xmlLang": "af",
+		"xmlLangSimple": "af",
+		"systemLanguage": "af",
+		"translation": "Hierdie beursie is as gesteel onderteken.",
+		"language": "Afrikaans"
+	},
+	"sq": {
+		"xmlLang": "sq",
+		"xmlLangSimple": "sq",
+		"systemLanguage": "sq",
+		"translation": "Kjo portofol është nënshkruar si e vjedhur.",
+		"language": "Albanian"
+	},
+	"ar": {
+		"xmlLang": "ar",
+		"xmlLangSimple": "ar",
+		"systemLanguage": "ar",
+		"translation": "وقد تم توقيع هذه المحفظة كما سرقت.",
+		"language": "Arabic"
+	},
+	"hy": {
+		"xmlLang": "hy",
+		"xmlLangSimple": "hy",
+		"systemLanguage": "hy",
+		"translation": "Այս դրամապանակը ստորագրվել է որպես գողացված:",
+		"language": "Armenian"
+	},
+	"az": {
+		"xmlLang": "az",
+		"xmlLangSimple": "az",
+		"systemLanguage": "az",
+		"translation": "Bu cüzdan oğurlanmış kimi imzalanmışdır.",
+		"language": "Azerbaijani"
+	},
+	"eu": {
+		"xmlLang": "eu",
+		"xmlLangSimple": "eu",
+		"systemLanguage": "eu",
+		"translation": "Zorro hau lapurtu bezala sinatu da.",
+		"language": "Basque"
+	},
+	"bg": {
+		"xmlLang": "bg",
+		"xmlLangSimple": "bg",
+		"systemLanguage": "bg",
+		"translation": "Този портфейл е подписан като откраднат.",
+		"language": "Bulgarian"
+	},
+	"be": {
+		"xmlLang": "be",
+		"xmlLangSimple": "be",
+		"systemLanguage": "be",
+		"translation": "Гэты кашалёк быў падпісаны як скрадзены.",
+		"language": "Belarusian"
+	},
+	"bn": {
+		"xmlLang": "bn",
+		"xmlLangSimple": "bn",
+		"systemLanguage": "bn",
+		"translation": "এই মানিব্যাগটি চুরি হিসাবে স্বাক্ষরিত হয়েছে।",
+		"language": "Bengali"
+	},
+	"bs": {
+		"xmlLang": "bs",
+		"xmlLangSimple": "bs",
+		"systemLanguage": "bs",
+		"translation": "Ovaj novčanik je potpisan kao ukraden.",
+		"language": "Bosnian"
+	},
+	"my": {
+		"xmlLang": "my",
+		"xmlLangSimple": "my",
+		"systemLanguage": "my",
+		"translation": "ဒီပိုက်ဆံအိတ်ခိုးယူအဖြစ်လက်မှတ်ရေးထိုးခဲ့သည်။",
+		"language": "Burmese"
+	},
+	"ca": {
+		"xmlLang": "ca",
+		"xmlLangSimple": "ca",
+		"systemLanguage": "ca",
+		"translation": "Aquesta cartera ha estat signada com a robada.",
+		"language": "Catalan"
+	},
+	"zh": {
+		"xmlLang": "zh",
+		"xmlLangSimple": "zh",
+		"systemLanguage": "zh",
+		"translation": "这个钱包已被盗。",
+		"language": "Chinese"
+	},
+	"zh-HK": {
+		"xmlLang": "zh-HK",
+		"xmlLangSimple": "zh",
+		"systemLanguage": "zh",
+		"translation": "這個錢包已被盜。",
+		"language": "Chinese (HK)"
+	},
+	"zh-CN": {
+		"xmlLang": "zh-CN",
+		"xmlLangSimple": "zh",
+		"systemLanguage": "zh",
+		"translation": "这个钱包已被盗。",
+		"language": "Chinese (CN)"
+	},
+	"zh-TW": {
+		"xmlLang": "zh-TW",
+		"xmlLangSimple": "zh",
+		"systemLanguage": "zh",
+		"translation": "這個錢包已被盜。",
+		"language": "Chinese (TW)"
+	},
+	"co": {
+		"xmlLang": "co",
+		"xmlLangSimple": "co",
+		"systemLanguage": "co",
+		"translation": "Questa billetera hè stata firmata cum&apos;è arrubata.",
+		"language": "Corsican"
+	},
+	"hr": {
+		"xmlLang": "hr",
+		"xmlLangSimple": "hr",
+		"systemLanguage": "hr",
+		"translation": "Ovaj je novčanik potpisan kao ukraden.",
+		"language": "Croatian"
+	},
+	"cs": {
+		"xmlLang": "cs",
+		"xmlLangSimple": "cs",
+		"systemLanguage": "cs",
+		"translation": "Tato peněženka byla podepsána jako ukradená.",
+		"language": "Czech"
+	},
+	"da": {
+		"xmlLang": "da",
+		"xmlLangSimple": "da",
+		"systemLanguage": "da",
+		"translation": "Denne tegnebog er blevet underskrevet som stjålet.",
+		"language": "Danish"
+	},
+	"nl": {
+		"xmlLang": "nl",
+		"xmlLangSimple": "nl",
+		"systemLanguage": "nl",
+		"translation": "Deze portemonnee is ondertekend als gestolen.",
+		"language": "Dutch"
+	},
+	"en": {
+		"xmlLang": "en",
+		"xmlLangSimple": "en",
+		"systemLanguage": "en",
+		"translation": "This wallet has been signed as stolen.",
+		"language": "English"
+	},
+	"en-CA": {
+		"xmlLang": "en-CA",
+		"xmlLangSimple": "en",
+		"systemLanguage": "en",
+		"translation": "This wallet has been signed as stolen.",
+		"language": "English (CA)"
+	},
+	"en-GB": {
+		"xmlLang": "en-GB",
+		"xmlLangSimple": "en",
+		"systemLanguage": "en",
+		"translation": "This wallet has been signed as stolen.",
+		"language": "English (GB)"
+	},
+	"en-US": {
+		"xmlLang": "en-US",
+		"xmlLangSimple": "en",
+		"systemLanguage": "en",
+		"translation": "This wallet has been signed as stolen.",
+		"language": "English (US)"
+	},
+	"eo": {
+		"xmlLang": "eo",
+		"xmlLangSimple": "eo",
+		"systemLanguage": "eo",
+		"translation": "Ĉi tiu monujo estis subskribita kiel ŝtelita.",
+		"language": "Esperanto"
+	},
+	"et": {
+		"xmlLang": "et",
+		"xmlLangSimple": "et",
+		"systemLanguage": "et",
+		"translation": "See rahakott on allkirjastatud varastatud.",
+		"language": "Estonian"
+	},
+	"fa": {
+		"xmlLang": "fa",
+		"xmlLangSimple": "fa",
+		"systemLanguage": "fa",
+		"translation": "این کیف پول به عنوان دزدیده شده امضا شده است.",
+		"language": "Farsi"
+	},
+	"fi": {
+		"xmlLang": "fi",
+		"xmlLangSimple": "fi",
+		"systemLanguage": "fi",
+		"translation": "Tämä lompakko on allekirjoitettu varastettuna.",
+		"language": "Finnish"
+	},
+	"fr": {
+		"xmlLang": "fr",
+		"xmlLangSimple": "fr",
+		"systemLanguage": "fr",
+		"translation": "Ce portefeuille a été signé comme volé.",
+		"language": "French"
+	},
+	"fr-FR": {
+		"xmlLang": "fr-FR",
+		"xmlLangSimple": "fr",
+		"systemLanguage": "fr",
+		"translation": "Ce portefeuille a été signé comme volé.",
+		"language": "French (FR)"
+	},
+	"fy": {
+		"xmlLang": "fy",
+		"xmlLangSimple": "fy",
+		"systemLanguage": "fy",
+		"translation": "Dizze slaget is tekene as stellen.",
+		"language": "Frisian"
+	},
+	"gd": {
+		"xmlLang": "gd",
+		"xmlLangSimple": "gd",
+		"systemLanguage": "gd",
+		"translation": "Chaidh an wallet seo a shoidhnigeadh mar a chaidh a ghoid.",
+		"language": "Gaelic"
+	},
+	"gl": {
+		"xmlLang": "gl",
+		"xmlLangSimple": "gl",
+		"systemLanguage": "gl",
+		"translation": "Esta carteira foi asinada como roubada.",
+		"language": "Galacian"
+	},
+	"ka": {
+		"xmlLang": "ka",
+		"xmlLangSimple": "ka",
+		"systemLanguage": "ka",
+		"translation": "ეს საფულე გაფორმდა როგორც მოპარული.",
+		"language": "Georgian"
+	},
+	"de": {
+		"xmlLang": "de",
+		"xmlLangSimple": "de",
+		"systemLanguage": "de",
+		"translation": "Diese Brieftasche wurde als gestohlen unterschrieben.",
+		"language": "German"
+	},
+	"de-DE": {
+		"xmlLang": "de-DE",
+		"xmlLangSimple": "de",
+		"systemLanguage": "de",
+		"translation": "Diese Brieftasche wurde als gestohlen unterschrieben.",
+		"language": "German (DE)"
+	},
+	"el": {
+		"xmlLang": "el",
+		"xmlLangSimple": "el",
+		"systemLanguage": "el",
+		"translation": "Αυτό το πορτοφόλι έχει υπογραφεί ως κλεμμένο.",
+		"language": "Greek"
+	},
+	"gu": {
+		"xmlLang": "gu",
+		"xmlLangSimple": "gu",
+		"systemLanguage": "gu",
+		"translation": "આ વ let લેટ પર ચોરીની જેમ હસ્તાક્ષર કરવામાં આવ્યા છે.",
+		"language": "Gujurati"
+	},
+	"ht": {
+		"xmlLang": "ht",
+		"xmlLangSimple": "ht",
+		"systemLanguage": "ht",
+		"translation": "Sa a te bous sa a te siyen kòm yo vòlè li.",
+		"language": "Haitian"
+	},
+	"he": {
+		"xmlLang": "he",
+		"xmlLangSimple": "he",
+		"systemLanguage": "he",
+		"translation": "הארנק הזה נחתם כגנוב.",
+		"language": "Hebrew"
+	},
+	"hi": {
+		"xmlLang": "hi",
+		"xmlLangSimple": "hi",
+		"systemLanguage": "hi",
+		"translation": "इस बटुए को चोरी के रूप में हस्ताक्षरित किया गया है।",
+		"language": "Hindi"
+	},
+	"hu": {
+		"xmlLang": "hu",
+		"xmlLangSimple": "hu",
+		"systemLanguage": "hu",
+		"translation": "Ezt a pénztárcát ellopták.",
+		"language": "Hungarian"
+	},
+	"is": {
+		"xmlLang": "is",
+		"xmlLangSimple": "is",
+		"systemLanguage": "is",
+		"translation": "Þetta veski hefur verið undirritað sem stolið.",
+		"language": "Icelandic"
+	},
+	"id": {
+		"xmlLang": "id",
+		"xmlLangSimple": "id",
+		"systemLanguage": "id",
+		"translation": "Dompet ini telah ditandatangani sebagai dicuri.",
+		"language": "Indonesian"
+	},
+	"ga": {
+		"xmlLang": "ga",
+		"xmlLangSimple": "ga",
+		"systemLanguage": "ga",
+		"translation": "Tá an sparán seo sínithe mar goidte.",
+		"language": "Irish"
+	},
+	"it": {
+		"xmlLang": "it",
+		"xmlLangSimple": "it",
+		"systemLanguage": "it",
+		"translation": "Questo portafoglio è stato firmato come rubato.",
+		"language": "Italian"
+	},
+	"ja": {
+		"xmlLang": "ja",
+		"xmlLangSimple": "ja",
+		"systemLanguage": "ja",
+		"translation": "このウォレットは盗まれたものとして署名されています。",
+		"language": "Japanese"
+	},
+	"kn": {
+		"xmlLang": "kn",
+		"xmlLangSimple": "kn",
+		"systemLanguage": "kn",
+		"translation": "ಈ ಕೈಚೀಲವನ್ನು ಕಳವು ಮಾಡಿದಂತೆ ಸಹಿ ಮಾಡಲಾಗಿದೆ.",
+		"language": "Kannada"
+	},
+	"kk": {
+		"xmlLang": "kk",
+		"xmlLangSimple": "kk",
+		"systemLanguage": "kk",
+		"translation": "Бұл әмиян ұрланған деп қол қойылды.",
+		"language": "Kazakh"
+	},
+	"km": {
+		"xmlLang": "km",
+		"xmlLangSimple": "km",
+		"systemLanguage": "km",
+		"translation": "កាបូបនេះត្រូវបានចុះហត្ថលេខាថាត្រូវបានគេលួច។",
+		"language": "Khmer"
+	},
+	"ky": {
+		"xmlLang": "ky",
+		"xmlLangSimple": "ky",
+		"systemLanguage": "ky",
+		"translation": "Бул капчыкты уурдап кетишкен.",
+		"language": "Kirghiz"
+	},
+	"ko": {
+		"xmlLang": "ko",
+		"xmlLangSimple": "ko",
+		"systemLanguage": "ko",
+		"translation": "이 지갑은 도난당한 것으로 서명되었습니다.",
+		"language": "Korean"
+	},
+	"ko-KR": {
+		"xmlLang": "ko-KR",
+		"xmlLangSimple": "ko",
+		"systemLanguage": "ko",
+		"translation": "이 지갑은 도난당한 것으로 서명되었습니다.",
+		"language": "Korean (KR)"
+	},
+	"la": {
+		"xmlLang": "la",
+		"xmlLangSimple": "la",
+		"systemLanguage": "la",
+		"translation": "Hoc peram est signati ut furto.",
+		"language": "Latin"
+	},
+	"lv": {
+		"xmlLang": "lv",
+		"xmlLangSimple": "lv",
+		"systemLanguage": "lv",
+		"translation": "Šis maciņš ir parakstīts kā nozagts.",
+		"language": "Latvian"
+	},
+	"lt": {
+		"xmlLang": "lt",
+		"xmlLangSimple": "lt",
+		"systemLanguage": "lt",
+		"translation": "Ši piniginė buvo pasirašyta kaip pavogta.",
+		"language": "Lithuanian"
+	},
+	"lb": {
+		"xmlLang": "lb",
+		"xmlLangSimple": "lb",
+		"systemLanguage": "lb",
+		"translation": "Dëse Portemonnaie gouf ënnerschriwwen wéi geklaut.",
+		"language": "Luxembourgish"
+	},
+	"mk": {
+		"xmlLang": "mk",
+		"xmlLangSimple": "mk",
+		"systemLanguage": "mk",
+		"translation": "Овој паричник е потпишан како украден.",
+		"language": "Fyro Macedonian"
+	},
+	"ms": {
+		"xmlLang": "ms",
+		"xmlLangSimple": "ms",
+		"systemLanguage": "ms",
+		"translation": "Dompet ini telah ditandatangani sebagai dicuri.",
+		"language": "Malay"
+	},
+	"ml": {
+		"xmlLang": "ml",
+		"xmlLangSimple": "ml",
+		"systemLanguage": "ml",
+		"translation": "ഈ വാലറ്റ് മോഷ്ടിച്ചതായി ഒപ്പിട്ടു.",
+		"language": "Malayalam"
+	},
+	"mt": {
+		"xmlLang": "mt",
+		"xmlLangSimple": "mt",
+		"systemLanguage": "mt",
+		"translation": "Din il-kartiera ġiet iffirmata bħala misruqa.",
+		"language": "Maltese"
+	},
+	"mi": {
+		"xmlLang": "mi",
+		"xmlLangSimple": "mi",
+		"systemLanguage": "mi",
+		"translation": "Kua hainatia tenei putea ki te tahaetia.",
+		"language": "Maori"
+	},
+	"mr": {
+		"xmlLang": "mr",
+		"xmlLangSimple": "mr",
+		"systemLanguage": "mr",
+		"translation": "या पाकीटात चोरी म्हणून स्वाक्षरी केली गेली आहे.",
+		"language": "Marathi"
+	},
+	"mo": {
+		"xmlLang": "mo",
+		"xmlLangSimple": "mo",
+		"systemLanguage": "mo",
+		"translation": "Acest portofel a fost semnat ca fiind furat.",
+		"language": "Moldavian"
+	},
+	"ne": {
+		"xmlLang": "ne",
+		"xmlLangSimple": "ne",
+		"systemLanguage": "ne",
+		"translation": "यो वालेट चोरीको रूपमा हस्ताक्षर गरिएको छ।",
+		"language": "Nepali"
+	},
+	"no": {
+		"xmlLang": "no",
+		"xmlLangSimple": "no",
+		"systemLanguage": "no",
+		"translation": "Denne lommeboken er signert som stjålet.",
+		"language": "Norwegian"
+	},
+	"nb": {
+		"xmlLang": "nb",
+		"xmlLangSimple": "nb",
+		"systemLanguage": "nb",
+		"translation": "Denne lommeboken er signert som stjålet.",
+		"language": "Norwegian"
+	},
+	"or": {
+		"xmlLang": "or",
+		"xmlLangSimple": "or",
+		"systemLanguage": "or",
+		"translation": "ଏହି ୱାଲେଟ୍ ଚୋରି ହୋଇଥିବା ପରି ଦସ୍ତଖତ ହୋଇଛି |",
+		"language": "Oriya"
+	},
+	"fa": {
+		"xmlLang": "fa",
+		"xmlLangSimple": "fa",
+		"systemLanguage": "fa",
+		"translation": "این کیف پول به عنوان دزدیده شده امضا شده است.",
+		"language": "Persian"
+	},
+	"pl": {
+		"xmlLang": "pl",
+		"xmlLangSimple": "pl",
+		"systemLanguage": "pl",
+		"translation": "Ten portfel został podpisany jako skradziony.",
+		"language": "Polish"
+	},
+	"pt": {
+		"xmlLang": "pt",
+		"xmlLangSimple": "pt",
+		"systemLanguage": "pt",
+		"translation": "Esta carteira foi assinada como roubada.",
+		"language": "Portuguese"
+	},
+	"pt-BR": {
+		"xmlLang": "pt-BR",
+		"xmlLangSimple": "pt",
+		"systemLanguage": "pt",
+		"translation": "Esta carteira foi assinada como roubada.",
+		"language": "Portuguese (BR)"
+	},
+	"pa": {
+		"xmlLang": "pa",
+		"xmlLangSimple": "pa",
+		"systemLanguage": "pa",
+		"translation": "ਇਹ ਬਟੂਆ ਚੋਰੀ &apos;ਤੇ ਦਸਤਖਤ ਕੀਤੇ ਗਏ ਹਨ.",
+		"language": "Punjabi"
+	},
+	"ro": {
+		"xmlLang": "ro",
+		"xmlLangSimple": "ro",
+		"systemLanguage": "ro",
+		"translation": "Acest portofel a fost semnat ca fiind furat.",
+		"language": "Romanian"
+	},
+	"ru": {
+		"xmlLang": "ru",
+		"xmlLangSimple": "ru",
+		"systemLanguage": "ru",
+		"translation": "Этот кошелек был подписан как украденный.",
+		"language": "Russian"
+	},
+	"gd": {
+		"xmlLang": "gd",
+		"xmlLangSimple": "gd",
+		"systemLanguage": "gd",
+		"translation": "Chaidh an wallet seo a shoidhnigeadh mar a chaidh a ghoid.",
+		"language": "Scots Gaelic"
+	},
+	"sd": {
+		"xmlLang": "sd",
+		"xmlLangSimple": "sd",
+		"systemLanguage": "sd",
+		"translation": "هي والٽ چوري طور تي دستخط ڪيو ويو آهي.",
+		"language": "Sindhi"
+	},
+	"si": {
+		"xmlLang": "si",
+		"xmlLangSimple": "si",
+		"systemLanguage": "si",
+		"translation": "මෙම මුදල් පසුම්බිය සොරකම් කළ පරිදි අත්සන් කර ඇත.",
+		"language": "Singhalese"
+	},
+	"sr": {
+		"xmlLang": "sr",
+		"xmlLangSimple": "sr",
+		"systemLanguage": "sr",
+		"translation": "Овај новчаник је потписан као украден.",
+		"language": "Serbian"
+	},
+	"sk": {
+		"xmlLang": "sk",
+		"xmlLangSimple": "sk",
+		"systemLanguage": "sk",
+		"translation": "Táto peňaženka bola podpísaná ako ukradnutá.",
+		"language": "Slovak"
+	},
+	"sl": {
+		"xmlLang": "sl",
+		"xmlLangSimple": "sl",
+		"systemLanguage": "sl",
+		"translation": "Ta denarnica je podpisana kot ukradena.",
+		"language": "Slovenian"
+	},
+	"so": {
+		"xmlLang": "so",
+		"xmlLangSimple": "so",
+		"systemLanguage": "so",
+		"translation": "Boorsadan waxaa loo saxeexay sidii la xaday.",
+		"language": "Somani"
+	},
+	"es": {
+		"xmlLang": "es",
+		"xmlLangSimple": "es",
+		"systemLanguage": "es",
+		"translation": "Esta billetera ha sido firmada como robada.",
+		"language": "Spanish"
+	},
+	"es-MX": {
+		"xmlLang": "es-MX",
+		"xmlLangSimple": "es",
+		"systemLanguage": "es",
+		"translation": "Esta billetera ha sido firmada como robada.",
+		"language": "Spanish (MX)"
+	},
+	"es-ES": {
+		"xmlLang": "es-ES",
+		"xmlLangSimple": "es",
+		"systemLanguage": "es",
+		"translation": "Esta billetera ha sido firmada como robada.",
+		"language": "Spanish (ES)"
+	},
+	"sw": {
+		"xmlLang": "sw",
+		"xmlLangSimple": "sw",
+		"systemLanguage": "sw",
+		"translation": "Mkoba huu umesainiwa kama ulioibiwa.",
+		"language": "Swahili"
+	},
+	"sv": {
+		"xmlLang": "sv",
+		"xmlLangSimple": "sv",
+		"systemLanguage": "sv",
+		"translation": "Denna plånbok har undertecknats som stulen.",
+		"language": "Swedish"
+	},
+	"ta": {
+		"xmlLang": "ta",
+		"xmlLangSimple": "ta",
+		"systemLanguage": "ta",
+		"translation": "இந்த பணப்பையை திருடியதாக கையொப்பமிடப்பட்டுள்ளது.",
+		"language": "Tamil"
+	},
+	"tt": {
+		"xmlLang": "tt",
+		"xmlLangSimple": "tt",
+		"systemLanguage": "tt",
+		"translation": "Бу капчык урланган кебек кул куелган.",
+		"language": "Tatar"
+	},
+	"te": {
+		"xmlLang": "te",
+		"xmlLangSimple": "te",
+		"systemLanguage": "te",
+		"translation": "ఈ వాలెట్ దొంగిలించబడినట్లు సంతకం చేయబడింది.",
+		"language": "Teluga"
+	},
+	"th": {
+		"xmlLang": "th",
+		"xmlLangSimple": "th",
+		"systemLanguage": "th",
+		"translation": "กระเป๋าเงินนี้ได้รับการลงนามว่าถูกขโมย",
+		"language": "Thai"
+	},
+	"tr": {
+		"xmlLang": "tr",
+		"xmlLangSimple": "tr",
+		"systemLanguage": "tr",
+		"translation": "Bu cüzdan çalındı.",
+		"language": "Turkish"
+	},
+	"tk": {
+		"xmlLang": "tk",
+		"xmlLangSimple": "tk",
+		"systemLanguage": "tk",
+		"translation": "Bu gapjyk ogurlanan hökmünde gol çekildi.",
+		"language": "Turkmen"
+	},
+	"uk": {
+		"xmlLang": "uk",
+		"xmlLangSimple": "uk",
+		"systemLanguage": "uk",
+		"translation": "Цей гаманець був підписаний як викрадений.",
+		"language": "Ukrainian"
+	},
+	"ur": {
+		"xmlLang": "ur",
+		"xmlLangSimple": "ur",
+		"systemLanguage": "ur",
+		"translation": "اس پرس کو چوری کے طور پر دستخط کیا گیا ہے۔",
+		"language": "Urdu"
+	},
+	"vi": {
+		"xmlLang": "vi",
+		"xmlLangSimple": "vi",
+		"systemLanguage": "vi",
+		"translation": "Ví này đã được ký kết là bị đánh cắp.",
+		"language": "Vietnamese"
+	},
+	"cy": {
+		"xmlLang": "cy",
+		"xmlLangSimple": "cy",
+		"systemLanguage": "cy",
+		"translation": "Mae&apos;r waled hon wedi&apos;i llofnodi fel un wedi&apos;i dwyn.",
+		"language": "Welsh"
+	},
+	"xh": {
+		"xmlLang": "xh",
+		"xmlLangSimple": "xh",
+		"systemLanguage": "xh",
+		"translation": "Le wallet ityikitywe njengebiwe.",
+		"language": "Xhosa"
+	},
+	"ji": {
+		"xmlLang": "ji",
+		"xmlLangSimple": "ji",
+		"systemLanguage": "ji",
+		"translation": "די בייַטל איז געחתמעט ווי סטאָלען.",
+		"language": "Yiddish"
+	},
+	"zu": {
+		"xmlLang": "zu",
+		"xmlLangSimple": "zu",
+		"systemLanguage": "zu",
+		"translation": "Lesi sikhwama sesisayiniwe njengebiwe.",
+		"language": "Zulu"
+	}
+}

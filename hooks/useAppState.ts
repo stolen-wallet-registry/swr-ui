@@ -1,5 +1,4 @@
 import localStore, { ACCOUNTS_KEY, initialState, StateConfig } from '@utils/localStore';
-import localforage from 'localforage';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -37,7 +36,7 @@ const useAppState = () => {
 
 			if (!state) {
 				const user = { ...initialState, address, network: chain?.id };
-				await localforage.setItem(ACCOUNTS_KEY, user);
+				localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(user));
 				setLocalState(user);
 			} else {
 				setLocalState(state);
