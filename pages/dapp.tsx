@@ -257,7 +257,9 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 
 	// acknowledge-and-pay
 	const ButtonChoices = () => {
-		const [localState, setLocalState] = useLocalStorage(ACCOUNTS_KEY, {});
+		const [localState, setLocalState] = useLocalStorage(ACCOUNTS_KEY, {
+			registrationType: 'standard',
+		});
 		const handleOnClick = (section: RegistrationTypes) => {
 			setLocalState({ registrationType: section });
 		};

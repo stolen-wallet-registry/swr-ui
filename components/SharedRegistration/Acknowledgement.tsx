@@ -142,15 +142,15 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					<Checkbox
 						width={[100, 100]}
 						isChecked={localState.includeWalletNFT === true}
-						isInvalid={localState.includeWalletNFT === undefined}
+						isRequired={true}
 						onChange={() => setLocalState({ includeWalletNFT: true })}
 					>
 						Yes
 					</Checkbox>
 					<Checkbox
 						width={[100, 100]}
+						isRequired={true}
 						onChange={() => setLocalState({ includeWalletNFT: false })}
-						isInvalid={localState.includeWalletNFT === undefined}
 						isChecked={localState.includeWalletNFT === false}
 					>
 						No
@@ -169,8 +169,8 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				<CheckboxGroup>
 					<Checkbox
 						width={[100, 100]}
+						isRequired={true}
 						isChecked={localState.includeSupportNFT === true}
-						isInvalid={localState.includeSupportNFT === undefined}
 						onChange={() => setLocalState({ includeSupportNFT: true })}
 					>
 						Yes
@@ -178,7 +178,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					<Checkbox
 						width={[100, 100]}
 						isChecked={localState.includeSupportNFT === false}
-						isInvalid={localState.includeWalletNFT === undefined}
+						isRequired={true}
 						onChange={() => setLocalState({ includeSupportNFT: false })}
 					>
 						No
