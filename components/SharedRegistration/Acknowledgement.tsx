@@ -1,4 +1,3 @@
-import { PhoneIcon } from '@chakra-ui/icons';
 import {
 	Flex,
 	Spacer,
@@ -13,9 +12,8 @@ import {
 } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { signTypedDataProps } from '@hooks/use712Signature';
-import { RegistrationStateManagemenetProps } from '@interfaces/index';
+import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { RegistrationTypes } from '@utils/types';
 import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
@@ -23,7 +21,6 @@ import { FaWallet } from 'react-icons/fa';
 import { useContractReads, useEnsName } from 'wagmi';
 
 interface AcknowledgementProps {
-	registrationType: RegistrationTypes;
 	address: string;
 	isConnected: boolean;
 	onOpen: () => void;
@@ -31,14 +28,12 @@ interface AcknowledgementProps {
 }
 
 const Acknowledgement: React.FC<AcknowledgementProps> = ({
-	registrationType,
 	address,
 	isConnected,
 	onOpen,
 	setNextStep,
 }) => {
-	const [includeWalletNFT, setIncludeWalletNFT] = useState<boolean>();
-	const [includeSupportNFT, setIncludeSupportNFT] = useState<boolean>();
+	const [localState, setLocalState] = useLocalStorage();
 	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
 
 	const ensData = useEnsName({
@@ -46,7 +41,6 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 		chainId: 1,
 	});
 
-	const [trustedRelayer, setTrustedRelayer] = useState('');
 	const [relayerIsValid, setRelayerIsValid] = useState(true);
 
 	const [isMounted, setIsMounted] = useState(false);
@@ -79,13 +73,12 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 
 	const handleChangeRelayer = (e: any) => {
 		// TODO handle ens address
-		setTrustedRelayer(e.target.value);
+		setLocalState({ trustedRelayer: e.target.value });
 		setRelayerIsValid(ethers.utils.isAddress(e.target.value));
 	};
 
 	const handleSignAndPay = async () => {
-		// use712Signature(acknowledgement!)
-		localStorage.setItem('trustedRelayer', trustedRelayer);
+		// await use712Signature(acknowledgement!)
 		setNextStep();
 	};
 
@@ -140,15 +133,17 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				<CheckboxGroup>
 					<Checkbox
 						width={[100, 100]}
-						isChecked={includeWalletNFT}
-						onChange={() => setIncludeWalletNFT(true)}
+						isChecked={localState.includeWalletNFT === true}
+						isRequired={true}
+						onChange={() => setLocalState({ includeWalletNFT: true })}
 					>
 						Yes
 					</Checkbox>
 					<Checkbox
 						width={[100, 100]}
-						onChange={() => setIncludeWalletNFT(false)}
-						isChecked={includeWalletNFT === false}
+						isRequired={true}
+						onChange={() => setLocalState({ includeWalletNFT: false })}
+						isChecked={localState.includeWalletNFT === false}
 					>
 						No
 					</Checkbox>
@@ -166,27 +161,29 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				<CheckboxGroup>
 					<Checkbox
 						width={[100, 100]}
-						isChecked={includeSupportNFT}
-						onChange={() => setIncludeSupportNFT(true)}
+						isRequired={true}
+						isChecked={localState.includeSupportNFT === true}
+						onChange={() => setLocalState({ includeSupportNFT: true })}
 					>
 						Yes
 					</Checkbox>
 					<Checkbox
 						width={[100, 100]}
-						isChecked={includeSupportNFT === false}
-						onChange={() => setIncludeSupportNFT(false)}
+						isChecked={localState.includeSupportNFT === false}
+						isRequired={true}
+						onChange={() => setLocalState({ includeSupportNFT: false })}
 					>
 						No
 					</Checkbox>
 				</CheckboxGroup>
 			</Flex>
-			{registrationType !== 'standard' && (
+			{localState.registrationType !== 'standard' && (
 				<Flex flexDirection="column">
 					<Text>What is your other wallet address?</Text>
 					<InputGroup>
 						<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
 						<Input
-							value={trustedRelayer}
+							value={localState?.trustedRelayer || ''}
 							placeholder="Trusted Relayer"
 							size="md"
 							isRequired
@@ -211,8 +208,8 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					m={5}
 					onClick={handleSignAndPay}
 					disabled={
-						includeWalletNFT === undefined ||
-						includeSupportNFT === undefined ||
+						localState.includeWalletNFT === undefined ||
+						localState.includeSupportNFT === undefined ||
 						// acknowledgement === undefined ||
 						!relayerIsValid
 					}

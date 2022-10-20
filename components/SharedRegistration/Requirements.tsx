@@ -4,32 +4,27 @@ import React from 'react';
 import RegistrationSection from '@components/RegistrationSection';
 import { HIGHLIGHT_STYLE } from '@utils/helpers';
 
-import { RegistrationStateManagemenetProps } from '@interfaces/index';
-import { useAccount } from 'wagmi';
-import { RegistrationTypes } from '@utils/types';
 import capitalize from 'lodash/capitalize';
+import useLocalStorage from '@hooks/useLocalStorage';
 
-interface RequirementProps extends RegistrationStateManagemenetProps {
+interface RequirementProps {
 	address: string;
 	isConnected: boolean;
-	registrationType: RegistrationTypes;
 	handleBegin: () => void;
 }
 
-const Requirements: React.FC<RequirementProps> = ({
-	handleBegin,
-	address,
-	isConnected,
-	registrationType,
-}) => {
+const Requirements: React.FC<RequirementProps> = ({ handleBegin, address, isConnected }) => {
+	const [localState, setLocalState] = useLocalStorage();
 	const minPayment = '0.01';
+
+	console.log({ localState });
 
 	if (!isConnected) {
 		return (
 			<RegistrationSection title="Requirements">
 				<Box>
 					<OrderedList spacing={4}>
-						<Text>Connect your wallet</Text>
+						<Text>Connect your wallet Please</Text>
 					</OrderedList>
 				</Box>
 			</RegistrationSection>
@@ -106,11 +101,11 @@ const Requirements: React.FC<RequirementProps> = ({
 	};
 
 	return (
-		<RegistrationSection title={`${capitalize(registrationType)} Registration`}>
+		<RegistrationSection title={`${capitalize(localState.registrationType)} Registration`}>
 			<Box pb={10}>Requirements:</Box>
-			{registrationType === 'standard' && <StandardRequirements />}
-			{registrationType === 'selfRelay' && <SelfRelayRequirements />}
-			{registrationType === 'p2pRelay' && <PeerToPeerRelayRequirements />}
+			{localState.registrationType === 'standard' && <StandardRequirements />}
+			{localState.registrationType === 'selfRelay' && <SelfRelayRequirements />}
+			{localState.registrationType === 'p2pRelay' && <PeerToPeerRelayRequirements />}
 			<Button alignSelf="flex-end" width={[200, 250]} m={5} onClick={handleBegin}>
 				Begin
 			</Button>

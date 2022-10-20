@@ -1,37 +1,37 @@
 import { OrderedList, ListItem } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { RegistrationTypes } from '@utils/types';
+import useLocalStorage from '@hooks/useLocalStorage';
 
 interface StepProps {
-	key: number | string;
+	keyIndex: number | string;
 }
 
 interface CompletionStepsProps {
-	registrationType: RegistrationTypes;
 	payWallet?: string;
 	peerId?: number;
 }
 
-const CompletionSteps: React.FC<CompletionStepsProps> = ({
-	registrationType,
-	payWallet,
-	peerId,
-}) => {
-	const NftStep = ({ key }: StepProps) => (
-		<ListItem key={key}>Select value for the optional NFTs.</ListItem>
+const CompletionSteps: React.FC<CompletionStepsProps> = ({ payWallet, peerId }) => {
+	const [localState, _] = useLocalStorage();
+	const NftStep = ({ keyIndex }: StepProps) => (
+		<ListItem key={keyIndex}>Select value for the optional NFTs.</ListItem>
 	);
-	const AcknowledgeStep = ({ key }: StepProps) => (
-		<ListItem key={key}>Sign and pay an "Acknowledgement of Registration" transaction.</ListItem>
+	const AcknowledgeStep = ({ keyIndex }: StepProps) => (
+		<ListItem key={keyIndex}>
+			Sign and pay an "Acknowledgement of Registration" transaction.
+		</ListItem>
 	);
-	const WaitStep = ({ key }: StepProps) => (
-		<ListItem key={key}>Wait 2-4 minutes grace period before you are allowed to register.</ListItem>
+	const WaitStep = ({ keyIndex }: StepProps) => (
+		<ListItem key={keyIndex}>
+			Wait 2-4 minutes grace period before you are allowed to register.
+		</ListItem>
 	);
 
-	const RegistrationStep = ({ key }: StepProps) => (
+	const RegistrationStep = ({ keyIndex }: StepProps) => (
 		<>
-			<ListItem key={key}>
-				Sign {registrationType === 'standard' && 'and pay'} for your wallet to be added to the
-				Registry.
+			<ListItem key={keyIndex}>
+				Sign {localState.registrationType === 'standard' && 'and pay'} for your wallet to be added
+				to the Registry.
 			</ListItem>
 		</>
 	);
@@ -39,10 +39,10 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({
 	const StandardCompletionSteps = () => {
 		return (
 			<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-				<NftStep key={1} />
+				<NftStep keyIndex={1} />
 				<ListItem key={2}>Sign and pay an "Acknowledgement of Registration" transaction.</ListItem>
-				<WaitStep key={3} />
-				<RegistrationStep key={4} />
+				<WaitStep keyIndex={3} />
+				<RegistrationStep keyIndex={4} />
 			</OrderedList>
 		);
 	};
@@ -50,11 +50,11 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({
 	const SelfRelayCompletionSteps = () => {
 		return (
 			<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-				<NftStep key={1} />
+				<NftStep keyIndex={1} />
 				<ListItem key={2}>Sign an "Acknowledgement of Registration" transaction.</ListItem>
 				<ListItem key={3}>Switch to {payWallet}</ListItem>
-				<WaitStep key={4} />
-				<RegistrationStep key={5} />
+				<WaitStep keyIndex={4} />
+				<RegistrationStep keyIndex={5} />
 				<ListItem key={6}>Switch to {payWallet}</ListItem>
 				<ListItem key={7}>Pay for your wallet to be added to the Registry</ListItem>
 			</OrderedList>
@@ -64,11 +64,11 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({
 	const PeerToPeerRelayCompletionSteps = () => {
 		return (
 			<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-				<NftStep key={1} />
+				<NftStep keyIndex={1} />
 				<ListItem key={2}>Sign an "Acknowledgement of Registration" transaction.</ListItem>
 				<ListItem key={3}>Switch to {payWallet}</ListItem>
-				<WaitStep key={4} />
-				<RegistrationStep key={5} />
+				<WaitStep keyIndex={4} />
+				<RegistrationStep keyIndex={5} />
 				<ListItem key={6}>Give peer your peerId of {peerId} in order to connect</ListItem>
 				<ListItem key={7}>Pay for your wallet to be added to the Registry</ListItem>
 			</OrderedList>
@@ -77,9 +77,9 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({
 
 	return (
 		<RegistrationSection title="Completion Steps">
-			{registrationType === 'standard' && <StandardCompletionSteps />}
-			{registrationType === 'selfRelay' && <SelfRelayCompletionSteps />}
-			{registrationType === 'p2pRelay' && <PeerToPeerRelayCompletionSteps />}
+			{localState.registrationType === 'standard' && <StandardCompletionSteps />}
+			{localState.registrationType === 'selfRelay' && <SelfRelayCompletionSteps />}
+			{localState.registrationType === 'p2pRelay' && <PeerToPeerRelayCompletionSteps />}
 		</RegistrationSection>
 	);
 };

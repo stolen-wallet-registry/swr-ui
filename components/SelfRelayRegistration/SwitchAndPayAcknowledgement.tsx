@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { useAccount } from 'wagmi';
+import useLocalStorage from '@hooks/useLocalStorage';
 
-interface SwitchAndPayAcknowledgementProps extends RegistrationStateManagemenetProps {}
-
-const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = ({
-	setShowStep,
-}) => {
+const SwitchAndPayAcknowledgement: React.FC = () => {
+	const [_, setLocalState] = useLocalStorage();
 	const [isMounted, setIsMounted] = useState(false);
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
@@ -31,7 +28,7 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 			<RegistrationSection title="Waiting Trusted Relayer">
 				<Text>Please switch to your other account ({storedTrustedRelayer})</Text>
 				<Text> so you can pay for the acknowledgement step and proceed</Text>
-				<Button onClick={() => setShowStep('acknowledge-and-sign')}>Back</Button>
+				<Button onClick={() => setLocalState({ step: 'acknowledge-and-sign' })}>Back</Button>
 			</RegistrationSection>
 		);
 	}
@@ -39,7 +36,7 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 	return (
 		<RegistrationSection title="Pay for Registration">
 			<div>SwitchAndPay</div>
-			<Button onClick={() => setShowStep('acknowledge-and-sign')}>Back</Button>
+			<Button onClick={() => setLocalState({ step: 'acknowledge-and-sign' })}>Back</Button>
 		</RegistrationSection>
 	);
 };

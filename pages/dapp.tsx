@@ -1,5 +1,6 @@
+import React from 'react';
+
 import DappLayout from '../components/DappLayout';
-import StolenWalletSVG from '../assets/stolen-wallet.svg';
 import pick from 'lodash/pick';
 
 import type { GetStaticProps } from 'next';
@@ -12,33 +13,10 @@ import {
 	SimpleGrid,
 	Center,
 	useColorMode,
-	Highlight,
-	OrderedList,
-	ListItem,
-	Checkbox,
-	Text,
-	CheckboxGroup,
-	Spacer,
 	useDisclosure,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import {
-	useAccount,
-	useContract,
-	useEnsName,
-	useProvider,
-	useSigner,
-	useNetwork,
-	useContractReads,
-} from 'wagmi';
-
+import { useAccount, useContract, useProvider, useSigner, useNetwork } from 'wagmi';
 import {
 	buildAcknowledgementStruct,
 	signTypedDataProps,
@@ -53,15 +31,12 @@ import { ethers } from 'ethers';
 
 import StandardRegistration from '@components/StandardRegistration';
 
-import {
-	RegistrationTypes,
-	StandardSteps,
-	SelfRelaySteps,
-	P2PRelaySteps,
-	PreviewMessageKey,
-} from '@utils/types';
+import { RegistrationTypes, PreviewMessageKey } from '@utils/types';
 import SelfRelayRegistration from '@components/SelfRelayRegistration';
 import WebRtcDirectRelay from '@components/WebRtcDirectRegistration';
+import useLocalStorage from '@hooks/useLocalStorage';
+import PreviewModal from '@components/PreviewModal';
+
 interface DappProps {
 	messages: IntlMessages;
 	previewMessages: Record<PreviewMessageKey, IntlMessages>;
@@ -87,7 +62,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
-	const [showSection, setShowSection] = useState<RegistrationTypes>('standard');
 	const [isMounted, setIsMounted] = useState(false);
 	const [signer, setSigner] = useState<ethers.Signer>();
 
@@ -123,78 +97,18 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		setIsMounted(true);
 	}, []);
 
-	const PreviewModal = () => {
-		const [currentDemoLang, setCurrentDemoLang] = useState(previewMessages.default);
-		const [languages] = useState(Object.keys(previewMessages));
-
-		const onLangChange = () => {
-			if (typeof window === 'undefined') {
-				return;
-			}
-			const languages = [...Object.keys(previewMessages).filter((l) => l !== currentDemoLang)];
-			const newLang = languages[Math.floor(Math.random() * languages.length)];
-			setCurrentDemoLang(previewMessages[newLang as PreviewMessageKey]);
-
-			window.navigator.language = newLang;
-		};
-
-		// console.log(currentDemoLang, window.navigator);
-
-		return (
-			<Modal isOpen={isOpen} onClose={onClose} isCentered>
-				<ModalOverlay />
-				<ModalContent minWidth={1000}>
-					<ModalHeader>Preview of NFTs</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
-						<Flex p={20}>
-							<Box>
-								<Heading as="h1" mb={10} textAlign="center">
-									Support NFT
-								</Heading>
-								<Center>
-									<StolenWalletSVG lang="es" />
-								</Center>
-								<OrderedList mt={10} spacing={2} fontWeight="bold">
-									<ListItem>All funds go to public goods</ListItem>
-									<ListItem>Advertise your support of the SWR</ListItem>
-								</OrderedList>
-							</Box>
-							<Spacer />
-							<Box>
-								<Heading as="h1" mb={10} textAlign="center">
-									Wallet NFT
-								</Heading>
-								<Center>
-									<iframe
-										src="https://svgshare.com/i/kFd.svg"
-										lang="es"
-										width="100%"
-										height="100%"
-									/>
-									{/* <StolenWalletSVG lang={currentDemoLang} /> */}
-								</Center>
-								<OrderedList mt={10} spacing={2} fontWeight="bold">
-									<ListItem>All funds go to public goods</ListItem>
-									<ListItem>non-burnable, non-tradeable</ListItem>
-								</OrderedList>
-							</Box>
-						</Flex>
-					</ModalBody>
-					<ModalFooter>
-						<Button onClick={onLangChange}>Change Language</Button>
-						<Button onClick={onClose}>Close</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
-		);
-	};
-
 	// acknowledge-and-pay
 	const ButtonChoices = () => {
+		const [localState, setLocalState] = useLocalStorage();
 		const handleOnClick = (section: RegistrationTypes) => {
-			setShowSection(section);
+			setLocalState({ registrationType: section });
 		};
+
+		console.log(localState);
+
+		if (!isMounted) {
+			return null;
+		}
 
 		return (
 			<Box mt={20} mb={10}>
@@ -217,27 +131,27 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 						<Button
 							variant="outline"
 							width={200}
-							disabled={showSection === 'standard'}
+							disabled={localState?.registrationType === 'standard'}
 							onClick={() => handleOnClick('standard')}
-							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
+							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
 						>
 							Standard
 						</Button>
 						<Button
 							variant="outline"
 							width={200}
-							disabled={showSection === 'selfRelay'}
+							disabled={localState?.registrationType === 'selfRelay'}
 							onClick={() => handleOnClick('selfRelay')}
-							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
+							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
 						>
 							Self Relay
 						</Button>
 						<Button
 							variant="outline"
 							width={200}
-							disabled={showSection === 'p2pRelay'}
+							disabled={localState?.registrationType === 'p2pRelay'}
 							onClick={() => handleOnClick('p2pRelay')}
-							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
+							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
 						>
 							P2P Relay
 						</Button>
@@ -246,9 +160,14 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 				<Center p={10} gap={5}>
 					{isConnected ? (
 						<>
-							{showSection === 'standard' && <StandardRegistration onOpen={onOpen} />}
-							{showSection === 'selfRelay' && <SelfRelayRegistration onOpen={onOpen} />}
-							{showSection === 'p2pRelay' && <WebRtcDirectRelay onOpen={onOpen} />}
+							{localState?.registrationType === 'standard' && (
+								<StandardRegistration onOpen={onOpen} />
+							)}
+							{localState?.registrationType === 'selfRelay' && (
+								<SelfRelayRegistration onOpen={onOpen} />
+							)}
+							{localState?.registrationType === 'p2pRelay' && <WebRtcDirectRelay onOpen={onOpen} />}
+							<PreviewModal isOpen={isOpen} onClose={onClose} />
 						</>
 					) : (
 						<div>Please Connect to your wallet</div>
@@ -268,7 +187,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 				}
 			`}</style>
 			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
-			<PreviewModal />
 		</LightMode>
 	);
 };

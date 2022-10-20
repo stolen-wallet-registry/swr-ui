@@ -1,22 +1,12 @@
 import Layout, { COLORS, ColorValues } from '../components/Layout';
 
 import type { GetStaticProps, NextPage } from 'next';
-import {
-	Center,
-	Heading,
-	GridItem,
-	Box,
-	SimpleGrid,
-	useColorMode,
-	Button,
-	VStack,
-} from '@chakra-ui/react';
+import { Center, Heading, GridItem, Box, SimpleGrid, useColorMode } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import ColorButton from '../components/ColorButton';
 
 import { SectionTitle, SectionBody } from '../components/GridSection';
 import { FeaturesSection } from '../components/LandingSections';
-import PrimaryButton from '../components/PrimaryButton';
 import { AppProps } from 'next/app';
 import { randomNumber } from '@utils/helpers';
 import { showColorProps } from '@utils/types';

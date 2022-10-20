@@ -1,29 +1,38 @@
+import React from 'react';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import {
 	RainbowKitProvider,
 	getDefaultWallets,
 	connectorsForWallets,
-	wallet,
 	lightTheme,
 	darkTheme,
 	DisclaimerComponent,
 	Theme,
 	AvatarComponent,
 } from '@rainbow-me/rainbowkit';
+
+import {
+	injectedWallet,
+	rainbowWallet,
+	metaMaskWallet,
+	coinbaseWallet,
+	walletConnectWallet,
+	argentWallet,
+	trustWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import appLightTheme from '../theme/rainbowkit-themes/light';
+
 import { chain, createClient, configureChains, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Text, Link } from '@chakra-ui/react';
-
-import appLightTheme from '../theme/rainbowkit-themes/light';
-
 import { Image } from '../components/NextChalkraImage';
 
-import React from 'react';
-
 import { RAINBOWKIT_COLORS } from '../theme/rainbowkit-themes/base';
+
+const APP_NAME = 'The Stollen Wallet Registry';
 
 export const testnets = [
 	// chain.rinkeby,
@@ -36,10 +45,10 @@ export const testnets = [
 ];
 
 export const supporttedChains = [
-	chain.mainnet,
-	chain.polygon,
-	chain.optimism,
-	chain.arbitrum,
+	// chain.mainnet,
+	// chain.polygon,
+	// chain.optimism,
+	// chain.arbitrum,
 	...testnets,
 ];
 
@@ -47,11 +56,6 @@ const { chains, provider, webSocketProvider } = configureChains(supporttedChains
 	infuraProvider({ infuraId: process.env.INFURA_ID }),
 	publicProvider(),
 ]);
-
-const { wallets } = getDefaultWallets({
-	appName: 'RainbowKit Demo',
-	chains: chains,
-});
 
 const Disclaimer: DisclaimerComponent = () => (
 	<Text>
@@ -62,16 +66,28 @@ const Disclaimer: DisclaimerComponent = () => (
 );
 
 const demoAppInfo = {
-	appName: 'The Stollen Wallet Registry',
+	appName: APP_NAME,
 	learnMoreUrl: 'https://docs.swi.xyz/',
 	disclaimer: Disclaimer,
 };
 
 const connectors = connectorsForWallets([
-	...wallets,
+	{
+		groupName: 'Popular',
+		wallets: [
+			injectedWallet({ chains: supporttedChains }),
+			rainbowWallet({ chains: supporttedChains }),
+			metaMaskWallet({ chains: supporttedChains }),
+			coinbaseWallet({ chains: supporttedChains, appName: APP_NAME }),
+			walletConnectWallet({ chains: supporttedChains }),
+		],
+	},
 	{
 		groupName: 'Other',
-		wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
+		wallets: [
+			argentWallet({ chains: supporttedChains }),
+			trustWallet({ chains: supporttedChains }),
+		],
 	},
 ]);
 

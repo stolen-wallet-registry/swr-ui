@@ -6,7 +6,9 @@ import MadeFrom from './MadeFrom';
 
 export type ColorValues = 'red' | 'teal' | 'blue' | 'green' | 'purple';
 export const COLORS: ColorValues[] = ['red', 'teal', 'blue', 'green', 'purple'];
-interface DappLayoutProps {}
+interface DappLayoutProps {
+	children: React.ReactNode;
+}
 
 const DappLayout: React.FunctionComponent<DappLayoutProps> = ({ children }) => {
 	return (

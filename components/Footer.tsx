@@ -6,6 +6,7 @@ interface FooterProps {
 	color: string;
 	opacity: number;
 	addBox?: boolean;
+	children?: React.ReactNode;
 }
 
 const Footer: React.FC<FooterProps> = ({ color, opacity, addBox = false, children }) => {
