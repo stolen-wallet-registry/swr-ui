@@ -1,14 +1,16 @@
+import React from 'react';
+
+import { useAccount } from 'wagmi';
+
+import useLocalStorage from '@hooks/useLocalStorage';
+
+import RegisterAndSign from './RegisterAndSIgn';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import Requirements from '@components/SharedRegistration/Requirements';
 import SwitchAndPayAcknowledgement from '@components/SelfRelayRegistration/SwitchAndPayAcknowledgement';
 import SwitchAndPayRegistration from '@components/SelfRelayRegistration/SwitchAndPayRegistration';
 import Acknowledgement from '@components/SharedRegistration/Acknowledgement';
-import { SelfRelaySteps } from '@utils/types';
-import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
-import RegisterAndSign from './RegisterAndSIgn';
-
 interface SelfRelayRegistrationInterface {
 	onOpen: () => void;
 }
@@ -20,40 +22,30 @@ const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = ({ onOpe
 		},
 	});
 
-	const [expiryTimestamp, setExpiryTimestamp] = useState<number>(0);
-	const [showStep, setShowStep] = useState<SelfRelaySteps>('requirements');
-
-	useEffect(() => {
-		setExpiryTimestamp(new Date().getTime() + 1 * 5 * 1000);
-	}, []);
+	const [localState, setLocalState] = useLocalStorage();
 
 	return (
 		<>
-			{showStep === 'requirements' && (
+			{localState.step === 'requirements' && (
 				<Requirements
-					handleBegin={() => setShowStep('acknowledge-and-sign')}
-					registrationType="selfRelay"
-					setShowStep={setShowStep}
+					handleBegin={() => setLocalState({ step: 'acknowledge-and-sign' })}
 					address={address as string}
 					isConnected={isConnected}
 				/>
 			)}
-			{showStep !== 'requirements' && <CompletionSteps registrationType="selfRelay" />}
-			{showStep === 'acknowledge-and-sign' && (
+			{localState.step !== 'requirements' && <CompletionSteps />}
+			{localState.step === 'acknowledge-and-sign' && (
 				<Acknowledgement
-					registrationType="selfRelay"
-					setNextStep={() => setShowStep('switch-and-pay-one')}
+					setNextStep={() => setLocalState({ step: 'switch-and-pay-one' })}
 					address={address as string}
 					isConnected={isConnected}
 					onOpen={onOpen}
 				/>
 			)}
-			{showStep === 'switch-and-pay-one' && (
-				<SwitchAndPayAcknowledgement setShowStep={setShowStep} />
-			)}
-			{showStep === 'grace-period' && <GracePeriod setShowStep={setShowStep} />}
-			{showStep === 'register-and-sign' && <RegisterAndSign />}
-			{showStep === 'switch-and-pay-two' && <SwitchAndPayRegistration setShowStep={setShowStep} />}
+			{localState.step === 'switch-and-pay-one' && <SwitchAndPayAcknowledgement />}
+			{localState.step === 'grace-period' && <GracePeriod setLocalState={setLocalState} />}
+			{localState.step === 'register-and-sign' && <RegisterAndSign />}
+			{localState.step === 'switch-and-pay-two' && <SwitchAndPayRegistration />}
 		</>
 	);
 };

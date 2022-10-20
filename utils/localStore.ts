@@ -29,31 +29,84 @@ export const initialState: StateConfig = {
 	includeSupportNFT: null,
 };
 
-// localStorage.setDriver(localStorage.LOCALSTORAGE);
+const useLocalStorage = <T extends StateConfig>(
+	key: string,
+	initialValue: Partial<T>
+): [T, (val: Partial<T>) => void] => {
+	// State to store our value
+	// Pass initial state function to useState so logic is only executed once
+	const [storedValue, setStoredValue] = useState<T>(() => {
+		if (typeof window === 'undefined') {
+			return initialValue;
+		}
+
+		try {
+			// Get from local storage by key
+			const item = window.localStorage.getItem(key);
+			// Parse stored json or if none return initialValue
+			return item ? JSON.parse(item) : initialValue;
+		} catch (error) {
+			// If error also return initialValue
+			console.log(error);
+			return initialValue;
+		}
+	});
+	// Return a wrapped version of useState's setter function that ...
+	// ... persists the new value to localStorage.
+	const setValue = (value: Partial<T>) => {
+		try {
+			// Allow value to be a function so we have same API as useState
+			const valueToStore = { ...storedValue, ...value };
+			// Save state
+			setStoredValue(valueToStore);
+			// Save to local storage
+			if (typeof window !== 'undefined') {
+				window.localStorage.setItem(key, JSON.stringify(valueToStore));
+			}
+		} catch (error) {
+			// A more advanced implementation would handle the error case
+			console.log(error);
+		}
+	};
+	return [storedValue, setValue] as [T, (val: Partial<T>) => void];
+};
+
+export default useLocalStorage;
+
+// window.localStorage.setDriver(window.localStorage.LOCALSTORAGE);
 
 const getLocalState = (): StateConfig => {
-	const state = JSON.parse(localStorage.getItem(ACCOUNTS_KEY as string) as string);
+	try {
+		const state = window.localStorage.getItem(ACCOUNTS_KEY as string);
 
-	// if (!state) {
-	//   console.log('no state found');
-	//   localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(initialState));
-	//   return initialState;
-	// }
+		if (state) {
+			return JSON.parse(state);
+		} else {
+			console.log('no state found');
+			window.localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(initialState));
+			return initialState;
+		}
+	} catch (e) {
+		console.log(e);
 
-	return state;
+		throw e;
+	}
 };
 
 const setLocalState = (args: Partial<StateConfig>) => {
 	try {
-		const currentState = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) as string);
-		localStorage.setItem(ACCOUNTS_KEY, JSON.stringify({ ...currentState, ...args }));
+		const currentState = JSON.parse(window.localStorage.getItem(ACCOUNTS_KEY) as string);
+		debugger;
+		window.localStorage.setItem(ACCOUNTS_KEY, JSON.stringify({ ...currentState, ...args }));
+		return getLocalState();
 	} catch (e) {
 		console.log(e);
+		throw e;
 	}
 };
 
 const resetLocalState = (address?: string, network?: number) => {
-	localStorage.removeItem(ACCOUNTS_KEY);
+	window.localStorage.removeItem(ACCOUNTS_KEY);
 
 	const user = {
 		...initialState,
@@ -62,12 +115,12 @@ const resetLocalState = (address?: string, network?: number) => {
 		connectedAddress: address,
 	};
 
-	localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(user));
+	window.localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(user));
 };
 
 // const setAccounts = (accounts: AccountConfig[]) => {
 // 	try {
-// 		localStorage.setItem(ACCOUNTS_KEY, (accts: AccountConfig[]) => [...accts, ...accounts]);
+// 		window.localStorage.setItem(ACCOUNTS_KEY, (accts: AccountConfig[]) => [...accts, ...accounts]);
 // 	} catch (error) {
 // 		console.log(error);
 // 	}
@@ -75,7 +128,7 @@ const resetLocalState = (address?: string, network?: number) => {
 
 // const removeAccount = (address: string) => {
 // 	try {
-// 		localStorage.setItem(ACCOUNTS_KEY, (accts: AccountConfig[]) =>
+// 		window.localStorage.setItem(ACCOUNTS_KEY, (accts: AccountConfig[]) =>
 // 			accts.filter((acct) => acct.address === address)
 // 		);
 // 	} catch (error) {
@@ -86,12 +139,12 @@ const resetLocalState = (address?: string, network?: number) => {
 // const deleteRegistration = (address: string, network: number) => {
 // 	try {
 // 		let user: StateConfig;
-// 		localStorage.iterate(
+// 		window.localStorage.iterate(
 // 			(value, key, _) => {
 // 				if (key === (buildKey(address, network))) {
 // 					user = (getAddress(address, network)) as StateConfig;
-// 					localStorage.removeItem(buildKey(user!.trustedRelayer!, network));
-// 					localStorage.removeItem(key);
+// 					window.localStorage.removeItem(buildKey(user!.trustedRelayer!, network));
+// 					window.localStorage.removeItem(key);
 
 // 					removeAccount(user.address);
 // 					removeAccount(user.trustedRelayer!);
@@ -108,7 +161,7 @@ const resetLocalState = (address?: string, network?: number) => {
 
 const setAddress = (state: StateConfig) => {
 	try {
-		localStorage.setItem(
+		window.localStorage.setItem(
 			buildKey(state.address!, state.network!),
 			JSON.stringify({
 				address: state.address,
@@ -127,7 +180,7 @@ const setAddress = (state: StateConfig) => {
 
 const getAddress = (address: string, network: number): StateConfig | unknown => {
 	try {
-		const config = localStorage.getItem(buildKey(address, network))!;
+		const config = window.localStorage.getItem(buildKey(address, network))!;
 		return JSON.parse(config) as StateConfig;
 	} catch (error) {
 		console.log(error);
@@ -135,7 +188,7 @@ const getAddress = (address: string, network: number): StateConfig | unknown => 
 };
 
 // const getAccounts = (address: string, network: number) => {
-// 	const accts = (localStorage.getItem(ACCOUNTS_KEY)) as AccountConfig[];
+// 	const accts = (window.localStorage.getItem(ACCOUNTS_KEY)) as AccountConfig[];
 
 // 	if (accts.length === 0) {
 // 		setAddress({ ...initialState, address, network });
@@ -166,7 +219,7 @@ const getAddress = (address: string, network: number): StateConfig | unknown => 
 // 		accounts = getAccounts(address, network);
 
 // 		accounts.map((acct) => {
-// 			return localStorage.getItem(buildKey(acct?.address!, acct?.network!));
+// 			return window.localStorage.getItem(buildKey(acct?.address!, acct?.network!));
 // 		});
 
 // 		// TODO uhhh

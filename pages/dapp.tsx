@@ -1,9 +1,7 @@
 import React from 'react';
 
 import DappLayout from '../components/DappLayout';
-import StolenWalletSVG from '../assets/stolen-wallet.svg';
 import pick from 'lodash/pick';
-// import { setLocalState, getLocalState } from '@utils/localStore';
 
 import type { GetStaticProps } from 'next';
 import {
@@ -15,35 +13,10 @@ import {
 	SimpleGrid,
 	Center,
 	useColorMode,
-	Highlight,
-	OrderedList,
-	ListItem,
-	Checkbox,
-	Text,
-	CheckboxGroup,
-	Spacer,
 	useDisclosure,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay,
-	Select,
-	Container,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import {
-	useAccount,
-	useContract,
-	useEnsName,
-	useProvider,
-	useSigner,
-	useNetwork,
-	useContractReads,
-} from 'wagmi';
-import SoulBound from '../components/NftDisplay/SoulBound';
+import { useAccount, useContract, useProvider, useSigner, useNetwork } from 'wagmi';
 import {
 	buildAcknowledgementStruct,
 	signTypedDataProps,
@@ -58,23 +31,11 @@ import { ethers } from 'ethers';
 
 import StandardRegistration from '@components/StandardRegistration';
 
-import {
-	RegistrationTypes,
-	StandardSteps,
-	SelfRelaySteps,
-	P2PRelaySteps,
-	PreviewMessageKey,
-} from '@utils/types';
+import { RegistrationTypes, PreviewMessageKey } from '@utils/types';
 import SelfRelayRegistration from '@components/SelfRelayRegistration';
 import WebRtcDirectRelay from '@components/WebRtcDirectRegistration';
-import {
-	LANGUAGE_MAP,
-	LanguageAttributes,
-	LANGUAGE_OPTIONS,
-	LANGUAGE_DISPLAY,
-} from '@components/NftDisplay/languageData';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { ACCOUNTS_KEY } from '@utils/localStore';
+import PreviewModal from '@components/PreviewModal';
 
 interface DappProps {
 	messages: IntlMessages;
@@ -136,133 +97,14 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		setIsMounted(true);
 	}, []);
 
-	const PreviewModal = () => {
-		const windowLang = (typeof window !== 'undefined' && window.navigator.language) || 'en-US';
-		const [languageKey, setLanguageKey] = useState<string>(windowLang);
-		const [selectedLanguage, setSelectedLanguage] = useState<LanguageAttributes>(
-			LANGUAGE_MAP[languageKey]
-		);
-		const [demoAllClicked, setDemoAllClicked] = useState(false);
-
-		const handleLanguageChange = ({ event }: { event: any }) => {
-			const lang = event?.currentTarget?.value;
-
-			if (process.env.NDOE_ENVIRONMENT === 'development') {
-				console.info({ lang });
-			}
-
-			setLanguageKey(lang);
-		};
-
-		const onLangChange = () => {
-			if (typeof window === 'undefined') {
-				return;
-			}
-
-			setDemoAllClicked(true);
-		};
-
-		useEffect(() => {
-			const lang = LANGUAGE_MAP[languageKey];
-			setSelectedLanguage(lang);
-		}, [languageKey]);
-
-		if (process.env.NDOE_ENVIRONMENT === 'development') {
-			console.info({ selectedLanguage, navigator: window.navigator });
-		}
-
-		return (
-			<Modal isOpen={isOpen} onClose={onClose} isCentered>
-				<ModalOverlay />
-				<ModalContent minWidth={1000}>
-					<ModalHeader pt={3}>
-						<Container textAlign="center" pb={3}>
-							<Heading as="h2" pb={3}>
-								Preview of NFTs
-							</Heading>
-							<Text fontSize="14px" overflowWrap="break-word">
-								The SVGs served from these NFTs will detect a viewers screen reader and display the
-								content in their preferred language.
-							</Text>
-						</Container>
-						<Flex flexDirection="row" justifyContent="center">
-							<Select
-								colorScheme="blackAlpha"
-								variant="filled"
-								fontWeight="bolder"
-								width="fit-content"
-								onChange={(event) => handleLanguageChange({ event })}
-								placeholder="Select Language"
-								value={languageKey}
-							>
-								{LANGUAGE_DISPLAY.map((lang, i) => {
-									return (
-										<option key={`${lang[0]}-${i}`} value={lang[0]}>
-											{lang[1]}
-										</option>
-									);
-								})}
-							</Select>
-							<Button ml={5} textAlign="center" onClick={onLangChange}>
-								Demo Random Languages
-							</Button>
-						</Flex>
-					</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
-						<Flex p={5} justifyContent="space-around">
-							<Box>
-								<Heading as="h1" mb={10} textAlign="center">
-									Support NFT
-								</Heading>
-								<Center>
-									<SoulBound
-										selectedLanguage={selectedLanguage}
-										demoAllClicked={demoAllClicked}
-										setDemoAllClicked={setDemoAllClicked}
-										setSelectedLanguage={setSelectedLanguage}
-									/>
-								</Center>
-								<OrderedList mt={10} spacing={2} fontWeight="bold">
-									<ListItem>All funds go to public goods</ListItem>
-									<ListItem>Advertise your support of the SWR</ListItem>
-								</OrderedList>
-							</Box>
-							<Box>
-								<Heading as="h1" mb={10} textAlign="center">
-									Wallet NFT
-								</Heading>
-								<Center>
-									<SoulBound
-										selectedLanguage={selectedLanguage}
-										demoAllClicked={demoAllClicked}
-										setDemoAllClicked={setDemoAllClicked}
-										setSelectedLanguage={setSelectedLanguage}
-									/>
-								</Center>
-								<OrderedList mt={10} spacing={2} fontWeight="bold">
-									<ListItem>All funds go to public goods</ListItem>
-									<ListItem>non-burnable, non-tradeable</ListItem>
-								</OrderedList>
-							</Box>
-						</Flex>
-					</ModalBody>
-					<ModalFooter>
-						<Button onClick={onClose}>Close</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
-		);
-	};
-
 	// acknowledge-and-pay
 	const ButtonChoices = () => {
-		const [localState, setLocalState] = useLocalStorage(ACCOUNTS_KEY, {
-			registrationType: 'standard',
-		});
+		const [localState, setLocalState] = useLocalStorage();
 		const handleOnClick = (section: RegistrationTypes) => {
 			setLocalState({ registrationType: section });
 		};
+
+		console.log(localState);
 
 		if (!isMounted) {
 			return null;
@@ -291,7 +133,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 							width={200}
 							disabled={localState?.registrationType === 'standard'}
 							onClick={() => handleOnClick('standard')}
-							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
+							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
 						>
 							Standard
 						</Button>
@@ -300,7 +142,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 							width={200}
 							disabled={localState?.registrationType === 'selfRelay'}
 							onClick={() => handleOnClick('selfRelay')}
-							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
+							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
 						>
 							Self Relay
 						</Button>
@@ -309,7 +151,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 							width={200}
 							disabled={localState?.registrationType === 'p2pRelay'}
 							onClick={() => handleOnClick('p2pRelay')}
-							_active={{ transform: 'translateY(-2px) scale(1.1)' }}
+							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
 						>
 							P2P Relay
 						</Button>
@@ -325,6 +167,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 								<SelfRelayRegistration onOpen={onOpen} />
 							)}
 							{localState?.registrationType === 'p2pRelay' && <WebRtcDirectRelay onOpen={onOpen} />}
+							<PreviewModal isOpen={isOpen} onClose={onClose} />
 						</>
 					) : (
 						<div>Please Connect to your wallet</div>
@@ -344,7 +187,6 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 				}
 			`}</style>
 			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
-			<PreviewModal />
 		</LightMode>
 	);
 };

@@ -1,22 +1,18 @@
 import { OrderedList, ListItem } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { RegistrationTypes } from '@utils/types';
+import useLocalStorage from '@hooks/useLocalStorage';
 
 interface StepProps {
 	keyIndex: number | string;
 }
 
 interface CompletionStepsProps {
-	registrationType: RegistrationTypes;
 	payWallet?: string;
 	peerId?: number;
 }
 
-const CompletionSteps: React.FC<CompletionStepsProps> = ({
-	registrationType,
-	payWallet,
-	peerId,
-}) => {
+const CompletionSteps: React.FC<CompletionStepsProps> = ({ payWallet, peerId }) => {
+	const [localState, _] = useLocalStorage();
 	const NftStep = ({ keyIndex }: StepProps) => (
 		<ListItem key={keyIndex}>Select value for the optional NFTs.</ListItem>
 	);
@@ -34,8 +30,8 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({
 	const RegistrationStep = ({ keyIndex }: StepProps) => (
 		<>
 			<ListItem key={keyIndex}>
-				Sign {registrationType === 'standard' && 'and pay'} for your wallet to be added to the
-				Registry.
+				Sign {localState.registrationType === 'standard' && 'and pay'} for your wallet to be added
+				to the Registry.
 			</ListItem>
 		</>
 	);
@@ -81,9 +77,9 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({
 
 	return (
 		<RegistrationSection title="Completion Steps">
-			{registrationType === 'standard' && <StandardCompletionSteps />}
-			{registrationType === 'selfRelay' && <SelfRelayCompletionSteps />}
-			{registrationType === 'p2pRelay' && <PeerToPeerRelayCompletionSteps />}
+			{localState.registrationType === 'standard' && <StandardCompletionSteps />}
+			{localState.registrationType === 'selfRelay' && <SelfRelayCompletionSteps />}
+			{localState.registrationType === 'p2pRelay' && <PeerToPeerRelayCompletionSteps />}
 		</RegistrationSection>
 	);
 };

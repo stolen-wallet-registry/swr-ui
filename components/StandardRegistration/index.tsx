@@ -1,11 +1,10 @@
-import { StandardSteps } from '@utils/types';
-import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import CompletionSteps from '../SharedRegistration/CompletionSteps';
 import GracePeriod from '../SharedRegistration/GracePeriod';
 import Requirements from '../SharedRegistration/Requirements';
 import RegisterAndPay from './RegisterAndPay';
 import Acknowledgement from '../SharedRegistration/Acknowledgement';
+import useLocalStorage from '@hooks/useLocalStorage';
 
 // TODO expract this out into useModal
 interface StandardRegistrationInterface {
@@ -13,37 +12,33 @@ interface StandardRegistrationInterface {
 }
 
 const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ onOpen }) => {
+	const [localState, setLocalState] = useLocalStorage();
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
 			console.log('Connected', { address, connector, isReconnected });
 		},
 	});
 
-	const [showStep, setShowStep] = useState<StandardSteps>('requirements');
-
 	return (
 		<>
-			{showStep === 'requirements' && (
+			{localState.step === 'requirements' && (
 				<Requirements
-					handleBegin={() => setShowStep('acknowledge-and-pay')}
-					registrationType="standard"
-					setShowStep={setShowStep}
+					handleBegin={() => setLocalState({ step: 'acknowledge-and-pay' })}
 					address={address as string}
 					isConnected={isConnected}
 				/>
 			)}
-			{showStep !== 'requirements' && <CompletionSteps registrationType="standard" />}
-			{showStep === 'acknowledge-and-pay' && (
+			{localState.step !== 'requirements' && <CompletionSteps />}
+			{localState.step === 'acknowledge-and-pay' && (
 				<Acknowledgement
-					registrationType="standard"
-					setNextStep={() => setShowStep('grace-period')}
+					setNextStep={() => setLocalState({ step: 'grace-period' })}
 					address={address as string}
 					isConnected={isConnected}
 					onOpen={onOpen}
 				/>
 			)}
-			{showStep === 'grace-period' && <GracePeriod setShowStep={setShowStep} />}
-			{showStep === 'register-and-pay' && <RegisterAndPay setShowStep={setShowStep} />}
+			{localState.step === 'grace-period' && <GracePeriod setLocalState={setLocalState} />}
+			{localState.step === 'register-and-pay' && <RegisterAndPay setLocalState={setLocalState} />}
 		</>
 	);
 };

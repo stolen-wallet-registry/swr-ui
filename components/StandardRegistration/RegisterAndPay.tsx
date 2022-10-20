@@ -1,22 +1,34 @@
 import { Flex, Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
+import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
 import useTimer from '@hooks/useTimer';
-import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { useState, useEffect } from 'react';
 
-const RegisterAndPay: React.FC<RegistrationStateManagemenetProps> = ({ setShowStep }) => {
-	const [expiryTimestamp, setExpiryTimestamp] = useState<number>(
-		new Date().getTime() + 1 * 5 * 1000
-	);
+interface GracePeriodInterface {
+	setLocalState: (val: Partial<StateConfig>) => void;
+}
+
+const RegisterAndPay: React.FC<GracePeriodInterface> = ({ setLocalState }) => {
 	const [expired, setExpired] = useState(false);
+	const expireyTimestamp = new Date().getTime() + 1 * 5 * 1000;
 	const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
-		expiry: expiryTimestamp,
-		onExpire: () => setExpired(true),
+		expiry: expireyTimestamp,
+		onExpire: () => {
+			console.log('onExpire');
+			setExpired(true);
+		},
 	});
 
 	useEffect(() => {
 		start();
 	}, []);
+
+	useEffect(() => {
+		if (!isRunning) {
+			console.log('here');
+			setExpired(true);
+		}
+	}, [isRunning]);
 
 	return (
 		<RegistrationSection title="Register and Pay">
@@ -30,7 +42,7 @@ const RegisterAndPay: React.FC<RegistrationStateManagemenetProps> = ({ setShowSt
 			<Button mb={5} disabled={expired}>
 				Sign and Pay
 			</Button>
-			<Button disabled={!expired} onClick={() => setShowStep('acknowledge-and-pay')}>
+			<Button disabled={!expired} onClick={() => setLocalState({ step: 'requirements' })}>
 				Restart
 			</Button>
 		</RegistrationSection>

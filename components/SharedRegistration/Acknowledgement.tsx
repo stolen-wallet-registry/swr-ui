@@ -1,4 +1,3 @@
-import { PhoneIcon } from '@chakra-ui/icons';
 import {
 	Flex,
 	Spacer,
@@ -14,10 +13,7 @@ import {
 import RegistrationSection from '@components/RegistrationSection';
 import { signTypedDataProps } from '@hooks/use712Signature';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { RegistrationStateManagemenetProps } from '@interfaces/index';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { ACCOUNTS_KEY } from '@utils/localStore';
-import { RegistrationTypes } from '@utils/types';
 import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
@@ -25,7 +21,6 @@ import { FaWallet } from 'react-icons/fa';
 import { useContractReads, useEnsName } from 'wagmi';
 
 interface AcknowledgementProps {
-	registrationType: RegistrationTypes;
 	address: string;
 	isConnected: boolean;
 	onOpen: () => void;
@@ -33,13 +28,12 @@ interface AcknowledgementProps {
 }
 
 const Acknowledgement: React.FC<AcknowledgementProps> = ({
-	registrationType,
 	address,
 	isConnected,
 	onOpen,
 	setNextStep,
 }) => {
-	const [localState, setLocalState] = useLocalStorage(ACCOUNTS_KEY, {});
+	const [localState, setLocalState] = useLocalStorage();
 	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
 
 	const ensData = useEnsName({
@@ -47,7 +41,6 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 		chainId: 1,
 	});
 
-	const [trustedRelayer, setTrustedRelayer] = useState('');
 	const [relayerIsValid, setRelayerIsValid] = useState(true);
 
 	const [isMounted, setIsMounted] = useState(false);
@@ -80,13 +73,12 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 
 	const handleChangeRelayer = (e: any) => {
 		// TODO handle ens address
-		setTrustedRelayer(e.target.value);
+		setLocalState({ trustedRelayer: e.target.value });
 		setRelayerIsValid(ethers.utils.isAddress(e.target.value));
 	};
 
 	const handleSignAndPay = async () => {
-		// use712Signature(acknowledgement!)
-		setLocalState({ trustedRelayer });
+		// await use712Signature(acknowledgement!)
 		setNextStep();
 	};
 
@@ -185,13 +177,13 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					</Checkbox>
 				</CheckboxGroup>
 			</Flex>
-			{registrationType !== 'standard' && (
+			{localState.registrationType !== 'standard' && (
 				<Flex flexDirection="column">
 					<Text>What is your other wallet address?</Text>
 					<InputGroup>
 						<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
 						<Input
-							value={trustedRelayer}
+							value={localState?.trustedRelayer || ''}
 							placeholder="Trusted Relayer"
 							size="md"
 							isRequired
