@@ -258,6 +258,11 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 		);
 	};
 
+	if (!isMounted) {
+		// no server side rendering please
+		return null;
+	}
+
 	return (
 		<LightMode>
 			<style jsx global>{`
@@ -267,8 +272,9 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 					transition-duration: unset;
 				}
 			`}</style>
-			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
-			<PreviewModal />
+			<DappLayout>
+				<ButtonChoices />
+			</DappLayout>
 		</LightMode>
 	);
 };

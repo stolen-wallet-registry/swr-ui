@@ -74,6 +74,7 @@ const getMessageFallback = ({ namespace, key, error }: messageFallbackProps) => 
 
 interface NextIntlLocaleProviderProps {
 	pageProps: AppProps & NextIntlProviderProps;
+	children?: React.ReactNode;
 }
 
 const NextIntlLocaleProvider: React.FC<NextIntlLocaleProviderProps> = ({ pageProps, children }) => {
