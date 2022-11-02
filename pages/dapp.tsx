@@ -4,17 +4,7 @@ import DappLayout from '../components/DappLayout';
 import pick from 'lodash/pick';
 
 import type { GetStaticProps } from 'next';
-import {
-	Box,
-	Button,
-	Flex,
-	Heading,
-	LightMode,
-	SimpleGrid,
-	Center,
-	useColorMode,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Box, LightMode, Center, useColorMode, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useAccount, useContract, useProvider, useSigner, useNetwork } from 'wagmi';
 import {
@@ -29,13 +19,12 @@ import {
 } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
 
-import StandardRegistration from '@components/StandardRegistration';
-
-import { RegistrationTypes, PreviewMessageKey } from '@utils/types';
-import SelfRelayRegistration from '@components/SelfRelayRegistration';
-import WebRtcDirectRelay from '@components/WebRtcDirectRegistration';
+import { PreviewMessageKey, RegistrationTypes } from '@utils/types';
 import useLocalStorage from '@hooks/useLocalStorage';
-import PreviewModal from '@components/PreviewModal';
+import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
+import Requirements from '@components/SharedRegistration/Requirements';
+import ButtonChoices from '@components/ButtonChoices';
+import router from 'next/router';
 
 interface DappProps {
 	messages: IntlMessages;
@@ -60,13 +49,13 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { setColorMode } = useColorMode();
 	const [isMounted, setIsMounted] = useState(false);
 	const [signer, setSigner] = useState<ethers.Signer>();
+	const [localState] = useLocalStorage();
+	const [registration, setRegistration] = useState<RegistrationTypes>(localState.registrationType);
 
 	const provider = useProvider();
-	const { chain } = useNetwork();
 
 	const contract = useContract({
 		addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
@@ -94,86 +83,38 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 
 	useEffect(() => {
 		setColorMode('light');
+		setRegistration(localState.registrationType);
 		setIsMounted(true);
 	}, []);
 
 	// acknowledge-and-pay
-	const ButtonChoices = () => {
-		const [localState, setLocalState] = useLocalStorage();
-		const handleOnClick = (section: RegistrationTypes) => {
-			setLocalState({ registrationType: section });
-		};
-
-		console.log(localState);
-
+	const RequirementsDisplay = () => {
 		if (!isMounted) {
 			return null;
 		}
 
 		return (
-			<Box mt={20} mb={10}>
-				<Heading size="lg" letterSpacing="0.1em" textAlign="center">
-					Registration Options
-				</Heading>
-				<Heading
-					color="white"
-					backgroundColor="blackAlpha.900"
-					textShadow="-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;"
-					boxShadow="-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;"
-					size="sm"
-					letterSpacing="0.1em"
-					textAlign="center"
-				>
-					The Stolen Wallet Registry
-				</Heading>
-				<Flex justifyContent="space-around" alignItems="center">
-					<SimpleGrid spacing={20} columns={[1, 1, 3]} p={10} gap={5}>
-						<Button
-							variant="outline"
-							width={200}
-							disabled={localState?.registrationType === 'standard'}
-							onClick={() => handleOnClick('standard')}
-							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
-						>
-							Standard
-						</Button>
-						<Button
-							variant="outline"
-							width={200}
-							disabled={localState?.registrationType === 'selfRelay'}
-							onClick={() => handleOnClick('selfRelay')}
-							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
-						>
-							Self Relay
-						</Button>
-						<Button
-							variant="outline"
-							width={200}
-							disabled={localState?.registrationType === 'p2pRelay'}
-							onClick={() => handleOnClick('p2pRelay')}
-							_active={{ transform: 'translateY(-2px) scale(1.2)' }}
-						>
-							P2P Relay
-						</Button>
-					</SimpleGrid>
-				</Flex>
-				<Center p={10} gap={5}>
-					{isConnected ? (
-						<>
-							{localState?.registrationType === 'standard' && (
-								<StandardRegistration onOpen={onOpen} />
-							)}
-							{localState?.registrationType === 'selfRelay' && (
-								<SelfRelayRegistration onOpen={onOpen} />
-							)}
-							{localState?.registrationType === 'p2pRelay' && <WebRtcDirectRelay onOpen={onOpen} />}
-							<PreviewModal isOpen={isOpen} onClose={onClose} />
-						</>
-					) : (
-						<div>Please Connect to your wallet</div>
-					)}
-				</Center>
-			</Box>
+			<Flex mt={20} mb={10} p={10} flexDirection="column">
+				{isConnected ? (
+					<>
+						<ButtonChoices
+							disableAll={false}
+							setRegistration={setRegistration}
+							registration={registration}
+						/>
+						<Flex flexDirection={{ lg: 'row', md: 'column', sm: 'column' }} gap={10}>
+							<CompletionSteps />
+							<Requirements
+								address={address as string}
+								isConnected={isConnected}
+								registrationType={registration}
+							/>
+						</Flex>
+					</>
+				) : (
+					<div>Please Connect to your wallet</div>
+				)}
+			</Flex>
 		);
 	};
 
@@ -186,7 +127,7 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 					transition-duration: unset;
 				}
 			`}</style>
-			<DappLayout>{isMounted && <ButtonChoices />}</DappLayout>
+			<DappLayout showButton={false}>{isMounted && <RequirementsDisplay />}</DappLayout>
 		</LightMode>
 	);
 };

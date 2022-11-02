@@ -24,7 +24,7 @@ import {
 import appLightTheme from '../theme/rainbowkit-themes/light';
 
 import { chain, createClient, configureChains, WagmiConfig } from 'wagmi';
-import { infuraProvider } from 'wagmi/providers/infura';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Text, Link } from '@chakra-ui/react';
@@ -45,15 +45,15 @@ export const testnets = [
 ];
 
 export const supporttedChains = [
-	// chain.mainnet,
+	chain.mainnet,
 	// chain.polygon,
 	// chain.optimism,
 	// chain.arbitrum,
 	...testnets,
 ];
 
-const { chains, provider, webSocketProvider } = configureChains(supporttedChains, [
-	infuraProvider({ infuraId: process.env.INFURA_ID }),
+const { chains, provider } = configureChains(supporttedChains, [
+	alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
 	publicProvider(),
 ]);
 
@@ -110,7 +110,6 @@ const wagmiClient = createClient({
 	autoConnect: true,
 	connectors,
 	provider,
-	webSocketProvider,
 });
 
 type RainbowKitWagmiProviderProps = {

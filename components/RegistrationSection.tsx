@@ -1,5 +1,8 @@
-import { Flex, Heading } from '@chakra-ui/react';
-import React from 'react';
+import { Button, Flex, Heading } from '@chakra-ui/react';
+import useLocalStorage from '@hooks/useLocalStorage';
+import React, { useEffect, useState } from 'react';
+import { useAccount, useNetwork } from 'wagmi';
+import router from 'next/router';
 
 export interface RegistrationSectionProps {
 	title: string;
@@ -17,9 +20,11 @@ const RegistrationSection: React.FC<RegistrationSectionProps> = ({ title, childr
 			flexDirection="column"
 			border="2px solid RGBA(0, 0, 0, 0.50)"
 		>
-			<Heading size="md" pb={5} pt={5}>
-				{title}
-			</Heading>
+			<Flex justifyContent="space-between" alignItems="center" pb={5}>
+				<Heading size="md" pb={5} pt={5}>
+					{title}
+				</Heading>
+			</Flex>
 			{children}
 		</Flex>
 	);

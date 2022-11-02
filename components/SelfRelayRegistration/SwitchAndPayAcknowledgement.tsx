@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { useAccount } from 'wagmi';
-import useLocalStorage from '@hooks/useLocalStorage';
+import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
+import { SelfRelaySteps } from '@utils/types';
 
-const SwitchAndPayAcknowledgement: React.FC = () => {
-	const [_, setLocalState] = useLocalStorage();
+interface SwitchAndPayAcknowledgementProps {}
+
+const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = ({}) => {
+	const [localState, setLocalState] = useLocalStorage();
 	const [isMounted, setIsMounted] = useState(false);
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
 			console.log('Connected', { address, connector, isReconnected });
 		},
 	});
-
-	const storedTrustedRelayer = localStorage.getItem('trustedRelayer');
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -23,20 +24,23 @@ const SwitchAndPayAcknowledgement: React.FC = () => {
 		return null;
 	}
 
-	if (isConnected && address !== storedTrustedRelayer) {
+	const backButtonAction = () => {
+		setLocalState({ step: SelfRelaySteps.AcknowledgeAndSign });
+	};
+
+	if (isConnected && address !== localState.trustedRelayer) {
 		return (
 			<RegistrationSection title="Waiting Trusted Relayer">
-				<Text>Please switch to your other account ({storedTrustedRelayer})</Text>
+				<Text>Please switch to your other account ({localState.trustedRelayer})</Text>
 				<Text> so you can pay for the acknowledgement step and proceed</Text>
-				<Button onClick={() => setLocalState({ step: 'acknowledge-and-sign' })}>Back</Button>
+				<Button onClick={backButtonAction}>Back</Button>
 			</RegistrationSection>
 		);
 	}
 
 	return (
-		<RegistrationSection title="Pay for Registration">
-			<div>SwitchAndPay</div>
-			<Button onClick={() => setLocalState({ step: 'acknowledge-and-sign' })}>Back</Button>
+		<RegistrationSection title="Pay for Acknowledgement">
+			<Button onClick={backButtonAction}>Back</Button>
 		</RegistrationSection>
 	);
 };

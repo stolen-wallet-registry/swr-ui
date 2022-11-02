@@ -8,73 +8,75 @@ import {
 	Input,
 	InputGroup,
 	InputLeftElement,
-	Box,
 } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { signTypedDataProps } from '@hooks/use712Signature';
-import useLocalStorage from '@hooks/useLocalStorage';
+import useDebounce from '@hooks/useDebounce';
+import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
+import { SelfRelaySteps } from '@utils/types';
 import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
 import { ethers } from 'ethers';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaWallet } from 'react-icons/fa';
-import { useContractReads, useEnsName } from 'wagmi';
+import { useContractReads, useProvider } from 'wagmi';
 
 interface AcknowledgementProps {
 	address: string;
 	isConnected: boolean;
 	onOpen: () => void;
 	setNextStep: () => void;
+	tempRelayer: string;
+	setTempRelayer: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Acknowledgement: React.FC<AcknowledgementProps> = ({
 	address,
 	isConnected,
 	onOpen,
+	setTempRelayer,
+	tempRelayer,
 	setNextStep,
 }) => {
 	const [localState, setLocalState] = useLocalStorage();
 	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
-
-	const ensData = useEnsName({
-		address,
-		chainId: 1,
-	});
-
-	const [relayerIsValid, setRelayerIsValid] = useState(true);
+	const [relayerIsValid, setRelayerIsValid] = useState(false);
+	const debouncedTrustedRelayer = useDebounce(tempRelayer, 500);
 
 	const [isMounted, setIsMounted] = useState(false);
-	const { data, isError, isLoading } = useContractReads({
-		contracts: [
-			{
-				addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-				contractInterface: StolenWalletRegistryAbi,
-				functionName: 'generateHashStruct',
-				args: [address],
-			},
-			{
-				addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-				contractInterface: StolenWalletRegistryAbi,
-				functionName: 'nonces',
-				args: [address],
-			},
-			{
-				addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-				contractInterface: StolenWalletRegistryAbi,
-				functionName: 'ACKNOWLEDGEMENT_TYPEHASH',
-			},
-			{
-				addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-				contractInterface: StolenWalletRegistryAbi,
-				functionName: 'REGISTRATION_TYPEHASH',
-			},
-		],
-	});
+	// const { data, isError, isLoading } = useContractReads({
+	// 	contracts: [
+	// 		{
+	// 			addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+	// 			contractInterface: StolenWalletRegistryAbi,
+	// 			functionName: 'generateHashStruct',
+	// 			args: [address],
+	// 		},
+	// 		{
+	// 			addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+	// 			contractInterface: StolenWalletRegistryAbi,
+	// 			functionName: 'nonces',
+	// 			args: [address],
+	// 		},
+	// 		{
+	// 			addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+	// 			contractInterface: StolenWalletRegistryAbi,
+	// 			functionName: 'ACKNOWLEDGEMENT_TYPEHASH',
+	// 		},
+	// 		{
+	// 			addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+	// 			contractInterface: StolenWalletRegistryAbi,
+	// 			functionName: 'REGISTRATION_TYPEHASH',
+	// 		},
+	// 	],
+	// });
 
-	const handleChangeRelayer = (e: any) => {
-		// TODO handle ens address
-		setLocalState({ trustedRelayer: e.target.value });
-		setRelayerIsValid(ethers.utils.isAddress(e.target.value));
+	const checkValidEns = (address: string) => {
+		return address?.split('.')?.at(-1) === 'eth';
+	};
+
+	const handleChangeRelayer = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		setTempRelayer(e.target.value);
 	};
 
 	const handleSignAndPay = async () => {
@@ -83,11 +85,19 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 	};
 
 	useEffect(() => {
+		setRelayerIsValid(ethers.utils.isAddress(debouncedTrustedRelayer));
+
+		if (!relayerIsValid) {
+			console.log('relayer not valid');
+		}
+	}, [debouncedTrustedRelayer]);
+
+	useEffect(() => {
 		setIsMounted(true);
 	}, []);
 
 	useEffect(() => {
-		console.log(isError, isLoading, data);
+		// console.log(isError, isLoading, data);
 		const buildStruct = async () => {
 			// const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
 			// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
@@ -118,7 +128,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 			buildStruct();
 		}
 	}, [isConnected, address]);
-
+	console.log(localState);
 	return (
 		<RegistrationSection title="Include NFTs?">
 			<Flex>
@@ -177,13 +187,13 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					</Checkbox>
 				</CheckboxGroup>
 			</Flex>
-			{localState.registrationType !== 'standard' && (
+			{localState.registrationType !== 'standardRelay' && (
 				<Flex flexDirection="column">
 					<Text>What is your other wallet address?</Text>
 					<InputGroup>
 						<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
 						<Input
-							value={localState?.trustedRelayer || ''}
+							value={tempRelayer}
 							placeholder="Trusted Relayer"
 							size="md"
 							isRequired
@@ -208,10 +218,10 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					m={5}
 					onClick={handleSignAndPay}
 					disabled={
-						localState.includeWalletNFT === undefined ||
-						localState.includeSupportNFT === undefined ||
-						// acknowledgement === undefined ||
-						!relayerIsValid
+						localState.includeWalletNFT === null ||
+						localState.includeSupportNFT === null ||
+						// acknowledgement === null ||
+						(localState.registrationType !== 'standardRelay' && !relayerIsValid)
 					}
 				>
 					Sign and Pay

@@ -16,11 +16,6 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({ payWallet, peerId }) 
 	const NftStep = ({ keyIndex }: StepProps) => (
 		<ListItem key={keyIndex}>Select value for the optional NFTs.</ListItem>
 	);
-	const AcknowledgeStep = ({ keyIndex }: StepProps) => (
-		<ListItem key={keyIndex}>
-			Sign and pay an "Acknowledgement of Registration" transaction.
-		</ListItem>
-	);
 	const WaitStep = ({ keyIndex }: StepProps) => (
 		<ListItem key={keyIndex}>
 			Wait 2-4 minutes grace period before you are allowed to register.
@@ -30,8 +25,8 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({ payWallet, peerId }) 
 	const RegistrationStep = ({ keyIndex }: StepProps) => (
 		<>
 			<ListItem key={keyIndex}>
-				Sign {localState.registrationType === 'standard' && 'and pay'} for your wallet to be added
-				to the Registry.
+				Sign {localState.registrationType === 'standardRelay' && 'and pay'} for your wallet to be
+				added to the Registry.
 			</ListItem>
 		</>
 	);
@@ -77,7 +72,7 @@ const CompletionSteps: React.FC<CompletionStepsProps> = ({ payWallet, peerId }) 
 
 	return (
 		<RegistrationSection title="Completion Steps">
-			{localState.registrationType === 'standard' && <StandardCompletionSteps />}
+			{localState.registrationType === 'standardRelay' && <StandardCompletionSteps />}
 			{localState.registrationType === 'selfRelay' && <SelfRelayCompletionSteps />}
 			{localState.registrationType === 'p2pRelay' && <PeerToPeerRelayCompletionSteps />}
 		</RegistrationSection>

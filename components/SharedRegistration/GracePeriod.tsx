@@ -3,19 +3,21 @@ import RegistrationSection from '@components/RegistrationSection';
 import useTimer from '@hooks/useTimer';
 import { useEffect } from 'react';
 import { StateConfig } from '@utils/localStore';
+import { RegistrationValues } from '@utils/types';
 
 interface GracePeriodInterface {
 	setLocalState: (val: Partial<StateConfig>) => void;
+	nextStep: RegistrationValues;
 }
 
-const GracePeriod: React.FC<GracePeriodInterface> = ({ setLocalState }) => {
+const GracePeriod: React.FC<GracePeriodInterface> = ({ setLocalState, nextStep }) => {
 	const expireyTimestamp = new Date().getTime() + 1 * 5 * 1000;
 
 	const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
 		expiry: expireyTimestamp,
 		onExpire: () => {
 			console.log('onExpire');
-			setLocalState({ step: 'register-and-pay' });
+			setLocalState({ step: nextStep });
 		},
 	});
 
@@ -26,7 +28,7 @@ const GracePeriod: React.FC<GracePeriodInterface> = ({ setLocalState }) => {
 	useEffect(() => {
 		if (!isRunning) {
 			console.log('here test grace period');
-			setLocalState({ step: 'register-and-pay' });
+			setLocalState({ step: nextStep });
 		}
 	}, [isRunning]);
 

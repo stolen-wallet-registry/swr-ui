@@ -96,7 +96,6 @@ const getLocalState = (): StateConfig => {
 const setLocalState = (args: Partial<StateConfig>) => {
 	try {
 		const currentState = JSON.parse(window.localStorage.getItem(ACCOUNTS_KEY) as string);
-		debugger;
 		window.localStorage.setItem(ACCOUNTS_KEY, JSON.stringify({ ...currentState, ...args }));
 		return getLocalState();
 	} catch (e) {
