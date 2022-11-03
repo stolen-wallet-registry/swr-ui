@@ -3,110 +3,33 @@ import {
 	Spacer,
 	CheckboxGroup,
 	Checkbox,
-	Button,
-	Text,
-	Input,
 	InputGroup,
 	InputLeftElement,
+	Input,
+	Button,
+	Text,
 } from '@chakra-ui/react';
-import RegistrationSection from '@components/RegistrationSection';
-import { buildAcknowledgementStruct, signTypedDataProps } from '@hooks/use712Signature';
-import useDebounce from '@hooks/useDebounce';
-import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
-import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { ACKNOWLEDGEMENT_KEY, setSignatureWithExpiry } from '@utils/signature';
-import { SelfRelaySteps } from '@utils/types';
-import {
-	StolenWalletRegistryAbi,
-	StolenWalletRegistryFactory,
-} from '@wallet-hygiene/swr-contracts';
-import { BigNumber, ethers } from 'ethers';
-import { useState, useEffect, useRef } from 'react';
+import useLocalStorage from '@hooks/useLocalStorage';
+import React from 'react';
 import { FaWallet } from 'react-icons/fa';
-import {
-	chain,
-	useAccount,
-	useContract,
-	useContractReads,
-	useNetwork,
-	useProvider,
-	useSigner,
-	useSignTypedData,
-} from 'wagmi';
+import RegistrationSection from './RegistrationSection';
 
-interface AcknowledgementProps {
-	address: string;
+interface AcknowledgementFormProps {
+	handleSignature: () => void;
+	relayerIsValid: boolean;
+	handleChangeRelayer: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onOpen: () => void;
-	setNextStep: () => void;
-	tempRelayer: string;
-	setTempRelayer: React.Dispatch<React.SetStateAction<string>>;
+	relayer: string;
 }
 
-const Acknowledgement: React.FC<AcknowledgementProps> = ({
-	address,
+export const AcknowledgementForm = ({
+	handleSignature,
+	relayerIsValid = true,
+	handleChangeRelayer,
 	onOpen,
-	setTempRelayer,
-	tempRelayer,
-	setNextStep,
-}) => {
+	relayer,
+}: AcknowledgementFormProps) => {
 	const [localState, setLocalState] = useLocalStorage();
-	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
-	const [relayerIsValid, setRelayerIsValid] = useState(false);
-	const [deadline, setDeadline] = useState<BigNumber | null>(null);
-	const debouncedTrustedRelayer = useDebounce(tempRelayer, 500);
-
-	const typedSignature = useSignTypedData();
-	const { data: signer } = useSigner();
-	const { chain } = useNetwork();
-
-	const [isMounted, setIsMounted] = useState(false);
-
-	const checkValidEns = (address: string) => {
-		return address?.split('.')?.at(-1) === 'eth';
-	};
-
-	const handleChangeRelayer = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTempRelayer(e.target.value);
-	};
-
-	const handleSignAndPay = async () => {
-		try {
-			const { domain, types, value } = await buildAcknowledgementStruct({
-				signer,
-				address,
-				chainId: chain?.id!,
-			});
-			setDeadline(value.deadline);
-			await typedSignature.signTypedDataAsync({ domain, types, value });
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
-	useEffect(() => {
-		setRelayerIsValid(ethers.utils.isAddress(debouncedTrustedRelayer));
-
-		if (!relayerIsValid) {
-			console.log('relayer not valid');
-		}
-	}, [debouncedTrustedRelayer]);
-
-	useEffect(() => {
-		if (typedSignature.data) {
-			setSignatureWithExpiry({
-				keyRef: ACKNOWLEDGEMENT_KEY,
-				value: typedSignature.data,
-				ttl: deadline!,
-				chainId: chain?.id!,
-				address: address!,
-			});
-			setNextStep();
-		}
-	}, [typedSignature.data]);
-
-	useEffect(() => {
-		setIsMounted(true);
-	}, []);
 
 	return (
 		<RegistrationSection title="Include NFTs?">
@@ -172,7 +95,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					<InputGroup>
 						<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
 						<Input
-							value={tempRelayer}
+							value={relayer}
 							placeholder="Trusted Relayer"
 							size="md"
 							isRequired
@@ -195,7 +118,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				</Button>
 				<Button
 					m={5}
-					onClick={handleSignAndPay}
+					onClick={handleSignature}
 					disabled={
 						localState.includeWalletNFT === null ||
 						localState.includeSupportNFT === null ||
@@ -209,5 +132,3 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 		</RegistrationSection>
 	);
 };
-
-export default Acknowledgement;

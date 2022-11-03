@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
 
@@ -13,11 +13,14 @@ import RegisterAndSign from '@components/SelfRelayRegistration/RegisterAndSIgn';
 import DappLayout from '@components/DappLayout';
 import { SelfRelaySteps } from '@utils/types';
 import { Flex } from '@chakra-ui/react';
+import { ACKNOWLEDGEMENT_KEY } from '@utils/signature';
+import SelfRelayAcknowledgement from '@components/SelfRelayRegistration/SelfRelayAcknowledgement';
 interface SelfRelayRegistrationInterface {
 	onOpen: () => void;
 }
 
 const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = ({ onOpen }) => {
+	const { chain } = useNetwork();
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
 			console.log('Connected', { address, connector, isReconnected });
@@ -29,8 +32,8 @@ const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = ({ onOpe
 
 	const setNextStep = () => {
 		setLocalState({
-			step: SelfRelaySteps.SwitchAndPayOne,
 			trustedRelayer: tempRelayer,
+			step: SelfRelaySteps.SwitchAndPayOne,
 		});
 	};
 
@@ -42,18 +45,23 @@ const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = ({ onOpe
 			<Flex mt={20} mb={10} p={10} gap={5}>
 				<CompletionSteps />
 				{localState.step === SelfRelaySteps.AcknowledgeAndSign && (
-					<Acknowledgement
+					<SelfRelayAcknowledgement
 						setNextStep={setNextStep}
 						tempRelayer={tempRelayer}
 						setTempRelayer={setTempRelayer}
 						address={address as string}
 						onOpen={onOpen}
-						isConnected={isConnected}
 					/>
 				)}
 				{localState.step === SelfRelaySteps.SwitchAndPayOne && <SwitchAndPayAcknowledgement />}
 				{localState.step === SelfRelaySteps.GracePeriod && (
-					<GracePeriod setLocalState={setLocalState} nextStep={SelfRelaySteps.RegisterAndSign} />
+					<GracePeriod
+						setLocalState={setLocalState}
+						nextStep={SelfRelaySteps.RegisterAndSign}
+						address={address as string}
+						chainId={chain?.id!}
+						keyRef={ACKNOWLEDGEMENT_KEY}
+					/>
 				)}
 				{localState.step === SelfRelaySteps.RegisterAndSign && <RegisterAndSign />}
 				{localState.step === SelfRelaySteps.SwitchAndPayTwo && <SwitchAndPayRegistration />}

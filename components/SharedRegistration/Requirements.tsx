@@ -86,7 +86,7 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 								'(Protocol Guild|Retro PG)',
 							]}
 							styles={HIGHLIGHT_STYLE}
-						>{`You have ${minPayment}(Eth|NativeToken) that will go to the (Protocol Guild|Retro PG).`}</Highlight>
+						>{`You have ${minPayment} ${nativeToken} that will go to the (Protocol Guild|Retro PG).`}</Highlight>
 					</ListItem>
 				</OrderedList>
 				<Button

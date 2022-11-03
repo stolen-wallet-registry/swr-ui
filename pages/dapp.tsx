@@ -4,20 +4,9 @@ import DappLayout from '../components/DappLayout';
 import pick from 'lodash/pick';
 
 import type { GetStaticProps } from 'next';
-import { Box, LightMode, Center, useColorMode, Flex } from '@chakra-ui/react';
+import { LightMode, useColorMode, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useAccount, useContract, useProvider, useSigner, useNetwork } from 'wagmi';
-import {
-	buildAcknowledgementStruct,
-	signTypedDataProps,
-	use712Signature,
-} from '../hooks/use712Signature';
-import { CONTRACT_ADDRESSES } from '../utils/constants';
-import {
-	StolenWalletRegistryAbi,
-	StolenWalletRegistryFactory,
-} from '@wallet-hygiene/swr-contracts';
-import { ethers } from 'ethers';
+import { useAccount } from 'wagmi';
 
 import { PreviewMessageKey, RegistrationTypes } from '@utils/types';
 import useLocalStorage from '@hooks/useLocalStorage';
@@ -51,35 +40,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 	const { setColorMode } = useColorMode();
 	const [isMounted, setIsMounted] = useState(false);
-	const [signer, setSigner] = useState<ethers.Signer>();
 	const [localState] = useLocalStorage();
 	const [registration, setRegistration] = useState<RegistrationTypes>(localState.registrationType);
 
-	const provider = useProvider();
-
-	const contract = useContract({
-		addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-		contractInterface: StolenWalletRegistryAbi,
-		signerOrProvider: signer || provider,
-	});
-
-	// const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
-	// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-	// 	signer || provider
-	// );
-
-	const { connector, address, isConnected } = useAccount({
-		onConnect({ address, connector, isReconnected }) {
-			console.log('Connected', { address, connector, isReconnected });
-		},
-	});
-
-	useSigner({
-		onSuccess: (wallet) => {
-			setSigner(wallet!);
-			contract.connect(wallet);
-		},
-	});
+	const { address, isConnected } = useAccount();
 
 	useEffect(() => {
 		setColorMode('light');

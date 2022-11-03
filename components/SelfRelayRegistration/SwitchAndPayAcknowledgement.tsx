@@ -1,28 +1,82 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Text } from '@chakra-ui/react';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
 import { SelfRelaySteps } from '@utils/types';
+import { CONTRACT_ADDRESSES } from '@utils/constants';
+import { Contract, Signer, ethers } from 'ethers';
+import {
+	StolenWalletRegistryAbi,
+	StolenWalletRegistryFactory,
+} from '@wallet-hygiene/swr-contracts';
+import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry } from '@utils/signature';
 
 interface SwitchAndPayAcknowledgementProps {}
 
 const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = ({}) => {
-	const [localState, setLocalState] = useLocalStorage();
-	const [isMounted, setIsMounted] = useState(false);
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
 			console.log('Connected', { address, connector, isReconnected });
 		},
 	});
 
+	const { data: signer } = useSigner();
+	const { chain } = useNetwork();
+	const [localState, setLocalState] = useLocalStorage();
+	const [isMounted, setIsMounted] = useState(false);
+	const provider = useProvider();
+	const [deadline, setDeadline] = useState<ethers.BigNumber | null>(null);
+	console.log(signer);
+
+	const registryContract = StolenWalletRegistryFactory.connect(
+		CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+		signer!
+	);
+
 	useEffect(() => {
 		setIsMounted(true);
 	}, []);
 
+	// useEffect(() => {
+	// 	const getDeadline = async () => {
+	// 		const deadline = await registryContract['getDeadline(address)'](localState.address!);
+	// 		debugger;
+	// 		setDeadline(deadline);
+	// 	};
+	// 	getDeadline();
+	// }, []);
+
 	if (!isMounted || !isConnected) {
 		return null;
 	}
+
+	const signAndPay = async () => {
+		try {
+			const storedSignature = getSignatureWithExpiry({
+				keyRef: ACKNOWLEDGEMENT_KEY,
+				chainId: chain?.id!,
+				address: localState.address!,
+			});
+
+			// const deadline = ethers.BigNumber.from(new Date(storedSignature.deadline).getTime());
+			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
+			const tx = await registryContract.acknowledgementOfRegistry(
+				localState.address!,
+				storedSignature.deadline,
+				v,
+				r,
+				s,
+				{
+					gasLimit: 1000000,
+				}
+			);
+			debugger;
+			const receipt = await tx.wait();
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	const backButtonAction = () => {
 		setLocalState({ step: SelfRelaySteps.AcknowledgeAndSign });
@@ -40,7 +94,14 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 
 	return (
 		<RegistrationSection title="Pay for Acknowledgement">
-			<Button onClick={backButtonAction}>Back</Button>
+			<Flex flexDirection="column">
+				<Text>Sign and Pay for Acknowledgement from {localState.trustedRelayer}</Text>
+				<Text mb={5}>Sign and Pay for Acknowledgement from {localState.address}</Text>
+			</Flex>
+			<Flex justifyContent="flex-end" gap={5}>
+				<Button onClick={backButtonAction}>Back</Button>
+				<Button onClick={signAndPay}>Sign and Pay</Button>
+			</Flex>
 		</RegistrationSection>
 	);
 };

@@ -9,6 +9,7 @@ import {
 	InputGroup,
 	InputLeftElement,
 } from '@chakra-ui/react';
+import { AcknowledgementForm } from '@components/AcknowledgementForm';
 import RegistrationSection from '@components/RegistrationSection';
 import { buildAcknowledgementStruct, signTypedDataProps } from '@hooks/use712Signature';
 import useDebounce from '@hooks/useDebounce';
@@ -23,16 +24,7 @@ import {
 import { BigNumber, ethers } from 'ethers';
 import { useState, useEffect, useRef } from 'react';
 import { FaWallet } from 'react-icons/fa';
-import {
-	chain,
-	useAccount,
-	useContract,
-	useContractReads,
-	useNetwork,
-	useProvider,
-	useSigner,
-	useSignTypedData,
-} from 'wagmi';
+import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 
 interface AcknowledgementProps {
 	address: string;
@@ -69,7 +61,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 		setTempRelayer(e.target.value);
 	};
 
-	const handleSignAndPay = async () => {
+	const handleSignature = async () => {
 		try {
 			const { domain, types, value } = await buildAcknowledgementStruct({
 				signer,
@@ -87,6 +79,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 		setRelayerIsValid(ethers.utils.isAddress(debouncedTrustedRelayer));
 
 		if (!relayerIsValid) {
+			setLocalState({ trustedRelayer: debouncedTrustedRelayer });
 			console.log('relayer not valid');
 		}
 	}, [debouncedTrustedRelayer]);
@@ -195,7 +188,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				</Button>
 				<Button
 					m={5}
-					onClick={handleSignAndPay}
+					onClick={handleSignature}
 					disabled={
 						localState.includeWalletNFT === null ||
 						localState.includeSupportNFT === null ||
@@ -203,7 +196,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 						(localState.registrationType !== 'standardRelay' && !relayerIsValid)
 					}
 				>
-					Sign and Pay
+					Sign Acknowledgement
 				</Button>
 			</Flex>
 		</RegistrationSection>

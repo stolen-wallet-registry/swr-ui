@@ -23,7 +23,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ setBGColor, children }) 
 			<Box backgroundColor={`${setBGColor}.400`} height={4}></Box>
 			<Box backgroundColor={`${setBGColor}.500`} height={2}></Box>
 			<Box backgroundColor={`${setBGColor}.600`} height={2}></Box>
-			<Footer color="white" opacity={0.8} />
+			{/* <Footer color="white" opacity={0.8} /> */}
 		</Box>
 	);
 };

@@ -9,7 +9,7 @@ function App({ Component, pageProps }: AppProps) {
 	return (
 		<ChakraProvider theme={theme}>
 			<RainbowKitWagmiProvider>
-				<NextIntlLocaleProvider pageProps={{ pageProps }}>
+				<NextIntlLocaleProvider pageProps={pageProps}>
 					<Component {...pageProps} />
 				</NextIntlLocaleProvider>
 			</RainbowKitWagmiProvider>

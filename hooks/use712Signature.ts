@@ -1,7 +1,6 @@
-import { BigNumber } from 'ethers';
-import { useSignTypedData } from 'wagmi';
-
+import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { CONTRACT_ADDRESSES, DOMAIN_SALTS } from '../utils/constants';
+import { StateConfig, ACCOUNTS_KEY } from './useLocalStorage';
 interface Domain712 {
 	name: string;
 	version: string;
@@ -9,7 +8,6 @@ interface Domain712 {
 	verifyingContract: string;
 	salt: string;
 }
-
 export interface signTypedDataProps {
 	domain: Domain712;
 	types: any;
@@ -17,58 +15,52 @@ export interface signTypedDataProps {
 	primaryType: string;
 }
 
-interface Domain712Params {
+interface AcknowledgementValues {
+	signer: any;
 	chainId: number;
-}
-
-interface AcknowledgementValues extends Domain712Params {
-	forwarder: string;
-	owner: string;
-	nonces: number;
-	deadline: BigNumber;
+	address: string;
 }
 
 export const buildAcknowledgementStruct = async ({
-	forwarder,
+	signer,
 	chainId,
-	owner,
-	nonces,
-	deadline,
+	address,
 }: AcknowledgementValues): Promise<signTypedDataProps> => {
-	// const [signer, setSigner] = useState<ethers.Signer>();
-	// const provider = useProvider();
-	// const { connector, address } = useAccount({
-	// 	onConnect({ address, connector, isReconnected }) {
-	// 		console.log('Connected', { address, connector, isReconnected });
-	// 	},
-	// });
-	// const ensData = useEnsName({
-	// 	address,
-	// 	chainId: 1,
-	// });
+	const localState: StateConfig = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) as string);
 
-	// useSigner({
-	// 	onSuccess: (wallet) => {
-	// 		setSigner(wallet!);
-	// 	},
-	// });
+	const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
+		CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+		signer
+	);
 
-	// const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
-	// 	CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-	// 	signer || provider
-	// );
+	if (!chainId) {
+		throw new Error('Chain ID not found');
+	}
 
-	// const contract = useContract({
-	// 	addressOrName: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-	// 	contractInterface: AcknowledgementSignatureAbi,
-	// 	signerOrProvider: signer,
-	// });
+	if (!localState.address || !localState.trustedRelayer) {
+		throw new Error('Missing required data');
+	}
 
-	// const owner = ensData.data || address;
-	// const { deadline, hashStruct } = await stollenWalletRegistry.generateHashStruct(forwarder);
-	// const nonces = await stollenWalletRegistry.nonces(address!);
+	const { deadline } = await stollenWalletRegistry.generateHashStruct(localState.trustedRelayer);
+	const nonce = await stollenWalletRegistry.nonces(address!);
 
+	// EIP712Domain: [
+	//   { name: 'name', type: 'string' },
+	//   { name: 'version', type: 'string' },
+	//   { name: 'chainId', type: 'uint256' },
+	//   { name: 'verifyingContract', type: 'address' },
+	//   { name: 'salt', type: 'bytes32' },
+	// ],
 	return {
+		types: {
+			TrustedForwarder: [
+				{ name: 'owner', type: 'string' },
+				{ name: 'forwarder', type: 'string' },
+				{ name: 'nonce', type: 'uint256' },
+				{ name: 'deadline', type: 'uint256' },
+			],
+		},
+		primaryType: 'TrustedForwarder',
 		domain: {
 			chainId: chainId,
 			name: 'AcknowledgementOfRegistry',
@@ -76,39 +68,11 @@ export const buildAcknowledgementStruct = async ({
 			version: '4',
 			salt: DOMAIN_SALTS.ACKNOWLEDGEMENT_OF_REGISTRY,
 		},
-		primaryType: 'TrustedForwarder',
-		types: {
-			EIP712Domain: [
-				{ name: 'name', type: 'string' },
-				{ name: 'version', type: 'string' },
-				{ name: 'chainId', type: 'uint256' },
-				{ name: 'verifyingContract', type: 'address' },
-				{ name: 'salt', type: 'bytes32' },
-			],
-			TrustedForwarder: [
-				{ name: 'owner', type: 'string' },
-				{ name: 'forwarder', type: 'string' },
-				{ name: 'nonce', type: 'number' },
-				{ name: 'deadline', type: 'number' },
-			],
-		},
 		value: {
-			owner,
-			forwarder,
-			nonce: nonces + 1,
-			deadline: deadline,
+			owner: localState.address,
+			forwarder: localState.trustedRelayer,
+			deadline,
+			nonce: nonce,
 		},
 	};
-};
-
-export const use712Signature = ({ domain, types, value }: signTypedDataProps): string => {
-	const { data, isError, isLoading, isSuccess, signTypedData } = useSignTypedData({
-		domain,
-		types,
-		value,
-	});
-
-	console.log(data, isError, isLoading, isSuccess, signTypedData);
-
-	return data as string;
 };

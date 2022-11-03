@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { RegistrationTypes, RegistrationValues } from '../utils/types';
 
 export const ACCOUNTS_KEY = '0xswraccts0x';
+export const ACKNOWLEDGEMENT_SIGNATURE_KEY = (address: string) => `0xack${address}`;
 const ADDRESS_KEY = 'a';
 const NO_WINDOW_DETECTED = 'cannot reset state on server';
 
