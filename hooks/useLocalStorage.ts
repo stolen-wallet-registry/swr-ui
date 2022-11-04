@@ -1,6 +1,8 @@
 import router from 'next/router';
 import { useState } from 'react';
 import { RegistrationTypes, RegistrationValues } from '../utils/types';
+import type { Multiaddr } from '@multiformats/multiaddr';
+import type { PeerId } from '@libp2p/interface-peer-id';
 
 export const ACCOUNTS_KEY = '0xswraccts0x';
 export const ACKNOWLEDGEMENT_SIGNATURE_KEY = (address: string) => `0xack${address}`;
@@ -21,7 +23,13 @@ export type StateConfig = {
 	trustedRelayer: string | null;
 	includeWalletNFT: boolean | null;
 	includeSupportNFT: boolean | null;
-	relayerEnsName: string | null;
+	isRegistering: boolean | null;
+	peerId: PeerId | null;
+	peerAddrs: Multiaddr[] | null;
+	peerPin?: string | null;
+	connectToPeer: string | null;
+	connectToPeerAddrs: string | null;
+	connectToPeerPin?: string | null;
 };
 
 export const initialState: StateConfig = {
@@ -34,7 +42,13 @@ export const initialState: StateConfig = {
 	trustedRelayer: null,
 	includeWalletNFT: null,
 	includeSupportNFT: null,
-	relayerEnsName: null,
+	isRegistering: null,
+	peerId: null,
+	peerAddrs: [],
+	peerPin: null,
+	connectToPeer: null,
+	connectToPeerAddrs: [],
+	connectToPeerPin: null,
 };
 
 const useLocalStorage = <T extends StateConfig>(): [

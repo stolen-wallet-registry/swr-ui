@@ -16,6 +16,7 @@ import {
 	RegistrationTypes,
 } from '@utils/types';
 import router from 'next/router';
+import WebRTCStarInstructions from '@components/WebRtcStarRegistration/WebRTCStarInstructions';
 
 interface RequirementProps {
 	address: string;
@@ -134,23 +135,13 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 				<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
 					<ConnectedStep />
 					<SupportedChainStep />
-					{/* <ListItem>
-					<Highlight
-						key={minPayment}
-						query={[
-							`${minPayment}(Eth|NativeToken)`,
-							'supported chains',
-							'(Protocol Guild|Retro PG)',
-						]}
-						styles={HIGHLIGHT_STYLE}
-					>{`You have ${minPayment}(Eth|NativeToken) that will go to the (Protocol Guild|Retro PG).`}</Highlight>
-				</ListItem> */}
+					<WebRTCStarInstructions />
 				</OrderedList>
 				<Button
 					alignSelf="flex-end"
 					width={[200, 250]}
 					m={5}
-					onClick={() => handleBegin(P2PRelaySteps.ConnectToPeer)}
+					onClick={() => handleBegin(P2PRelaySteps.Instructions)}
 				>
 					Begin
 				</Button>
@@ -163,7 +154,7 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 			<Box pb={10}>Requirements:</Box>
 			{registrationType === 'standardRelay' && <StandardRequirements />}
 			{registrationType === 'selfRelay' && <SelfRelayRequirements />}
-			{registrationType === 'p2pRelay' && <PeerToPeerRelayRequirements />}
+			{registrationType === 'p2pRelay' && <WebRTCStarInstructions />}
 		</RegistrationSection>
 	);
 };

@@ -15,6 +15,7 @@ export enum SelfRelaySteps {
 }
 
 export enum P2PRelaySteps {
+	Instructions = 'instructions',
 	ConnectToPeer = 'connect-to-peer',
 	AcknowledgeAndPay = 'acknowledge-and-sign',
 	SendToPeerFirst = 'first-send-to-peer',
