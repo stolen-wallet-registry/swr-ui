@@ -151,8 +151,8 @@ export const Connection = () => {
 			let stream;
 			try {
 				stream = await libp2pInstance!.dialProtocol(connPeerId, ['/p2p-swr']);
-			} catch (error) {
-				error.errors;
+			} catch (error: any) {
+				error?.errors;
 				debugger;
 			}
 			debugger;

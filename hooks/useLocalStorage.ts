@@ -47,7 +47,7 @@ export const initialState: StateConfig = {
 	peerAddrs: [],
 	peerPin: null,
 	connectToPeer: null,
-	connectToPeerAddrs: [],
+	connectToPeerAddrs: null,
 	connectToPeerPin: null,
 };
 

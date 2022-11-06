@@ -30,10 +30,6 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ onOpen 
 		setLocalState({ step: StandardSteps.GracePeriod });
 	};
 
-	useEffect(() => {
-		setLocalState({ trustedRelayer: address });
-	}, []);
-
 	return (
 		<DappLayout heading="Standard Relay" subHeading="pay and register on the same wallet">
 			<Flex mt={20} mb={10} p={10} gap={5}>

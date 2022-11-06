@@ -23,6 +23,7 @@
 		"@libp2p/bootstrap": "^5.0.0",
 		"@libp2p/mplex": "^7.0.0",
 		"@libp2p/webrtc-star": "^5.0.3",
+		"@libp2p/webrtc-star-signalling-server": "^2.0.5",
 		"@libp2p/websockets": "^5.0.0",
 		"@rainbow-me/rainbowkit": "^0.7.1",
 		"@svgr/webpack": "^6.5.0",

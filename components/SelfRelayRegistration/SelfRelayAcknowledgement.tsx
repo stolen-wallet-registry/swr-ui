@@ -68,6 +68,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				address,
 				chainId: chain?.id!,
 			});
+
 			setDeadline(value.deadline);
 			await typedSignature.signTypedDataAsync({ domain, types, value });
 		} catch (error) {
@@ -159,29 +160,27 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					</Checkbox>
 				</CheckboxGroup>
 			</Flex>
-			{localState.registrationType !== 'standardRelay' && (
-				<Flex flexDirection="column">
-					<Text>What is your other wallet address?</Text>
-					<InputGroup>
-						<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
-						<Input
-							value={tempRelayer}
-							placeholder="Trusted Relayer"
-							size="md"
-							isRequired
-							focusBorderColor="black.700"
-							isInvalid={!relayerIsValid}
-							onChange={handleChangeRelayer}
-						/>
-					</InputGroup>
-					<Text fontSize="sm">
-						*Once you sign, you will need to Switch to this wallet before proceeding.
-					</Text>
-					<Text fontSize="sm">
-						**you will use the "Trusted Relayer" wallet to pay for the Registration.
-					</Text>
-				</Flex>
-			)}
+			<Flex flexDirection="column">
+				<Text>What is your other wallet address?</Text>
+				<InputGroup>
+					<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
+					<Input
+						value={tempRelayer}
+						placeholder="Trusted Relayer"
+						size="md"
+						isRequired
+						focusBorderColor="black.700"
+						isInvalid={!relayerIsValid}
+						onChange={handleChangeRelayer}
+					/>
+				</InputGroup>
+				<Text fontSize="sm">
+					*Once you sign, you will need to Switch to this wallet before proceeding.
+				</Text>
+				<Text fontSize="sm">
+					**you will use the "Trusted Relayer" wallet to pay for the Registration.
+				</Text>
+			</Flex>
 			<Flex alignSelf="flex-end">
 				<Button m={5} onClick={onOpen}>
 					View NFT

@@ -30,9 +30,7 @@ export const WebRTCStarInstructions = () => {
 						onClick={() =>
 							setLocalState({
 								step: P2PRelaySteps.ConnectToPeer,
-								p2pConfig: {
-									isRegistering: false,
-								},
+								isRegistering: false,
 							})
 						}
 						_active={{ transform: 'translateY(-2px) scale(1.2)' }}
@@ -45,9 +43,7 @@ export const WebRTCStarInstructions = () => {
 						onClick={() =>
 							setLocalState({
 								step: P2PRelaySteps.ConnectToPeer,
-								p2pConfig: {
-									isRegistering: true,
-								},
+								isRegistering: true,
 							})
 						}
 						_active={{ transform: 'translateY(-2px) scale(1.2)' }}

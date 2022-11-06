@@ -1,39 +1,14 @@
-import {
-	Flex,
-	Spacer,
-	CheckboxGroup,
-	Checkbox,
-	Button,
-	Text,
-	Input,
-	InputGroup,
-	InputLeftElement,
-} from '@chakra-ui/react';
-import { AcknowledgementForm } from '@components/AcknowledgementForm';
+import { Flex, Spacer, CheckboxGroup, Checkbox, Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { buildAcknowledgementStruct, signTypedDataProps } from '@hooks/use712Signature';
 import useDebounce from '@hooks/useDebounce';
-import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
+import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { ACKNOWLEDGEMENT_KEY, setSignatureWithExpiry } from '@utils/signature';
 import { SelfRelaySteps } from '@utils/types';
-import {
-	StolenWalletRegistryAbi,
-	StolenWalletRegistryFactory,
-} from '@wallet-hygiene/swr-contracts';
+import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
 import { BigNumber, Contract, ethers, Signer } from 'ethers';
-import { useState, useEffect, useRef } from 'react';
-import { FaWallet } from 'react-icons/fa';
-import {
-	chain,
-	useAccount,
-	useContract,
-	useContractReads,
-	useNetwork,
-	useProvider,
-	useSigner,
-	useSignTypedData,
-} from 'wagmi';
+import { useState, useEffect } from 'react';
+import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 
 interface StandardAcknowledgementProps {
 	address: string;
@@ -58,7 +33,7 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
 
-	const [localState] = useLocalStorage();
+	const [localState, setLocalState] = useLocalStorage();
 
 	const handleChangeRelayer = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTempRelayer(e.target.value);
@@ -91,7 +66,7 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 			console.log(CONTRACT_ADDRESSES.local.StolenWalletRegistry);
 			const registryContract = new Contract(
 				CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-				StolenWalletRegistryAbi,
+				StolenWalletRegistryAbi.abi,
 				signer as Signer
 			);
 
@@ -104,13 +79,81 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 	}, [typedSignature.data]);
 
 	return (
-		<AcknowledgementForm
-			handleSignature={handleSignAndPay}
-			relayerIsValid={true}
-			handleChangeRelayer={() => {}}
-			onOpen={onOpen}
-			relayer={address}
-		/>
+		<RegistrationSection title="Include NFTs?">
+			<Flex>
+				<Text mr={20}>
+					Include{' '}
+					<Text as="span" fontWeight="bold" decoration="underline">
+						Supportive
+					</Text>{' '}
+					NFT?
+				</Text>
+				<Spacer />
+				<CheckboxGroup>
+					<Checkbox
+						width={[100, 100]}
+						isChecked={localState.includeWalletNFT === true}
+						isRequired={true}
+						onChange={() => setLocalState({ includeWalletNFT: true })}
+					>
+						Yes
+					</Checkbox>
+					<Checkbox
+						width={[100, 100]}
+						isRequired={true}
+						onChange={() => setLocalState({ includeWalletNFT: false })}
+						isChecked={localState.includeWalletNFT === false}
+					>
+						No
+					</Checkbox>
+				</CheckboxGroup>
+			</Flex>
+			<Flex mb={5}>
+				<Text mr={20}>
+					Include{' '}
+					<Text as="span" fontWeight="bold" decoration="underline">
+						Wallet
+					</Text>{' '}
+					NFT?
+				</Text>
+				<Spacer />
+				<CheckboxGroup>
+					<Checkbox
+						width={[100, 100]}
+						isRequired={true}
+						isChecked={localState.includeSupportNFT === true}
+						onChange={() => setLocalState({ includeSupportNFT: true })}
+					>
+						Yes
+					</Checkbox>
+					<Checkbox
+						width={[100, 100]}
+						isChecked={localState.includeSupportNFT === false}
+						isRequired={true}
+						onChange={() => setLocalState({ includeSupportNFT: false })}
+					>
+						No
+					</Checkbox>
+				</CheckboxGroup>
+			</Flex>
+			<Flex alignSelf="flex-end">
+				<Button m={5} onClick={onOpen}>
+					View NFT
+				</Button>
+				<Button
+					m={5}
+					onClick={handleSignAndPay}
+					disabled={
+						localState.includeWalletNFT === null ||
+						localState.includeSupportNFT === null ||
+						// acknowledgement === null ||
+						(localState.registrationType !== 'standardRelay' && !relayerIsValid)
+					}
+				>
+					Sign and Pay
+				</Button>
+			</Flex>
+		</RegistrationSection>
 	);
 };
 
