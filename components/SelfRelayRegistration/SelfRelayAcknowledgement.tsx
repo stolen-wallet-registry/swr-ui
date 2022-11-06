@@ -9,12 +9,10 @@ import {
 	InputGroup,
 	InputLeftElement,
 } from '@chakra-ui/react';
-import { AcknowledgementForm } from '@components/AcknowledgementForm';
 import RegistrationSection from '@components/RegistrationSection';
 import { buildAcknowledgementStruct, signTypedDataProps } from '@hooks/use712Signature';
 import useDebounce from '@hooks/useDebounce';
-import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
-import { CONTRACT_ADDRESSES } from '@utils/constants';
+import useLocalStorage from '@hooks/useLocalStorage';
 import { ACKNOWLEDGEMENT_KEY, setSignatureWithExpiry } from '@utils/signature';
 import { SelfRelaySteps } from '@utils/types';
 import {
