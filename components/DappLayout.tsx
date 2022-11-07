@@ -18,6 +18,8 @@ interface DappLayoutProps {
 	heading?: string;
 	subHeading?: string;
 	showButton?: boolean;
+	isOpen?: boolean;
+	onClose?: () => void;
 }
 
 const DappLayout: React.FunctionComponent<DappLayoutProps> = ({
@@ -25,8 +27,9 @@ const DappLayout: React.FunctionComponent<DappLayoutProps> = ({
 	heading,
 	subHeading,
 	showButton = true,
+	isOpen,
+	onClose,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [isMounted, setIsMounted] = useState(false);
 	const [localState, _, resetLocalState] = useLocalStorage();
 	const { address } = useAccount();
@@ -64,7 +67,7 @@ const DappLayout: React.FunctionComponent<DappLayoutProps> = ({
 			)}
 			{children}
 			<Footer color="black" opacity={0.8} addBox={true} />
-			<PreviewModal isOpen={isOpen} onClose={onClose} />
+			<PreviewModal isOpen={isOpen!} onClose={onClose!} />
 		</Box>
 	);
 };

@@ -12,14 +12,13 @@ import Acknowledgement from '@components/SharedRegistration/Acknowledgement';
 import RegisterAndSign from '@components/SelfRelayRegistration/RegisterAndSIgn';
 import DappLayout from '@components/DappLayout';
 import { SelfRelaySteps } from '@utils/types';
-import { Flex } from '@chakra-ui/react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
 import { ACKNOWLEDGEMENT_KEY } from '@utils/signature';
 import SelfRelayAcknowledgement from '@components/SelfRelayRegistration/SelfRelayAcknowledgement';
-interface SelfRelayRegistrationInterface {
-	onOpen: () => void;
-}
+interface SelfRelayRegistrationInterface {}
 
-const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = ({ onOpen }) => {
+const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { chain } = useNetwork();
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
@@ -39,6 +38,8 @@ const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = ({ onOpe
 
 	return (
 		<DappLayout
+			isOpen={isOpen}
+			onClose={onClose}
 			heading="Relay with your own wallets"
 			subHeading="sign wtih one wallet, pay with another"
 		>

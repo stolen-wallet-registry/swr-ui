@@ -1,3 +1,4 @@
+import { Chain } from '@rainbow-me/rainbowkit';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { CONTRACT_ADDRESSES, DOMAIN_SALTS } from '../utils/constants';
 import { StateConfig, ACCOUNTS_KEY } from './useLocalStorage';
@@ -17,23 +18,27 @@ export interface signTypedDataProps {
 
 interface AcknowledgementValues {
 	signer: any;
-	chainId: number;
+	chain:
+		| (Chain & {
+				unsupported?: boolean | undefined;
+		  })
+		| undefined;
 	address: string;
 }
 
 export const buildAcknowledgementStruct = async ({
 	signer,
-	chainId,
+	chain,
 	address,
 }: AcknowledgementValues): Promise<signTypedDataProps> => {
 	const localState: StateConfig = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) as string);
 
 	const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
 		signer
 	);
 
-	if (!chainId) {
+	if (!chain?.id) {
 		throw new Error('Chain ID not found');
 	}
 
@@ -41,8 +46,8 @@ export const buildAcknowledgementStruct = async ({
 		throw new Error('Missing required data');
 	}
 
-	const { deadline } = await stollenWalletRegistry.generateHashStruct(localState.trustedRelayer);
-	const nonce = await stollenWalletRegistry.nonces(address!);
+	// const { deadline } = await stollenWalletRegistry.generateHashStruct(localState.trustedRelayer);
+	// const nonce = await stollenWalletRegistry.nonces(address!);
 
 	// EIP712Domain: [
 	//   { name: 'name', type: 'string' },
@@ -51,28 +56,29 @@ export const buildAcknowledgementStruct = async ({
 	//   { name: 'verifyingContract', type: 'address' },
 	//   { name: 'salt', type: 'bytes32' },
 	// ],
+	// { name: 'nonce', type: 'uint256' },
+	// { name: 'deadline', type: 'uint256' },
+	// deadline,
+	// nonce: nonce,
+
 	return {
 		types: {
-			TrustedForwarder: [
-				{ name: 'owner', type: 'string' },
-				{ name: 'forwarder', type: 'string' },
-				{ name: 'nonce', type: 'uint256' },
-				{ name: 'deadline', type: 'uint256' },
+			AcknowledgementOfRegistry: [
+				{ name: 'owner', type: 'address' },
+				{ name: 'forwarder', type: 'address' },
 			],
 		},
-		primaryType: 'TrustedForwarder',
+		primaryType: 'AcknowledgementOfRegistry',
 		domain: {
-			chainId: chainId,
 			name: 'AcknowledgementOfRegistry',
-			verifyingContract: CONTRACT_ADDRESSES.local.StolenWalletRegistry,
 			version: '4',
+			chainId: chain?.id!,
+			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
 			salt: DOMAIN_SALTS.ACKNOWLEDGEMENT_OF_REGISTRY,
 		},
 		value: {
 			owner: localState.address,
 			forwarder: localState.trustedRelayer,
-			deadline,
-			nonce: nonce,
 		},
 	};
 };

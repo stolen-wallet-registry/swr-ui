@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { RegistrationTypes, RegistrationValues } from '../utils/types';
 import type { Multiaddr } from '@multiformats/multiaddr';
 import type { PeerId } from '@libp2p/interface-peer-id';
+import { buildAcknowledgementKey, buildRegistertKey } from '@utils/signature';
+import { ethers } from 'ethers';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 
 export const ACCOUNTS_KEY = '0xswraccts0x';
 export const ACKNOWLEDGEMENT_SIGNATURE_KEY = (address: string) => `0xack${address}`;
@@ -30,6 +33,8 @@ export type StateConfig = {
 	connectToPeer: string | null;
 	connectToPeerAddrs: string | null;
 	connectToPeerPin?: string | null;
+	acknowledgementReceipt?: string | null;
+	registrationmentReceipt?: string | null;
 };
 
 export const initialState: StateConfig = {
@@ -49,6 +54,8 @@ export const initialState: StateConfig = {
 	connectToPeer: null,
 	connectToPeerAddrs: null,
 	connectToPeerPin: null,
+	acknowledgementReceipt: null,
+	registrationmentReceipt: null,
 };
 
 const useLocalStorage = <T extends StateConfig>(): [
@@ -111,6 +118,9 @@ const useLocalStorage = <T extends StateConfig>(): [
 			throw new Error(NO_WINDOW_DETECTED);
 		} else {
 			window.localStorage.removeItem(ACCOUNTS_KEY);
+
+			localStorage.removeItem(buildAcknowledgementKey(address, network));
+			localStorage.removeItem(buildRegistertKey(address, network));
 
 			const state = {
 				...initialState,

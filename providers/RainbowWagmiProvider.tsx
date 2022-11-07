@@ -35,22 +35,23 @@ import { RAINBOWKIT_COLORS } from '../theme/rainbowkit-themes/base';
 const APP_NAME = 'The Stollen Wallet Registry';
 
 export const testnets = [
-	// chain.rinkeby,
 	chain.goerli,
 	// chain.optimismKovan,
 	// chain.polygonMumbai,
 	// chain.arbitrumRinkeby,
 	chain.foundry,
-	// chain.localhost,
+	chain.localhost,
 ];
 
 export const supporttedChains = [
-	chain.mainnet,
+	// chain.mainnet,
 	// chain.polygon,
 	// chain.optimism,
 	// chain.arbitrum,
 	...testnets,
 ];
+
+console.log(supporttedChains);
 
 const { chains, provider } = configureChains(supporttedChains, [
 	alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),

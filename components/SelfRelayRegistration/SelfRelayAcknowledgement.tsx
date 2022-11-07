@@ -64,7 +64,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 			const { domain, types, value } = await buildAcknowledgementStruct({
 				signer,
 				address,
-				chainId: chain?.id!,
+				chain,
 			});
 
 			setDeadline(value.deadline);

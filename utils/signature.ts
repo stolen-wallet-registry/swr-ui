@@ -5,11 +5,11 @@ import { useAccount, useNetwork } from 'wagmi';
 export const ACKNOWLEDGEMENT_KEY = '0xack';
 export const REGISTRATION_KEY = '0xreg';
 
-const buildAcknowledgementKey = (address: string, network: number): string => {
+export const buildAcknowledgementKey = (address: string, network: number): string => {
 	return `${ACKNOWLEDGEMENT_KEY}-${address}-${network}`;
 };
 
-const buildRegistertKey = (address: string, network: number): string => {
+export const buildRegistertKey = (address: string, network: number): string => {
 	return `${REGISTRATION_KEY}-${address}-${network}`;
 };
 
@@ -90,6 +90,6 @@ export const getSignatureWithExpiry = ({
 		localStorage.removeItem(itemStr);
 		throw new Error(`signature expired`);
 	}
-	debugger;
+
 	return { value: item.value, deadline: item.deadline };
 };

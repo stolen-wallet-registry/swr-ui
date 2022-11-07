@@ -1,4 +1,4 @@
-import { Text, Flex, Link, Button } from '@chakra-ui/react';
+import { Text, Flex, Link, Button, useDisclosure } from '@chakra-ui/react';
 import DappLayout from '@components/DappLayout';
 import RegistrationSection from '@components/RegistrationSection';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
@@ -11,10 +11,13 @@ import React, { useState } from 'react';
 interface P2PRelayInterface {}
 
 const P2PRelayRegistration: React.FC<P2PRelayInterface> = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [localState, setLocalState] = useLocalStorage();
 
 	return (
 		<DappLayout
+			isOpen={isOpen}
+			onClose={onClose}
 			heading="Peer to Peer Relay"
 			subHeading="sign with one wallet, have your peer pay for you."
 		>

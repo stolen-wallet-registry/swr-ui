@@ -1,6 +1,6 @@
 import { Flex, Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
+import { StateConfig } from '@hooks/useLocalStorage';
 import useTimer from '@hooks/useTimer';
 import { useState, useEffect } from 'react';
 
@@ -41,9 +41,6 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({ setLocalState }) => {
 			{expired && <Text mb={5}>Your registration window expired, please restart.</Text>}
 			<Button mb={5} disabled={expired}>
 				Sign and Pay
-			</Button>
-			<Button disabled={!expired} onClick={() => setLocalState({ step: 'requirements' })}>
-				Restart
 			</Button>
 		</RegistrationSection>
 	);

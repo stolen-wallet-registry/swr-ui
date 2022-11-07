@@ -30,7 +30,7 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 	console.log(signer);
 
 	const registryContract = StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES.local.StolenWalletRegistry,
+		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
 		signer!
 	);
 
@@ -61,18 +61,11 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 
 			// const deadline = ethers.BigNumber.from(new Date(storedSignature.deadline).getTime());
 			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
-			const tx = await registryContract.acknowledgementOfRegistry(
-				localState.address!,
-				storedSignature.deadline,
-				v,
-				r,
-				s,
-				{
-					gasLimit: 1000000,
-				}
-			);
-			debugger;
+			// storedSignature.deadline,
+			const tx = await registryContract.acknowledgementOfRegistry(localState.address!, v, r, s);
+
 			const receipt = await tx.wait();
+			console.log(receipt);
 		} catch (error) {
 			console.error(error);
 		}

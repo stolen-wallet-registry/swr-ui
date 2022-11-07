@@ -1,82 +1,74 @@
 import { Flex, Spacer, CheckboxGroup, Checkbox, Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { buildAcknowledgementStruct, signTypedDataProps } from '@hooks/use712Signature';
-import useDebounce from '@hooks/useDebounce';
+import { buildAcknowledgementStruct } from '@hooks/use712Signature';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { SelfRelaySteps } from '@utils/types';
-import { StolenWalletRegistryAbi } from '@wallet-hygiene/swr-contracts';
-import { BigNumber, Contract, ethers, Signer } from 'ethers';
+import { SignTypedDataArgs } from '@wagmi/core';
+import {
+	StolenWalletRegistryAbi,
+	StolenWalletRegistryFactory,
+} from '@wallet-hygiene/swr-contracts';
+import { BigNumber, ethers, Signer } from 'ethers';
 import { useState, useEffect } from 'react';
-import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
+import { useNetwork, useProvider, useSigner, useSignTypedData } from 'wagmi';
 
 interface StandardAcknowledgementProps {
 	address: string;
 	onOpen: () => void;
 	setNextStep: () => void;
-	tempRelayer: string;
-	setTempRelayer: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 	address,
 	onOpen,
-	setTempRelayer,
-	tempRelayer,
 	setNextStep,
 }) => {
-	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
 	const [relayerIsValid, setRelayerIsValid] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
-	const debouncedTrustedRelayer = useDebounce(tempRelayer, 500);
 	const typedSignature = useSignTypedData();
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
-
+	const provider = useProvider();
 	const [localState, setLocalState] = useLocalStorage();
 
-	const handleChangeRelayer = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTempRelayer(e.target.value);
-	};
-
-	const handleSignAndPay = async () => {
+	const handleSign = async () => {
 		try {
 			const { domain, types, value } = await buildAcknowledgementStruct({
 				signer,
 				address,
-				chainId: chain?.id!,
+				chain,
 			});
-			setDeadline(value.deadline);
+			// setDeadline(value.deadline);
+
+			//@ts-ignore
 			await typedSignature.signTypedDataAsync({ domain, types, value });
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
+	const handleSignAndPay = async ({ signature }: { signature: string }) => {
+		console.log(CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry);
+		const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
+			CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
+		);
+		const { v, r, s } = ethers.utils.splitSignature(signature);
+		// deadline
+		const tx = await registryContract.acknowledgementOfRegistry(localState.address!, v, r, s);
+		const receipt = await tx.wait();
+
+		setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
+		console.log(receipt);
+		setNextStep();
+	};
+
 	useEffect(() => {
-		setRelayerIsValid(ethers.utils.isAddress(debouncedTrustedRelayer));
+		setRelayerIsValid(ethers.utils.isAddress(address));
 
 		if (!relayerIsValid) {
 			console.log('relayer not valid');
 		}
-	}, [debouncedTrustedRelayer]);
-
-	useEffect(() => {
-		if (typedSignature.data) {
-			console.log(CONTRACT_ADDRESSES.local.StolenWalletRegistry);
-			const registryContract = new Contract(
-				CONTRACT_ADDRESSES.local.StolenWalletRegistry,
-				StolenWalletRegistryAbi.abi,
-				signer as Signer
-			);
-
-			const { v, r, s } = ethers.utils.splitSignature(typedSignature.data);
-
-			registryContract.acknowledgementOfRegistry(localState.address, deadline, v, r, s).then(() => {
-				setNextStep();
-			});
-		}
-	}, [typedSignature.data]);
+	}, [address]);
 
 	return (
 		<RegistrationSection title="Include NFTs?">
@@ -140,18 +132,33 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 				<Button m={5} onClick={onOpen}>
 					View NFT
 				</Button>
-				<Button
-					m={5}
-					onClick={handleSignAndPay}
-					disabled={
-						localState.includeWalletNFT === null ||
-						localState.includeSupportNFT === null ||
-						// acknowledgement === null ||
-						(localState.registrationType !== 'standardRelay' && !relayerIsValid)
-					}
-				>
-					Sign and Pay
-				</Button>
+				{typedSignature.data ? (
+					<Button
+						m={5}
+						onClick={() => handleSignAndPay({ signature: typedSignature.data })}
+						disabled={
+							localState.includeWalletNFT === null ||
+							localState.includeSupportNFT === null ||
+							// acknowledgement === null ||
+							(localState.registrationType !== 'standardRelay' && !relayerIsValid)
+						}
+					>
+						Pay
+					</Button>
+				) : (
+					<Button
+						m={5}
+						onClick={handleSign}
+						disabled={
+							localState.includeWalletNFT === null ||
+							localState.includeSupportNFT === null ||
+							// acknowledgement === null ||
+							(localState.registrationType !== 'standardRelay' && !relayerIsValid)
+						}
+					>
+						Sign
+					</Button>
+				)}
 			</Flex>
 		</RegistrationSection>
 	);

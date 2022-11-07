@@ -14,6 +14,7 @@ import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import Requirements from '@components/SharedRegistration/Requirements';
 import ButtonChoices from '@components/ButtonChoices';
 import router from 'next/router';
+import { optimism } from '@utils/chains';
 
 interface DappProps {
 	messages: IntlMessages;
