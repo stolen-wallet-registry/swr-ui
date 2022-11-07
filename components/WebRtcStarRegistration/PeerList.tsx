@@ -1,8 +1,8 @@
-import { Text, Button, UnorderedList, Heading, Flex } from '@chakra-ui/react';
+import { Text, UnorderedList, Heading, Flex } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import useLocalStorage from '@hooks/useLocalStorage';
 import React, { useEffect } from 'react';
 import truncate from 'lodash/truncate';
+import { Multiaddr } from '@multiformats/multiaddr';
 
 import { Libp2p } from 'libp2p';
 import type { PeerId } from '@libp2p/interface-peer-id';
@@ -10,10 +10,11 @@ import type { PeerId } from '@libp2p/interface-peer-id';
 interface PeerListProps {
 	libp2p: Libp2p;
 	connecting: boolean;
+	peerId?: PeerId | null;
+	multiaddress?: Multiaddr | null;
 }
 
-export const PeerList = ({ libp2p, connecting }: PeerListProps) => {
-	const [localState, setLocalState] = useLocalStorage();
+export const PeerList = ({ libp2p, connecting, peerId, multiaddress }: PeerListProps) => {
 	const [peers, setPeers] = React.useState<PeerId[]>([]);
 
 	useEffect(() => {
@@ -34,9 +35,9 @@ export const PeerList = ({ libp2p, connecting }: PeerListProps) => {
 			{connecting && (
 				<Flex flexDirection="column" gap={2}>
 					<Text>trying to connect to: </Text>
-					<Text fontWeight="bold">{localState.connectToPeer}</Text>
+					<Text fontWeight="bold">{peerId?.toString()}</Text>
 					<Text>trying to connect to:</Text>
-					<Text fontWeight="bold">{truncate(localState.connectToPeerAddrs!, { length: 50 })}</Text>
+					<Text fontWeight="bold">{truncate(multiaddress?.toString(), { length: 50 })}</Text>
 				</Flex>
 			)}
 			<Heading as="h4">Trusted Peer List</Heading>

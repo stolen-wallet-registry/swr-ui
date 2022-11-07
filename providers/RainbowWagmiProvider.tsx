@@ -51,8 +51,6 @@ export const supporttedChains = [
 	...testnets,
 ];
 
-console.log(supporttedChains);
-
 const { chains, provider } = configureChains(supporttedChains, [
 	alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
 	publicProvider(),

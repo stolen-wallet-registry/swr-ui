@@ -5217,13 +5217,14 @@
     "@chainlink/contracts" "^0.4.1"
     "@connext/nxtp-contracts" "^0.2.0-beta.17"
 
-"@wallet-hygiene/swr-contracts@^0.0.74":
-  version "0.0.74"
-  resolved "https://registry.yarnpkg.com/@wallet-hygiene/swr-contracts/-/swr-contracts-0.0.74.tgz#24b1bdb0dc75c5caba90a799188342645476ccd3"
-  integrity sha512-eGgRq1BC/7b0mmFdPvxFk6jiZbInD/j3Sigms354Wcsk+QhrO8e/NbhrDMYKokPxANJrHs5CCqFadA19IK0WAw==
+"@wallet-hygiene/swr-contracts@^0.0.76":
+  version "0.0.76"
+  resolved "https://registry.yarnpkg.com/@wallet-hygiene/swr-contracts/-/swr-contracts-0.0.76.tgz#e45339105e2a24fbb2749ade7ab96db04aaefbf5"
+  integrity sha512-GaSuXstyw/l+abb2wbe7B6Vgcrrpf0j4F6+oyzY4Z9DSa3t4ugniKVRAEdysw3MGfd0Ib8IaNwdwC6sqsv+3KA==
   dependencies:
     "@chainlink/contracts" "^0.4.1"
     "@connext/nxtp-contracts" "^0.2.0-beta.17"
+    "@libp2p/webrtc-star-signalling-server" "^2.0.5"
     "@openzeppelin/contracts" "^4.7.1"
     "@openzeppelin/contracts-upgradeable" "^4.7.1"
     "@wallet-hygiene/swr-contracts" "^0.0.6"

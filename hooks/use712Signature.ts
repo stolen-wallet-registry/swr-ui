@@ -1,5 +1,6 @@
 import { Chain } from '@rainbow-me/rainbowkit';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
+import { Signer } from 'ethers';
 import { CONTRACT_ADDRESSES, DOMAIN_SALTS } from '../utils/constants';
 import { StateConfig, ACCOUNTS_KEY } from './useLocalStorage';
 interface Domain712 {
@@ -33,9 +34,8 @@ export const buildAcknowledgementStruct = async ({
 }: AcknowledgementValues): Promise<signTypedDataProps> => {
 	const localState: StateConfig = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) as string);
 
-	const stollenWalletRegistry = await StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
-		signer
+	const stollenWalletRegistry = new StolenWalletRegistryFactory(signer as Signer).attach(
+		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
 	);
 
 	if (!chain?.id) {
@@ -46,26 +46,16 @@ export const buildAcknowledgementStruct = async ({
 		throw new Error('Missing required data');
 	}
 
-	// const { deadline } = await stollenWalletRegistry.generateHashStruct(localState.trustedRelayer);
-	// const nonce = await stollenWalletRegistry.nonces(address!);
-
-	// EIP712Domain: [
-	//   { name: 'name', type: 'string' },
-	//   { name: 'version', type: 'string' },
-	//   { name: 'chainId', type: 'uint256' },
-	//   { name: 'verifyingContract', type: 'address' },
-	//   { name: 'salt', type: 'bytes32' },
-	// ],
-	// { name: 'nonce', type: 'uint256' },
-	// { name: 'deadline', type: 'uint256' },
-	// deadline,
-	// nonce: nonce,
+	const { deadline } = await stollenWalletRegistry.generateHashStruct(localState.trustedRelayer);
+	const nonce = await stollenWalletRegistry.nonces(address!);
 
 	return {
 		types: {
 			AcknowledgementOfRegistry: [
 				{ name: 'owner', type: 'address' },
 				{ name: 'forwarder', type: 'address' },
+				{ name: 'nonce', type: 'uint256' },
+				{ name: 'deadline', type: 'uint256' },
 			],
 		},
 		primaryType: 'AcknowledgementOfRegistry',
@@ -79,6 +69,8 @@ export const buildAcknowledgementStruct = async ({
 		value: {
 			owner: localState.address,
 			forwarder: localState.trustedRelayer,
+			nonce,
+			deadline,
 		},
 	};
 };

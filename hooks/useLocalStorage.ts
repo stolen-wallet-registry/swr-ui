@@ -28,10 +28,10 @@ export type StateConfig = {
 	includeSupportNFT: boolean | null;
 	isRegistering: boolean | null;
 	peerId: PeerId | null;
-	peerAddrs: Multiaddr[] | null;
+	peerAddrs: Multiaddr[];
 	peerPin?: string | null;
-	connectToPeer: string | null;
-	connectToPeerAddrs: string | null;
+	connectToPeer: PeerId | null;
+	connectToPeerAddrs: Multiaddr | null;
 	connectToPeerPin?: string | null;
 	acknowledgementReceipt?: string | null;
 	registrationmentReceipt?: string | null;

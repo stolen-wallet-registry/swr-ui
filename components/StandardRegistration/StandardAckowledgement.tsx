@@ -25,6 +25,7 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 }) => {
 	const [relayerIsValid, setRelayerIsValid] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
+	const [nonce, setNonce] = useState<BigNumber | null>(null);
 	const typedSignature = useSignTypedData();
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
@@ -38,7 +39,8 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 				address,
 				chain,
 			});
-			// setDeadline(value.deadline);
+			setDeadline(value.deadline);
+			setNonce(value.nonce);
 
 			//@ts-ignore
 			await typedSignature.signTypedDataAsync({ domain, types, value });
@@ -48,13 +50,19 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 	};
 
 	const handleSignAndPay = async ({ signature }: { signature: string }) => {
-		console.log(CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry);
 		const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
 			CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
 		);
 		const { v, r, s } = ethers.utils.splitSignature(signature);
 		// deadline
-		const tx = await registryContract.acknowledgementOfRegistry(localState.address!, v, r, s);
+		const tx = await registryContract.acknowledgementOfRegistry(
+			deadline!,
+			nonce!,
+			localState.address!,
+			v,
+			r,
+			s
+		);
 		const receipt = await tx.wait();
 
 		setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
@@ -135,7 +143,7 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 				{typedSignature.data ? (
 					<Button
 						m={5}
-						onClick={() => handleSignAndPay({ signature: typedSignature.data })}
+						onClick={() => handleSignAndPay({ signature: typedSignature.data! })}
 						disabled={
 							localState.includeWalletNFT === null ||
 							localState.includeSupportNFT === null ||
