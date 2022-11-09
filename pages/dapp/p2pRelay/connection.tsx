@@ -1,4 +1,4 @@
-import { Text, Flex, useDisclosure, Box } from '@chakra-ui/react';
+import { Text, Flex, useDisclosure, Box, Button } from '@chakra-ui/react';
 import DappLayout from '@components/DappLayout';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import useLocalStorage from '@hooks/useLocalStorage';
@@ -9,15 +9,22 @@ import { Libp2p } from 'libp2p';
 import { PeerId } from '@libp2p/interface-peer-id';
 import { Multiaddr, multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 
-import { startLibp2p } from '@utils/libp2p';
+import { listenerLibp2p, dialerLibp2p, ProtcolHandlers } from '@utils/libp2p';
 
 import { ConnectToPeer } from '@components/WebRtcStarRegistration/ConnectToPeer';
 import { CompletionStepsModal } from '@components/WebRtcStarRegistration/CompletionStepsModal';
 import { PeerList } from '@components/WebRtcStarRegistration/PeerList';
 import { pipe } from 'it-pipe';
-import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
-import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import { peerIdFromString } from '@libp2p/peer-id';
+import { MplexStream } from '@libp2p/mplex/dist/src/mplex';
+import P2pAcknowledgement from '@components/WebRtcStarRegistration/P2pAcknowledgement';
+import { Stream } from '@libp2p/interface-connection';
+import { useAccount } from 'wagmi';
+import AcknowledgementPeerPayment from '@components/WebRtcStarRegistration/AcknowledgementPeerPayment';
+import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
+import * as lp from 'it-length-prefixed';
+import map from 'it-map';
+import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 
 // evt.detail.remoteAddr.toJSON()
 // '/dns4/am6.bootstrap.libp2p.io/tcp/443/wss/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb'
@@ -25,66 +32,164 @@ import { peerIdFromString } from '@libp2p/peer-id';
 export const Connection = () => {
 	const [localState, setLocalState] = useLocalStorage();
 	const [libp2pInstance, setLibp2pInstance] = React.useState<Libp2p>();
+	const { address } = useAccount();
 	const [peerId, setPeerId] = React.useState<PeerId | null>(null);
 	const [peerAddrs, setPeerAddrs] = React.useState<Multiaddr[]>([]);
 	const [connecting, setConnecting] = React.useState(false);
-	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [connStream, setConnStream] = React.useState<any>();
+	const [isConnected, setIsConnected] = React.useState(false);
+	const completionDisclosure = useDisclosure();
+	const nftDisclosure = useDisclosure();
+	const [connStream, setConnStream] = React.useState<Stream>();
+
+	const PeerDisplay = ({ isConnected }: { isConnected: boolean }) => {
+		return (
+			<Flex flexDirection="column" justifyContent="center" textAlign="center" mt={3}>
+				{isConnected ? <Text>Connected</Text> : <Text>...Waiting for Connection</Text>}
+				<Box mb={5}>
+					<Text>Your Peer ID is:</Text>
+					<Text fontWeight="bold" fontSize="20px">
+						{localState.peerId?.toString()}
+					</Text>
+				</Box>
+				<Box>
+					<Text>Your Connection Address is:</Text>
+					<Text fontWeight="bold" fontSize="20px">
+						{localState.peerAddrs?.[0]?.toString()}
+					</Text>
+				</Box>
+			</Flex>
+		);
+	};
+
+	const sendConnectMessage = async () => {
+		try {
+			if (localState.isRegistering) {
+				const result = await libp2pInstance!.peerStore.addressBook.set(localState.connectToPeer!, [
+					localState.connectToPeerAddrs!,
+				]);
+				let stream: Stream | undefined;
+
+				setConnecting(true);
+
+				stream = await libp2pInstance!.dialProtocol(localState.connectToPeer!, [
+					'/swr/connected/1.0.0',
+				]);
+
+				setConnStream(stream);
+
+				const relayerState = {
+					isRegistering: !localState.isRegistering,
+					network: localState.network,
+					includeWalletNFT: localState.includeWalletNFT,
+					includeSupportNFT: localState.includeSupportNFT,
+				};
+
+				await pipe(
+					// Read relayerState to stream (the source)
+					JSON.stringify(relayerState),
+					// Turn strings into buffers
+					(source) => map(source, (string) => uint8ArrayFromString(string)),
+					// Encode with length prefix (so receiving side knows how much data is coming)
+					lp.encode(),
+					// Write to the stream (the sink)
+					connStream!.sink
+				);
+				setIsConnected(true);
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setConnecting(false);
+		}
+	};
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
 		peerId: string,
-		multiaddress: MultiaddrInput,
-		signature: string
+		multiaddress: MultiaddrInput
 	) => {
 		e.preventDefault();
 		setConnecting(false);
 
-		try {
-			const connPeerId = peerIdFromString(peerId);
-			const connAddr = multiaddr(multiaddress);
+		const connPeerId = peerIdFromString(peerId);
+		const connAddr = multiaddr(multiaddress);
 
-			setLocalState({
-				connectToPeer: connPeerId,
-				connectToPeerAddrs: connAddr!,
-			});
+		setLocalState({
+			connectToPeer: connPeerId,
+			connectToPeerAddrs: connAddr!,
+		});
 
-			// await libP2p!.peerStore.addressBook.set(connPeerId, [connAddr]);
-			let stream;
-			try {
-				stream = await libp2pInstance!.dialProtocol(connPeerId, ['/p2p-swr']);
-			} catch (error: any) {
-				error?.errors;
-			}
-			setConnStream(stream);
-			console.log(stream);
-			console.log(connStream);
-
-			setConnecting(true);
-			const record = await libp2pInstance!.peerStore.addressBook.getPeerRecord(connPeerId);
-
-			await pipe([uint8ArrayFromString(signature)], connStream, async (source: any) => {
-				for await (const message of source) {
-					debugger;
-					console.log('received message', uint8ArrayToString(message));
-				}
-			});
-		} catch (error) {
-			// setConnecting(false);
-			console.log(error);
+		if (localState.isRegistering) {
+			await sendConnectMessage();
+		} else {
+			setConnecting(false);
+			setIsConnected(true);
 		}
+	};
+
+	// - /swr/acknowledgement/signature/1.0.0: # pass acknowledgement signature
+	//   - listener: relayer
+	//   - dialer: registrar
+
+	// - /swr/ackowledgement/payment/1.0.0: # pass successful payment acknowledgement
+	//   - listener: registrar
+	//   - dialer: relayer
+
+	// - /swr/register/signature/1.0.0: # pass register signature
+	//   - listener: relayer
+	//   - dialer: registrar
+
+	// - /swr/ackowledgement/payment/1.0.0: # pass successful payment register
+	//   - listener: registrar
+	//   - dialer: relayer
+
+	// - /swr/connected/1.0.0: # pass localState
+	//   - listener: relayer
+	//   - dialer: registrar
+	const connectHandler = async ({ stream }: { stream: Stream }) => {
+		pipe(
+			// Read from the stream (the source)
+			stream.source,
+			// Decode length-prefixed data
+			lp.decode(),
+			// Turn buffers into strings
+			(source) => map(source, (buf) => uint8ArrayToString(buf.subarray())),
+			// Sink function
+			async function (source) {
+				// For each chunk of data
+				let data = '';
+				for await (const msg of source) {
+					// Output the data as a utf8 string
+					data += msg;
+				}
+				console.log(data);
+				debugger;
+				setLocalState(JSON.parse(data));
+			}
+		);
 	};
 
 	useEffect(() => {
 		const start = async () => {
-			const { libp2p, peerId, multiaddresses } = await startLibp2p();
+			let instance;
+
+			if (localState.isRegistering) {
+				// const protocolHandlers = [{ protocol: '/swr/connected/1.0.0', handler: connectHandler }];
+				instance = await dialerLibp2p([]);
+			} else {
+				const protocolHandlers: ProtcolHandlers[] = [
+					{ protocol: '/swr/connected/1.0.0', handlerFn: { handler: connectHandler, options: {} } },
+				];
+				instance = await listenerLibp2p(protocolHandlers);
+			}
+			const { libp2p, peerId, multiaddresses } = instance;
 
 			setLibp2pInstance(libp2p);
 			setPeerId(peerId);
 			setPeerAddrs(multiaddresses);
 
 			setLocalState({
-				peerId: libp2p.peerId,
+				peerId: peerId,
 				peerAddrs: multiaddresses,
 			});
 
@@ -103,23 +208,13 @@ export const Connection = () => {
 
 	return (
 		<DappLayout
+			isOpen={nftDisclosure.isOpen}
+			onClose={nftDisclosure.onClose}
 			heading="Peer to Peer Relay"
 			subHeading="sign with one wallet, have your peer pay for you."
 		>
-			<Flex flexDirection="column" justifyContent="center" textAlign="center" mt={3}>
-				<Box mb={5}>
-					<Text>Your Peer ID is:</Text>
-					<Text fontWeight="bold" fontSize="20px">
-						{localState.peerId?.toString()}
-					</Text>
-				</Box>
-				<Box>
-					<Text>Your Connection Address is:</Text>
-					<Text fontWeight="bold" fontSize="20px">
-						{localState.peerAddrs?.[0]?.toString()}
-					</Text>
-				</Box>
-			</Flex>
+			<Button onClick={completionDisclosure.onOpen}>Open CompletionSteps</Button>
+			<PeerDisplay isConnected={isConnected} />
 			<Flex mt={3} mb={10} p={5} gap={5}>
 				{libp2pInstance && localState.connectToPeer && (
 					<PeerList
@@ -132,14 +227,29 @@ export const Connection = () => {
 				{localState.step === P2PRelaySteps.ConnectToPeer && (
 					<ConnectToPeer setConnectToPeerInfo={setConnectToPeerInfo} />
 				)}
-				{/* {localState.step === P2PRelaySteps.AcknowledgeAndPay && <AcknowledgeAndPay />}
-				{localState.step === P2PRelaySteps.SendToPeerFirst && <SendToPeerFirst />}
-				{localState.step === P2PRelaySteps.WaitForPeerInitPay && <WaitForPeerInitPay />}
-				{localState.step === P2PRelaySteps.GracePeriod && <GracePeriod />}
-				{localState.step === P2PRelaySteps.SignRegister && <SignRegister />}
-				{localState.step === P2PRelaySteps.SendToPeerSecond && <SendToPeerSecond />}
-				{localState.step === P2PRelaySteps.WaitForPeerRegisterPay && <WaitForPeerRegisterPay />} */}
-				{<CompletionStepsModal isOpen={isOpen} onClose={onClose} />}
+				{localState.step === P2PRelaySteps.AcknowledgeAndSign && (
+					<P2pAcknowledgement
+						address={address!}
+						onOpen={nftDisclosure.onOpen}
+						setNextStep={() => setLocalState({ step: P2PRelaySteps.AcknowledgementPeerPayment })}
+					/>
+				)}
+				{localState.step === P2PRelaySteps.AcknowledgementPeerPayment && (
+					<AcknowledgementPeerPayment />
+				)}
+				{/*
+        {localState.step === P2PRelaySteps.GracePeriod && (
+					<GracePeriod setLocalState={} nextStep={} address={''} chainId={0} keyRef={''} />
+				)}
+				{localState.step === P2PRelaySteps.RegisterAndSign && <RegisterAndSign />}
+				{localState.step === P2PRelaySteps.RegisterPeerPayment && <RegisterPeerPayment />}
+        */}
+				{
+					<CompletionStepsModal
+						isOpen={completionDisclosure.isOpen}
+						onClose={completionDisclosure.onClose}
+					/>
+				}
 			</Flex>
 		</DappLayout>
 	);

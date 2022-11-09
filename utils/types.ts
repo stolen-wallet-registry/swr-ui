@@ -17,13 +17,11 @@ export enum SelfRelaySteps {
 export enum P2PRelaySteps {
 	Instructions = 'instructions',
 	ConnectToPeer = 'connect-to-peer',
-	AcknowledgeAndPay = 'acknowledge-and-sign',
-	SendToPeerFirst = 'first-send-to-peer',
-	WaitForPeerInitPay = 'wait-for-peer-init-pay',
+	AcknowledgeAndSign = 'acknowledge-and-sign',
+	AcknowledgementPeerPayment = 'acknowledgement-peer-payment',
 	GracePeriod = 'grace-period',
-	SignRegister = 'register-and-sign',
-	SendToPeerSecond = 'second-send-to-peer',
-	WaitForPeerRegisterPay = 'wait-for-peer-register-pay',
+	RegisterAndSign = 'register-and-sign',
+	RegisterPeerPayment = 'register-peer-payment',
 }
 
 // export type StandardSteps =

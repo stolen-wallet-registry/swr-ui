@@ -3,11 +3,7 @@ import RegistrationSection from '@components/RegistrationSection';
 import { buildAcknowledgementStruct } from '@hooks/use712Signature';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { SignTypedDataArgs } from '@wagmi/core';
-import {
-	StolenWalletRegistryAbi,
-	StolenWalletRegistryFactory,
-} from '@wallet-hygiene/swr-contracts';
+import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { BigNumber, ethers, Signer } from 'ethers';
 import { useState, useEffect } from 'react';
 import { useNetwork, useProvider, useSigner, useSignTypedData } from 'wagmi';

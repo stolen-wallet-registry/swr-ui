@@ -16,6 +16,7 @@ export const ConnectToPeer = ({ setConnectToPeerInfo }: ConnectToPeerProps) => {
 	const [localState] = useLocalStorage();
 	const [connectPeerId, setConnectPeerId] = React.useState<string>('');
 	const [connectPeerAddrs, setConnectPeerAddrs] = React.useState<string>('');
+
 	return (
 		<RegistrationSection title="Waiting Trusted Relayer">
 			<Text>Please switch to your other account ({localState.trustedRelayer})</Text>
