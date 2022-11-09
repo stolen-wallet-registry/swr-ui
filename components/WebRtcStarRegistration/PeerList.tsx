@@ -1,6 +1,6 @@
 import { Text, UnorderedList, Heading, Flex } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import truncate from 'lodash/truncate';
 import { Multiaddr } from '@multiformats/multiaddr';
 
@@ -9,17 +9,17 @@ import type { PeerId } from '@libp2p/interface-peer-id';
 
 interface PeerListProps {
 	libp2p: Libp2p;
-	connecting: boolean;
-	peerId?: PeerId | null;
-	multiaddress?: Multiaddr | null;
+	connected: boolean;
+	peerId?: string | null;
+	multiaddress?: string | null;
 }
 
-export const PeerList = ({ libp2p, connecting, peerId, multiaddress }: PeerListProps) => {
-	const [peers, setPeers] = React.useState<PeerId[]>([]);
+export const PeerList = ({ libp2p, connected, peerId, multiaddress }: PeerListProps) => {
+	const [peers, setPeers] = useState<PeerId[]>([]);
 
 	useEffect(() => {
 		const getPeerList = async () => {
-			const list = await libp2p.getPeers();
+			const list = await libp2p.getPeers().filter((pid) => pid.equals(peerId!));
 
 			setPeers(list);
 		};
@@ -32,12 +32,23 @@ export const PeerList = ({ libp2p, connecting, peerId, multiaddress }: PeerListP
 
 	return (
 		<RegistrationSection title="Connection Details">
-			{connecting && (
+			{!connected ? (
 				<Flex flexDirection="column" gap={2}>
 					<Text>trying to connect to: </Text>
 					<Text fontWeight="bold">{peerId?.toString()}</Text>
 					<Text>trying to connect to:</Text>
-					<Text fontWeight="bold">{truncate(multiaddress?.toString(), { length: 50 })}</Text>
+					<Text fontWeight="bold" fontSize={10}>
+						{truncate(multiaddress?.toString(), { length: 50 })}
+					</Text>
+				</Flex>
+			) : (
+				<Flex flexDirection="column" gap={2}>
+					<Text>connected to: </Text>
+					<Text fontWeight="bold">{peerId?.toString()}</Text>
+					<Text>connected to:</Text>
+					<Text fontWeight="bold" fontSize={10}>
+						{truncate(multiaddress?.toString(), { length: 50 })}
+					</Text>
 				</Flex>
 			)}
 			<Heading as="h4">Trusted Peer List</Heading>

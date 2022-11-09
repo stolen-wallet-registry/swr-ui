@@ -12,9 +12,9 @@ import {
 } from '@wallet-hygiene/swr-contracts';
 import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry } from '@utils/signature';
 
-interface SwitchAndPayAcknowledgementProps {}
+interface AcknowledgementPaymentProps {}
 
-const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = ({}) => {
+const cknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({}) => {
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
 			console.log('Connected', { address, connector, isReconnected });
@@ -91,4 +91,4 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 	);
 };
 
-export default SwitchAndPayAcknowledgement;
+export default cknowledgementPayment;

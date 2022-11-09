@@ -141,7 +141,7 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 					alignSelf="flex-end"
 					width={[200, 250]}
 					m={5}
-					onClick={() => handleBegin(P2PRelaySteps.Instructions)}
+					onClick={() => handleBegin(P2PRegistereeSteps.Instructions)}
 				>
 					Begin
 				</Button>

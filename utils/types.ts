@@ -1,3 +1,5 @@
+import { off } from 'process';
+
 export type RegistrationTypes = 'standardRelay' | 'selfRelay' | 'p2pRelay';
 
 export enum StandardSteps {
@@ -14,14 +16,25 @@ export enum SelfRelaySteps {
 	SwitchAndPayTwo = 'switch-and-pay-two',
 }
 
-export enum P2PRelaySteps {
+export enum P2PRegistereeSteps {
 	Instructions = 'instructions',
 	ConnectToPeer = 'connect-to-peer',
 	AcknowledgeAndSign = 'acknowledge-and-sign',
-	AcknowledgementPeerPayment = 'acknowledgement-peer-payment',
+	WaitForAcknowledgementPayment = 'wait-for-acknowledgement-payment',
 	GracePeriod = 'grace-period',
 	RegisterAndSign = 'register-and-sign',
-	RegisterPeerPayment = 'register-peer-payment',
+	WaitForRegistrationPayment = 'register-peer-payment',
+	Success = 'success',
+}
+
+export enum P2PRelayerSteps {
+	Instructions = 'instructions',
+	WaitForConnection = 'wait-for-connection',
+	WaitForAcknowledgementSign = 'wait-for-acknowledgement-sign',
+	AcknowledgementPayment = 'acknowledgement-payment',
+	GracePeriod = 'grace-period',
+	WaitForRegistrationSign = 'wait-for-registration-sign',
+	RegistrationPayment = 'registration-payment',
 }
 
 // export type StandardSteps =
@@ -52,11 +65,15 @@ export enum P2PRelaySteps {
 export const RegistrationValueMap = {
 	standardRelay: StandardSteps,
 	selfRelay: SelfRelaySteps,
-	p2pRelay: P2PRelaySteps,
+	p2pRelay: P2PRegistereeSteps || P2PRelayerSteps,
 };
 
 // TODO add logic for RegistrationTypes against RegistrationSteps
-export type RegistrationValues = StandardSteps | SelfRelaySteps | P2PRelaySteps;
+export type RegistrationValues =
+	| StandardSteps
+	| SelfRelaySteps
+	| P2PRegistereeSteps
+	| P2PRelayerSteps;
 
 export type PreviewMessageKey = 'default' | 'en' | 'es' | 'fr';
 export type showColorProps = 'home' | 'about' | 'why' | 'how' | 'features';

@@ -30,8 +30,8 @@ export type StateConfig = {
 	peerId: PeerId | null;
 	peerAddrs: Multiaddr[];
 	peerPin?: string | null;
-	connectToPeer: PeerId | null;
-	connectToPeerAddrs: Multiaddr | null;
+	connectToPeer: string | null;
+	connectToPeerAddrs: string[] | null;
 	connectToPeerPin?: string | null;
 	acknowledgementReceipt?: string | null;
 	registrationmentReceipt?: string | null;

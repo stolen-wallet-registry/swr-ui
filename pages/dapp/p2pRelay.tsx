@@ -4,7 +4,7 @@ import RegistrationSection from '@components/RegistrationSection';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import WebRTCStarInstructions from '@components/WebRtcStarRegistration/WebRTCStarInstructions';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { P2PRelaySteps } from '@utils/types';
+import { P2PRegistereeSteps } from '@utils/types';
 import NextLink from 'next/link';
 import React, { useState } from 'react';
 
@@ -23,7 +23,7 @@ const P2PRelayRegistration: React.FC<P2PRelayInterface> = () => {
 		>
 			<Flex mt={5} mb={10} p={10} gap={5}>
 				<CompletionSteps />
-				{localState.step === P2PRelaySteps.Instructions && <WebRTCStarInstructions />}
+				{localState.step === P2PRegistereeSteps.Instructions && <WebRTCStarInstructions />}
 			</Flex>
 		</DappLayout>
 	);

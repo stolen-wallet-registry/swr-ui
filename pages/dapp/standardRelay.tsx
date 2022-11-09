@@ -16,11 +16,7 @@ interface StandardRegistrationInterface {}
 const StandardRegistration: React.FC<StandardRegistrationInterface> = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { chain } = useNetwork();
-	const { address } = useAccount({
-		onConnect({ address, connector, isReconnected }) {
-			console.log('Connected', { address, connector, isReconnected });
-		},
-	});
+	const { address } = useAccount();
 
 	const [localState, setLocalState] = useLocalStorage();
 

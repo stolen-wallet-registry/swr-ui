@@ -12,13 +12,13 @@ import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
 import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import { pipe } from 'it-pipe';
 
-interface P2pAcknowledgementProps {
+interface AcknowledgeAndSignProps {
 	address: string;
 	onOpen: () => void;
 	setNextStep: () => void;
 }
 
-const P2pAcknowledgement: React.FC<P2pAcknowledgementProps> = ({
+const AcknowledgeAndSign: React.FC<AcknowledgeAndSignProps> = ({
 	address,
 	onOpen,
 	setNextStep,
@@ -184,4 +184,4 @@ const P2pAcknowledgement: React.FC<P2pAcknowledgementProps> = ({
 	);
 };
 
-export default P2pAcknowledgement;
+export default AcknowledgeAndSign;

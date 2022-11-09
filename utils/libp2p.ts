@@ -5,10 +5,27 @@ import { mplex } from '@libp2p/mplex';
 import { webRTCStar } from '@libp2p/webrtc-star';
 import { webSockets } from '@libp2p/websockets';
 import { pipe } from 'it-pipe';
-import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
-import { Multiaddr, multiaddr } from '@multiformats/multiaddr';
 import { PeerId } from '@libp2p/interface-peer-id';
 import { StreamHandlerRecord } from '@libp2p/interface-registrar';
+import { StateConfig } from '@hooks/useLocalStorage';
+import { Stream } from '@libp2p/interface-connection';
+import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
+import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
+import * as lp from 'it-length-prefixed';
+import map from 'it-map';
+
+import { multiaddr, Multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
+import { peerIdFromString } from '@libp2p/peer-id';
+
+export const PROTOCOLS = {
+	CONNECT: '/swr/connected/1.0.0',
+	ACK_SIG: '/swr/acknowledgement/signature/1.0.0',
+	ACK_PAY: '/swr/acknowledgement/payment/1.0.0',
+	REG_SIG: '/swr/register/signature/1.0.0',
+	REG_PAY: '/swr/register/payment/1.0.0',
+};
+
+export const REGISTEREE_PROTOCOLS = {};
 
 // connectionGater: {
 //   denyDialPeer: (peerId: PeerId) => {
@@ -48,7 +65,7 @@ interface ListenerLibp2pInterface extends DialerLibp2pInterface {}
 
 export interface ProtcolHandlers {
 	protocol: string;
-	handlerFn: StreamHandlerRecord;
+	streamHandler: StreamHandlerRecord;
 }
 
 const dialerLibp2p = async (handlers: ProtcolHandlers[]): Promise<DialerLibp2pInterface> => {
@@ -88,9 +105,9 @@ const dialerLibp2p = async (handlers: ProtcolHandlers[]): Promise<DialerLibp2pIn
 
 	for (let h of handlers) {
 		// @ts-ignore
-		const { protocol, handlerFn } = h;
+		const { protocol, streamHandler } = h;
 
-		libp2p.handle(protocol, handlerFn.handler);
+		libp2p.handle(protocol, streamHandler.handler);
 	}
 
 	await libp2p.start();
@@ -143,9 +160,9 @@ const listenerLibp2p = async (handlers: ProtcolHandlers[]): Promise<ListenerLibp
 
 	for (let h of handlers) {
 		// @ts-ignore
-		const { protocol, handlerFn } = h;
+		const { protocol, streamHandler } = h;
 
-		libp2p.handle(protocol, handlerFn.handler);
+		libp2p.handle(protocol, streamHandler.handler);
 	}
 
 	await libp2p.start();
@@ -158,8 +175,88 @@ const listenerLibp2p = async (handlers: ProtcolHandlers[]): Promise<ListenerLibp
 	};
 };
 
+const sendConnectMessage = async ({
+	libp2p,
+	localState,
+}: {
+	libp2p: Libp2p;
+	localState: StateConfig;
+}) => {
+	try {
+		const connPeerId = peerIdFromString(localState?.connectToPeer!);
+		const connAddr = multiaddr(localState.connectToPeerAddrs![0]);
+		debugger;
+		await libp2p!.peerStore.addressBook.set(connPeerId!, [connAddr]);
+		const result = await libp2p!.peerStore.addressBook.get(connPeerId);
+		debugger;
+		console.log(result);
+
+		let stream: Stream | undefined;
+		console.log(connPeerId, [PROTOCOLS.CONNECT]);
+		stream = await libp2p!.dialProtocol(connAddr, [PROTOCOLS.CONNECT]);
+		debugger;
+		if (localState.isRegistering) {
+			try {
+				const relayerState = {
+					isRegistering: localState.isRegistering,
+					network: localState.network,
+					includeWalletNFT: localState.includeWalletNFT,
+					includeSupportNFT: localState.includeSupportNFT,
+				};
+
+				console.log('Sending connect message to relayer');
+
+				await pipe(
+					// Read relayerState to stream (the source)
+					JSON.stringify(relayerState),
+					// Turn strings into buffers
+					(source) => map(source, (string) => uint8ArrayFromString(string)),
+					// Encode with length prefix (so receiving side knows how much data is coming)
+					lp.encode(),
+					// Write to the stream (the sink)
+					stream!.sink
+				);
+
+				console.log(await stream.stat);
+				await stream!.close();
+				console.log(`${stream?.id} closed!`);
+
+				return stream.stat;
+			} catch (error) {
+				throw error;
+			}
+		} else {
+			try {
+				console.log('Sending connect message to registeree');
+
+				await pipe(
+					// Read relayerState to stream (the source)
+					JSON.stringify({ success: true, message: 'connected to relayer' }),
+					// Turn strings into buffers
+					(source) => map(source, (string) => uint8ArrayFromString(string)),
+					// Encode with length prefix (so receiving side knows how much data is coming)
+					lp.encode(),
+					// Write to the stream (the sink)
+					stream!.sink
+				);
+
+				console.log(await stream.stat);
+				await stream!.close();
+				console.log(`${stream?.id} closed!`);
+
+				return stream.stat;
+			} catch (error) {
+				throw error;
+			}
+		}
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
 // peerStore.metadataBook.set(peerId, 'acknowledgement', uint8ArrayFromString(signature))
 // const signature = peerStore.metadataBook.getValue(peerId, 'signature')
 // peerStore.metadataBook.delete(peerId, 'signature')
 
-export { dialerLibp2p, listenerLibp2p };
+export { dialerLibp2p, listenerLibp2p, sendConnectMessage };

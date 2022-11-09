@@ -12,17 +12,13 @@ import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
 import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import { pipe } from 'it-pipe';
 
-interface P2pAcknowledgementProps {
+interface RegisterAndSignProps {
 	address: string;
 	onOpen: () => void;
 	setNextStep: () => void;
 }
 
-const P2pAcknowledgement: React.FC<P2pAcknowledgementProps> = ({
-	address,
-	onOpen,
-	setNextStep,
-}) => {
+const RegisterAndSign: React.FC<RegisterAndSignProps> = ({ address, onOpen, setNextStep }) => {
 	const [relayerIsValid, setRelayerIsValid] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
 	const [nonce, setNonce] = useState<BigNumber | null>(null);
@@ -184,4 +180,4 @@ const P2pAcknowledgement: React.FC<P2pAcknowledgementProps> = ({
 	);
 };
 
-export default P2pAcknowledgement;
+export default RegisterAndSign;

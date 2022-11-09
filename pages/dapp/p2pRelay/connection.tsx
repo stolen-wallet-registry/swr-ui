@@ -1,33 +1,41 @@
 import { Text, Flex, useDisclosure, Box, Button } from '@chakra-ui/react';
 import DappLayout from '@components/DappLayout';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
-import useLocalStorage from '@hooks/useLocalStorage';
-import { P2PRelaySteps } from '@utils/types';
+import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
 import React, { useEffect } from 'react';
 
 import { Libp2p } from 'libp2p';
 import { PeerId } from '@libp2p/interface-peer-id';
 import { Multiaddr, multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 
-import { listenerLibp2p, dialerLibp2p, ProtcolHandlers } from '@utils/libp2p';
+import { listenerLibp2p, dialerLibp2p, ProtcolHandlers, PROTOCOLS } from '@utils/libp2p';
 
-import { ConnectToPeer } from '@components/WebRtcStarRegistration/ConnectToPeer';
+import { ConnectToPeer } from '@components/WebRtcStarRegistration/Registeree/ConnectToPeer';
 import { CompletionStepsModal } from '@components/WebRtcStarRegistration/CompletionStepsModal';
 import { PeerList } from '@components/WebRtcStarRegistration/PeerList';
 import { pipe } from 'it-pipe';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { MplexStream } from '@libp2p/mplex/dist/src/mplex';
-import P2pAcknowledgement from '@components/WebRtcStarRegistration/P2pAcknowledgement';
+import P2pAcknowledgement from '@components/WebRtcStarRegistration/Registeree/AcknowledgeAndSign';
 import { Stream } from '@libp2p/interface-connection';
-import { useAccount } from 'wagmi';
-import AcknowledgementPeerPayment from '@components/WebRtcStarRegistration/AcknowledgementPeerPayment';
+import { chainId, useAccount } from 'wagmi';
+import AcknowledgementPeerPayment from '@components/WebRtcStarRegistration/Relayer/AcknowledgementPayment';
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
+import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import * as lp from 'it-length-prefixed';
 import map from 'it-map';
-import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
+import RegistereeContainer from '@components/WebRtcStarRegistration/containers/RegistereeContainer';
+import { setLocalStorageProps, setSignatureLocalStorage } from '@utils/signature';
+import { P2PRegistereeSteps } from '@utils/types';
+import RelayerContainer from '@components/WebRtcStarRegistration/containers/RelayerContainer';
 
 // evt.detail.remoteAddr.toJSON()
 // '/dns4/am6.bootstrap.libp2p.io/tcp/443/wss/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb'
+
+interface RelayerMessageProps {
+	success: boolean;
+	message: string;
+}
 
 export const Connection = () => {
 	const [localState, setLocalState] = useLocalStorage();
@@ -44,7 +52,15 @@ export const Connection = () => {
 	const PeerDisplay = ({ isConnected }: { isConnected: boolean }) => {
 		return (
 			<Flex flexDirection="column" justifyContent="center" textAlign="center" mt={3}>
-				{isConnected ? <Text>Connected</Text> : <Text>...Waiting for Connection</Text>}
+				{isConnected ? (
+					<Text as="h4" fontWeight="bold">
+						Connected
+					</Text>
+				) : (
+					<Text as="h4" fontWeight="bold">
+						...Waiting for Connection
+					</Text>
+				)}
 				<Box mb={5}>
 					<Text>Your Peer ID is:</Text>
 					<Text fontWeight="bold" fontSize="20px">
@@ -61,48 +77,6 @@ export const Connection = () => {
 		);
 	};
 
-	const sendConnectMessage = async () => {
-		try {
-			if (localState.isRegistering) {
-				const result = await libp2pInstance!.peerStore.addressBook.set(localState.connectToPeer!, [
-					localState.connectToPeerAddrs!,
-				]);
-				let stream: Stream | undefined;
-
-				setConnecting(true);
-
-				stream = await libp2pInstance!.dialProtocol(localState.connectToPeer!, [
-					'/swr/connected/1.0.0',
-				]);
-
-				setConnStream(stream);
-
-				const relayerState = {
-					isRegistering: !localState.isRegistering,
-					network: localState.network,
-					includeWalletNFT: localState.includeWalletNFT,
-					includeSupportNFT: localState.includeSupportNFT,
-				};
-
-				await pipe(
-					// Read relayerState to stream (the source)
-					JSON.stringify(relayerState),
-					// Turn strings into buffers
-					(source) => map(source, (string) => uint8ArrayFromString(string)),
-					// Encode with length prefix (so receiving side knows how much data is coming)
-					lp.encode(),
-					// Write to the stream (the sink)
-					connStream!.sink
-				);
-				setIsConnected(true);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setConnecting(false);
-		}
-	};
-
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
 		peerId: string,
@@ -115,38 +89,77 @@ export const Connection = () => {
 		const connAddr = multiaddr(multiaddress);
 
 		setLocalState({
-			connectToPeer: connPeerId,
-			connectToPeerAddrs: connAddr!,
+			connectToPeer: connPeerId.toString(),
+			connectToPeerAddrs: [connAddr!.toString()],
 		});
 
-		if (localState.isRegistering) {
-			await sendConnectMessage();
-		} else {
-			setConnecting(false);
-			setIsConnected(true);
-		}
+		setConnecting(false);
+		setIsConnected(true);
 	};
 
-	// - /swr/acknowledgement/signature/1.0.0: # pass acknowledgement signature
-	//   - listener: relayer
-	//   - dialer: registrar
+	const registerHandler = async ({ stream }: { stream: Stream }) => {
+		debugger;
+		pipe(
+			// Read from the stream (the source)
+			stream.source,
+			// Decode length-prefixed data
+			lp.decode(),
+			// Turn buffers into strings
+			(source) => map(source, (buf) => uint8ArrayToString(buf.subarray())),
+			async function (source) {
+				// For each chunk of data
+				let data = '';
+				for await (const msg of source) {
+					// Output the data as a utf8 string
+					data += msg;
+				}
 
-	// - /swr/ackowledgement/payment/1.0.0: # pass successful payment acknowledgement
-	//   - listener: registrar
-	//   - dialer: relayer
+				const protocol = stream.stat.protocol;
+				debugger;
+				switch (protocol) {
+					case PROTOCOLS.CONNECT:
+						const connect: RelayerMessageProps = JSON.parse(data);
+						if (connect.success) {
+							setLocalState({ step: P2PRegistereeSteps.AcknowledgeAndSign });
+							console.log(connect.message);
+						} else {
+							console.log(connect.message);
+							throw new Error(connect.message);
+						}
+						break;
+					case PROTOCOLS.ACK_PAY:
+						const ackowledgePay: RelayerMessageProps = JSON.parse(data);
 
-	// - /swr/register/signature/1.0.0: # pass register signature
-	//   - listener: relayer
-	//   - dialer: registrar
+						if (ackowledgePay.success) {
+							setLocalState({ step: P2PRegistereeSteps.GracePeriod });
+							console.log(ackowledgePay.message);
+						} else {
+							console.log(ackowledgePay.message);
+							throw new Error(ackowledgePay.message);
+						}
+						break;
+					case PROTOCOLS.REG_PAY:
+						const registerPay: RelayerMessageProps = JSON.parse(data);
+						if (registerPay.success) {
+							setLocalState({ step: P2PRegistereeSteps.Success });
+							console.log(registerPay.message);
+						} else {
+							console.log(registerPay.message);
+							throw new Error(registerPay.message);
+						}
+					default:
+						console.log(`recieved unknown protocol: ${protocol}`);
+						console.log(data);
+						throw new Error(`recieved unknown protocol: ${protocol}\n and data: ${data}`);
+				}
 
-	// - /swr/ackowledgement/payment/1.0.0: # pass successful payment register
-	//   - listener: registrar
-	//   - dialer: relayer
+				console.log(stream.stat);
+			}
+		);
+	};
 
-	// - /swr/connected/1.0.0: # pass localState
-	//   - listener: relayer
-	//   - dialer: registrar
-	const connectHandler = async ({ stream }: { stream: Stream }) => {
+	const relayHandler = async ({ stream }: { stream: Stream }) => {
+		debugger;
 		pipe(
 			// Read from the stream (the source)
 			stream.source,
@@ -162,9 +175,36 @@ export const Connection = () => {
 					// Output the data as a utf8 string
 					data += msg;
 				}
-				console.log(data);
+
+				const protocol = stream.stat.protocol;
+
 				debugger;
-				setLocalState(JSON.parse(data));
+				switch (protocol) {
+					case PROTOCOLS.CONNECT:
+						debugger;
+						const relayerState: Partial<StateConfig> = JSON.parse(data);
+						setLocalState(relayerState);
+						console.log(`recieved relayer state: ${JSON.stringify(relayerState)}`);
+						break;
+					case PROTOCOLS.ACK_SIG:
+						const acknowledgementSignature: setLocalStorageProps = JSON.parse(data);
+						setSignatureLocalStorage(acknowledgementSignature);
+						console.log(
+							`recieved acknowledgement signature: ${JSON.stringify(acknowledgementSignature)}`
+						);
+						break;
+					case PROTOCOLS.REG_SIG:
+						const registerSignature: setLocalStorageProps = JSON.parse(data);
+						setSignatureLocalStorage(registerSignature);
+						console.log(`recieved register signature: ${JSON.stringify(registerSignature)}`);
+						break;
+					default:
+						console.log(`recieved unknown protocol: ${protocol}`);
+						console.log(data);
+						throw new Error(`recieved unknown protocol: ${protocol}\n and data: ${data}`);
+				}
+
+				console.log(stream.stat);
 			}
 		);
 	};
@@ -174,12 +214,24 @@ export const Connection = () => {
 			let instance;
 
 			if (localState.isRegistering) {
-				// const protocolHandlers = [{ protocol: '/swr/connected/1.0.0', handler: connectHandler }];
-				instance = await dialerLibp2p([]);
-			} else {
+				const streamHandler = { handler: registerHandler, options: {} };
+
 				const protocolHandlers: ProtcolHandlers[] = [
-					{ protocol: '/swr/connected/1.0.0', handlerFn: { handler: connectHandler, options: {} } },
+					{ protocol: PROTOCOLS.CONNECT, streamHandler },
+					{ protocol: PROTOCOLS.ACK_PAY, streamHandler },
+					{ protocol: PROTOCOLS.REG_PAY, streamHandler },
 				];
+
+				instance = await dialerLibp2p(protocolHandlers);
+			} else {
+				const streamHandler = { handler: relayHandler, options: {} };
+
+				const protocolHandlers: ProtcolHandlers[] = [
+					{ protocol: PROTOCOLS.CONNECT, streamHandler },
+					{ protocol: PROTOCOLS.ACK_SIG, streamHandler },
+					{ protocol: PROTOCOLS.REG_SIG, streamHandler },
+				];
+
 				instance = await listenerLibp2p(protocolHandlers);
 			}
 			const { libp2p, peerId, multiaddresses } = instance;
@@ -206,6 +258,10 @@ export const Connection = () => {
 		};
 	}, []);
 
+	if (!libp2pInstance) {
+		return <div>loading...</div>;
+	}
+
 	return (
 		<DappLayout
 			isOpen={nftDisclosure.isOpen}
@@ -216,40 +272,24 @@ export const Connection = () => {
 			<Button onClick={completionDisclosure.onOpen}>Open CompletionSteps</Button>
 			<PeerDisplay isConnected={isConnected} />
 			<Flex mt={3} mb={10} p={5} gap={5}>
-				{libp2pInstance && localState.connectToPeer && (
-					<PeerList
-						connecting={connecting}
-						libp2p={libp2pInstance!}
-						peerId={localState?.connectToPeer}
-						multiaddress={localState?.connectToPeerAddrs}
-					/>
-				)}
-				{localState.step === P2PRelaySteps.ConnectToPeer && (
-					<ConnectToPeer setConnectToPeerInfo={setConnectToPeerInfo} />
-				)}
-				{localState.step === P2PRelaySteps.AcknowledgeAndSign && (
-					<P2pAcknowledgement
+				{localState.isRegistering ? (
+					<RegistereeContainer
+						libp2p={libp2pInstance}
 						address={address!}
 						onOpen={nftDisclosure.onOpen}
-						setNextStep={() => setLocalState({ step: P2PRelaySteps.AcknowledgementPeerPayment })}
+					/>
+				) : (
+					<RelayerContainer
+						libp2p={libp2pInstance}
+						address={address!}
+						onOpen={nftDisclosure.onOpen}
 					/>
 				)}
-				{localState.step === P2PRelaySteps.AcknowledgementPeerPayment && (
-					<AcknowledgementPeerPayment />
-				)}
-				{/*
-        {localState.step === P2PRelaySteps.GracePeriod && (
-					<GracePeriod setLocalState={} nextStep={} address={''} chainId={0} keyRef={''} />
-				)}
-				{localState.step === P2PRelaySteps.RegisterAndSign && <RegisterAndSign />}
-				{localState.step === P2PRelaySteps.RegisterPeerPayment && <RegisterPeerPayment />}
-        */}
-				{
-					<CompletionStepsModal
-						isOpen={completionDisclosure.isOpen}
-						onClose={completionDisclosure.onClose}
-					/>
-				}
+
+				<CompletionStepsModal
+					isOpen={completionDisclosure.isOpen}
+					onClose={completionDisclosure.onClose}
+				/>
 			</Flex>
 		</DappLayout>
 	);

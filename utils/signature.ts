@@ -19,10 +19,45 @@ interface getSignatureProps {
 	address: string;
 }
 
+export interface setLocalStorageProps extends getSignatureProps {
+	value: string;
+	deadline: BigNumber;
+	startTime?: Date;
+	deadlineDate?: Date;
+}
+
 interface setSignatureProps extends getSignatureProps {
 	value: any;
 	ttl: BigNumber;
 }
+
+export const setSignatureLocalStorage = ({
+	keyRef,
+	chainId,
+	address,
+	value,
+	deadline,
+}: setLocalStorageProps) => {
+	const item = {
+		value,
+		deadline,
+		startTime: new Date(Date.now() + 1 * 60 * 1000), // TODO come  back to this and insert startTime.
+		deadlineDate: new Date(Date.now() + 6 * 60 * 1000), // TODO come  back to this and insert deadline.
+	};
+
+	try {
+		if (keyRef === ACKNOWLEDGEMENT_KEY) {
+			localStorage.setItem(buildAcknowledgementKey(address, chainId), JSON.stringify(item));
+		} else if (keyRef === REGISTRATION_KEY) {
+			localStorage.setItem(buildRegistertKey(address, chainId), JSON.stringify(item));
+		} else {
+			throw new Error('please use a valid key');
+		}
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
+};
 
 export const setSignatureWithExpiry = ({
 	keyRef,
@@ -43,18 +78,13 @@ export const setSignatureWithExpiry = ({
 		deadlineDate: new Date(Date.now() + 6 * 60 * 1000), // TODO come  back to this and insert deadline.
 	};
 
-	try {
-		if (keyRef === ACKNOWLEDGEMENT_KEY) {
-			localStorage.setItem(buildAcknowledgementKey(address, chainId), JSON.stringify(item));
-		} else if (keyRef === REGISTRATION_KEY) {
-			localStorage.setItem(buildRegistertKey(address, chainId), JSON.stringify(item));
-		} else {
-			throw new Error('please use a valid key');
-		}
-	} catch (e) {
-		console.log(e);
-		throw e;
-	}
+	setSignatureLocalStorage({
+		keyRef,
+		chainId,
+		address,
+		value,
+		deadline: ttl,
+	});
 };
 
 export const getSignatureWithExpiry = ({
