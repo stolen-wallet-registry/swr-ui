@@ -56,15 +56,24 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 			const storedSignature = getSignatureWithExpiry({
 				keyRef: ACKNOWLEDGEMENT_KEY,
 				chainId: chain?.id!,
-				address: localState.address!,
+				address: localState.trustedRelayerFor!,
 			});
 
 			// const deadline = ethers.BigNumber.from(new Date(storedSignature.deadline).getTime());
 			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
 			// storedSignature.deadline,
-			const tx = await registryContract.acknowledgementOfRegistry(localState.address!, v, r, s);
+			const tx = await registryContract.acknowledgementOfRegistry(
+				storedSignature.deadline,
+				storedSignature.nonce,
+				localState.address!,
+				v,
+				r,
+				s
+			);
 
 			const receipt = await tx.wait();
+
+			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
 			console.log(receipt);
 		} catch (error) {
 			console.error(error);

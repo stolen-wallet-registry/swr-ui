@@ -12,7 +12,7 @@ import {
 import RegistrationSection from '@components/RegistrationSection';
 import { buildAcknowledgementStruct, signTypedDataProps } from '@hooks/use712Signature';
 import useDebounce from '@hooks/useDebounce';
-import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
+import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
 import { ACKNOWLEDGEMENT_KEY, setSignatureWithExpiry } from '@utils/signature';
 import { SelfRelaySteps } from '@utils/types';
@@ -21,18 +21,9 @@ import {
 	StolenWalletRegistryFactory,
 } from '@wallet-hygiene/swr-contracts';
 import { BigNumber, ethers } from 'ethers';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { FaWallet } from 'react-icons/fa';
-import {
-	chain,
-	useAccount,
-	useContract,
-	useContractReads,
-	useNetwork,
-	useProvider,
-	useSigner,
-	useSignTypedData,
-} from 'wagmi';
+import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 
 interface AcknowledgementProps {
 	address: string;
@@ -53,6 +44,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
 	const [relayerIsValid, setRelayerIsValid] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
+	const [nonce, setNonce] = useState<BigNumber | null>(null);
 	const debouncedTrustedRelayer = useDebounce(tempRelayer, 500);
 
 	const typedSignature = useSignTypedData();
@@ -77,6 +69,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				chain,
 			});
 			setDeadline(value.deadline);
+			setNonce(value.nonce);
 			await typedSignature.signTypedDataAsync({ domain, types, value });
 		} catch (error) {
 			console.log(error);
@@ -99,6 +92,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				ttl: deadline!,
 				chainId: chain?.id!,
 				address: address!,
+				nonce: nonce!,
 			});
 			setNextStep();
 		}

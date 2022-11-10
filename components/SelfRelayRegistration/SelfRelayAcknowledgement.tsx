@@ -43,6 +43,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 	const [acknowledgement, setAcknowledgment] = useState<signTypedDataProps>();
 	const [relayerIsValid, setRelayerIsValid] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
+	const [nonce, setNonce] = useState<BigNumber | null>(null);
 	const debouncedTrustedRelayer = useDebounce(tempRelayer, 500);
 
 	const typedSignature = useSignTypedData();
@@ -68,6 +69,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 			});
 
 			setDeadline(value.deadline);
+			setNonce(value.nonce);
 			await typedSignature.signTypedDataAsync({ domain, types, value });
 		} catch (error) {
 			console.log(error);
@@ -91,6 +93,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				ttl: deadline!,
 				chainId: chain?.id!,
 				address: address!,
+				nonce: nonce!,
 			});
 			setNextStep();
 		}

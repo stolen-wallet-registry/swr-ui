@@ -2,11 +2,10 @@ import { Flex, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import useTimer from '@hooks/useTimer';
 import { useEffect } from 'react';
-import { StateConfig } from '@utils/localStore';
 import { RegistrationValues } from '@utils/types';
 import { getSignatureWithExpiry } from '@utils/signature';
-import { id } from 'ethers/lib/utils';
 import { useAccount, useNetwork } from 'wagmi';
+import { StateConfig } from '@hooks/useLocalStorage';
 
 interface GracePeriodInterface {
 	setLocalState: (val: Partial<StateConfig>) => void;
@@ -23,10 +22,10 @@ const GracePeriod: React.FC<GracePeriodInterface> = ({
 	address,
 	chainId,
 }) => {
-	const { value, expiry } = getSignatureWithExpiry({ chainId, address, keyRef });
+	// const { value, deadline } = getSignatureWithExpiry({ chainId, address, keyRef });
 
 	const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
-		expiry: new Date(expiry).getTime(),
+		expiry: new Date().getTime(),
 		onExpire: () => {
 			console.log('onExpire');
 			setLocalState({ step: nextStep });

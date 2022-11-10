@@ -1,4 +1,4 @@
-import { Button, Flex, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import useLocalStorage from '@hooks/useLocalStorage';
 import React from 'react';
@@ -18,10 +18,30 @@ export const ConnectToPeer = ({ setConnectToPeerInfo }: ConnectToPeerProps) => {
 	const [connectPeerAddrs, setConnectPeerAddrs] = React.useState<string>('');
 
 	return (
-		<RegistrationSection title="Waiting Trusted Relayer">
-			<Text>Please switch to your other account ({localState.trustedRelayer})</Text>
-			<Text> so you can pay for the acknowledgement step and proceed</Text>
-
+		<RegistrationSection title="Connect to Peer">
+			<Box mb={5}>
+				<Text>
+					1) Have someone you know visit the{' '}
+					<span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
+						Stollen Wallet Registry
+					</span>
+				</Text>
+				<Text>
+					2) Instruct them to visit{' '}
+					<span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>P2P Relay</span> and
+					click{' '}
+					<span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
+						Assist with Registration
+					</span>
+				</Text>
+				<Text>
+					3) get their{' '}
+					<span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
+						Peer ID and Connection Address offline
+					</span>
+				</Text>
+				<Text>4) Paste them here to connect.</Text>
+			</Box>
 			<Flex flexDirection="column" gap={3}>
 				<InputGroup>
 					<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />

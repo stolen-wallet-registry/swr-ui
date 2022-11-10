@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
@@ -16,19 +16,26 @@ import RegisterPeerPayment from '../Relayer/RegistrationPayment';
 
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
-import { sendConnectMessage } from '@utils/libp2p';
+import { registereeConnectMessage } from '@utils/libp2p';
 
 interface RegistreeContainerProps {
+	step: P2PRegistereeSteps;
 	libp2p: Libp2p;
 	address: string;
 	onOpen: () => void;
 }
 
-const RegistereeContainer: React.FC<RegistreeContainerProps> = ({ libp2p, address, onOpen }) => {
+const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
+	step,
+	libp2p,
+	address,
+	onOpen,
+}) => {
 	const [localState, setLocalState] = useLocalStorage();
 	const [connected, setIsConnected] = useState(false);
 	const [status, setStatus] = useState('waiting to connect to peer.');
 	const [error, setError] = useState<Error | unknown>();
+	const [tempRelayer, setTempRelayer] = useState('');
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
@@ -40,14 +47,14 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({ libp2p, addres
 		try {
 			const connPeerId = peerIdFromString(peerId);
 			const connAddr = multiaddr(multiaddress);
-			debugger;
+
 			setLocalState({
 				connectToPeer: connPeerId.toString(),
-				connectToPeerAddrs: [connAddr!.toString()],
+				connectToPeerAddrs: connAddr!.toString(),
 			});
 
 			try {
-				const stat = await sendConnectMessage({ libp2p, localState });
+				const stat = await registereeConnectMessage({ libp2p, localState });
 				console.log(stat);
 
 				if (stat?.timeline) {
@@ -68,20 +75,23 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({ libp2p, addres
 	};
 
 	return (
-		<Flex mt={3} mb={10} p={5} gap={5}>
+		<Flex mt={3} mb={10} p={5} gap={5} justifyContent="center">
 			{libp2p && localState.connectToPeer && (
 				<PeerList
 					connected={connected}
 					libp2p={libp2p!}
 					peerId={localState?.connectToPeer}
-					multiaddress={localState?.connectToPeerAddrs?.[0]}
+					multiaddress={localState?.connectToPeerAddrs}
 				/>
 			)}
-			{localState.step === P2PRegistereeSteps.ConnectToPeer && (
+			{step === P2PRegistereeSteps.ConnectToPeer && (
 				<ConnectToPeer setConnectToPeerInfo={setConnectToPeerInfo} />
 			)}
-			{localState.step === P2PRegistereeSteps.AcknowledgeAndSign && (
+			{step === P2PRegistereeSteps.AcknowledgeAndSign && (
 				<AcknowledgeAndSign
+					libp2p={libp2p!}
+					tempRelayer={tempRelayer}
+					setTempRelayer={setTempRelayer}
 					address={address!}
 					onOpen={onOpen}
 					setNextStep={() =>
@@ -89,20 +99,18 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({ libp2p, addres
 					}
 				/>
 			)}
-			{localState.step === P2PRegistereeSteps.WaitForAcknowledgementPayment && (
+			{step === P2PRegistereeSteps.WaitForAcknowledgementPayment && (
 				<WaitForAcknowledgementPayment />
 			)}
-			{localState.step === P2PRegistereeSteps.GracePeriod && <GracePeriod />}
-			{localState.step === P2PRegistereeSteps.RegisterAndSign && (
+			{step === P2PRegistereeSteps.GracePeriod && <GracePeriod />}
+			{step === P2PRegistereeSteps.RegisterAndSign && (
 				<RegisterAndSign
 					address={address}
 					onOpen={onOpen}
 					setNextStep={() => setLocalState({ step: P2PRegistereeSteps.WaitForRegistrationPayment })}
 				/>
 			)}
-			{localState.step === P2PRegistereeSteps.WaitForRegistrationPayment && (
-				<WaitForRegistrationPayment />
-			)}
+			{step === P2PRegistereeSteps.WaitForRegistrationPayment && <WaitForRegistrationPayment />}
 		</Flex>
 	);
 };

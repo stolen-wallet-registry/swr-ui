@@ -14,7 +14,7 @@ import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry } from '@utils/signature';
 
 interface AcknowledgementPaymentProps {}
 
-const cknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({}) => {
+const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({}) => {
 	const { connector, address, isConnected } = useAccount({
 		onConnect({ address, connector, isReconnected }) {
 			console.log('Connected', { address, connector, isReconnected });
@@ -25,14 +25,12 @@ const cknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({}) => {
 	const { chain } = useNetwork();
 	const [localState, setLocalState] = useLocalStorage();
 	const [isMounted, setIsMounted] = useState(false);
-	const provider = useProvider();
-	const [deadline, setDeadline] = useState<ethers.BigNumber | null>(null);
 	console.log(signer);
 
-	// const registryContract = StolenWalletRegistryFactory.connect(
-	// 	CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
-	// 	signer!
-	// );
+	const registryContract = StolenWalletRegistryFactory.connect(
+		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+		signer!
+	);
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -52,43 +50,50 @@ const cknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({}) => {
 	}
 
 	const signAndPay = async () => {
-		// 	try {
-		// 		const storedSignature = getSignatureWithExpiry({
-		// 			keyRef: ACKNOWLEDGEMENT_KEY,
-		// 			chainId: chain?.id!,
-		// 			address: localState.address!,
-		// 		});
-		// 		// const deadline = ethers.BigNumber.from(new Date(storedSignature.deadline).getTime());
-		// 		const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
-		// 		// storedSignature.deadline,
-		// 		const tx = await registryContract.acknowledgementOfRegistry(localState.address!, v, r, s);
-		// 		const receipt = await tx.wait();
-		// 		console.log(receipt);
-		// 	} catch (error) {
-		// 		console.error(error);
-		// 	}
+		try {
+			const storedSignature = getSignatureWithExpiry({
+				keyRef: ACKNOWLEDGEMENT_KEY,
+				chainId: chain?.id!,
+				address: localState.trustedRelayerFor!,
+			});
+
+			const deadline = ethers.BigNumber.from(storedSignature.deadline);
+			const nonce = ethers.BigNumber.from(storedSignature.nonce);
+			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
+
+			const tx = await registryContract.acknowledgementOfRegistry(
+				deadline,
+				nonce,
+				localState.trustedRelayerFor!,
+				v,
+				r,
+				s
+			);
+
+			const receipt = await tx.wait();
+
+			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
+			console.log(receipt);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
-	if (isConnected && localState.isRegistering) {
-		return (
-			<RegistrationSection title="Waiting for payment by Trusted Relayer">
-				<Text>Waiting on ({localState.trustedRelayer}) to pay for the transaction</Text>
-				<Text> so you can pay for the acknowledgement step and proceed</Text>
-			</RegistrationSection>
-		);
-	}
+	const backButtonAction = () => {
+		setLocalState({ step: SelfRelaySteps.AcknowledgeAndSign });
+	};
 
 	return (
 		<RegistrationSection title="Pay for Acknowledgement">
 			<Flex flexDirection="column">
-				<Text>Sign and Pay for Acknowledgement for {localState.address}</Text>
-				{/* <Text mb={5}>Sign and Pay for Acknowledgement from {localState.address}</Text> */}
+				<Text mb={5}>Sign and Pay for Acknowledgement from {localState.trustedRelayerFor}</Text>
 			</Flex>
 			<Flex justifyContent="flex-end" gap={5}>
+				<Button onClick={backButtonAction}>Back</Button>
 				<Button onClick={signAndPay}>Sign and Pay</Button>
 			</Flex>
 		</RegistrationSection>
 	);
 };
 
-export default cknowledgementPayment;
+export default AcknowledgementPayment;

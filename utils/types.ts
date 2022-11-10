@@ -23,7 +23,7 @@ export enum P2PRegistereeSteps {
 	WaitForAcknowledgementPayment = 'wait-for-acknowledgement-payment',
 	GracePeriod = 'grace-period',
 	RegisterAndSign = 'register-and-sign',
-	WaitForRegistrationPayment = 'register-peer-payment',
+	WaitForRegistrationPayment = 'wait-for-register-payment',
 	Success = 'success',
 }
 

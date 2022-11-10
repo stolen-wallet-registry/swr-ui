@@ -22,6 +22,7 @@
 		"@emotion/styled": "^11.10.4",
 		"@libp2p/bootstrap": "^5.0.0",
 		"@libp2p/mplex": "^7.0.0",
+		"@libp2p/peer-id-factory": "^1.0.19",
 		"@libp2p/webrtc-star": "^5.0.3",
 		"@libp2p/webrtc-star-signalling-server": "^2.0.5",
 		"@libp2p/websockets": "^5.0.0",

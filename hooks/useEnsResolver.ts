@@ -21,14 +21,11 @@ const useEnsResolver = (ensText: string) => {
 			if (STARTS_WITH_ALPHA.test(addr)) {
 				const resolver = await provider.getResolver(addr);
 				const address = await resolver?.getAddress();
-				debugger;
 				setResolvedAddress(address!);
 			} else {
-				debugger;
 				setResolvedAddress(addr);
 			}
 		} catch (error: any) {
-			debugger;
 			setResolvedAddress(addr);
 			setError(error);
 			console.error(error);

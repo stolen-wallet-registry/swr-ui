@@ -1,4 +1,4 @@
-import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { Box, Text, Button, Flex, useDisclosure } from '@chakra-ui/react';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { RegistrationTypes } from '@utils/types';
 import router from 'next/router';
@@ -43,6 +43,18 @@ const DappLayout: React.FunctionComponent<DappLayoutProps> = ({
 		setIsMounted(true);
 	}, []);
 
+	const AttributesComponent = ({ localState }: { localState: any }) => {
+		const values = Object.keys(localState).map((k) => `${k} - ${localState[k]}`);
+
+		return (
+			<>
+				{values.map((v, i) => (
+					<Text key={i}>{v}</Text>
+				))}
+			</>
+		);
+	};
+
 	const resetState = () => {
 		resetLocalState(address, chain?.id);
 
@@ -56,6 +68,8 @@ const DappLayout: React.FunctionComponent<DappLayoutProps> = ({
 	return (
 		<Box minHeight="100vh" height="100%" position="absolute" top={0} left={0} right={0} bottom={0}>
 			<DappHeader />
+			{/* <Text>localState:</Text> */}
+			{/* <AttributesComponent localState={localState} /> */}
 			<PageHeading heading="Registration Options" subHeading="The Stolen Wallet Registry" />
 			{heading && <PageHeading {...{ heading, subHeading }} invert={false} />}
 			{showButton && (

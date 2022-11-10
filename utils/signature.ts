@@ -19,16 +19,24 @@ interface getSignatureProps {
 	address: string;
 }
 
+interface UseableSignatureProps {
+	value: string;
+	deadline: BigNumber;
+	nonce: BigNumber;
+}
+
 export interface setLocalStorageProps extends getSignatureProps {
 	value: string;
 	deadline: BigNumber;
 	startTime?: Date;
 	deadlineDate?: Date;
+	nonce: BigNumber;
 }
 
 interface setSignatureProps extends getSignatureProps {
 	value: any;
 	ttl: BigNumber;
+	nonce: BigNumber;
 }
 
 export const setSignatureLocalStorage = ({
@@ -37,12 +45,14 @@ export const setSignatureLocalStorage = ({
 	address,
 	value,
 	deadline,
+	nonce,
 }: setLocalStorageProps) => {
 	const item = {
 		value,
 		deadline,
 		startTime: new Date(Date.now() + 1 * 60 * 1000), // TODO come  back to this and insert startTime.
 		deadlineDate: new Date(Date.now() + 6 * 60 * 1000), // TODO come  back to this and insert deadline.
+		nonce,
 	};
 
 	try {
@@ -65,6 +75,7 @@ export const setSignatureWithExpiry = ({
 	ttl,
 	chainId,
 	address,
+	nonce,
 }: setSignatureProps): void => {
 	// `item` is an object which contains the original value
 	// as well as the time when it's supposed to expire
@@ -84,6 +95,7 @@ export const setSignatureWithExpiry = ({
 		address,
 		value,
 		deadline: ttl,
+		nonce,
 	});
 };
 
@@ -91,7 +103,7 @@ export const getSignatureWithExpiry = ({
 	keyRef,
 	chainId,
 	address,
-}: getSignatureProps): { value: string; deadline: BigNumber } => {
+}: getSignatureProps): UseableSignatureProps => {
 	let itemStr: any | string = '';
 
 	try {
@@ -121,5 +133,5 @@ export const getSignatureWithExpiry = ({
 		throw new Error(`signature expired`);
 	}
 
-	return { value: item.value, deadline: item.deadline };
+	return { value: item.value, deadline: item.deadline, nonce: item.nonce };
 };

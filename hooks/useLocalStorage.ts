@@ -24,15 +24,15 @@ export type StateConfig = {
 	address: string | undefined;
 	network: number | undefined;
 	trustedRelayer: string | null;
+	trustedRelayerFor: string | null;
 	includeWalletNFT: boolean | null;
 	includeSupportNFT: boolean | null;
 	isRegistering: boolean | null;
-	peerId: PeerId | null;
-	peerAddrs: Multiaddr[];
-	peerPin?: string | null;
+	peerId: string | null;
+	peerAddrs: string | null;
 	connectToPeer: string | null;
-	connectToPeerAddrs: string[] | null;
-	connectToPeerPin?: string | null;
+	connectToPeerAddrs: string | null;
+	connectedToPeer: boolean;
 	acknowledgementReceipt?: string | null;
 	registrationmentReceipt?: string | null;
 };
@@ -45,17 +45,45 @@ export const initialState: StateConfig = {
 	address: undefined,
 	network: undefined,
 	trustedRelayer: null,
+	trustedRelayerFor: null,
 	includeWalletNFT: null,
 	includeSupportNFT: null,
 	isRegistering: null,
 	peerId: null,
-	peerAddrs: [],
-	peerPin: null,
+	peerAddrs: null,
 	connectToPeer: null,
 	connectToPeerAddrs: null,
-	connectToPeerPin: null,
+	connectedToPeer: false,
 	acknowledgementReceipt: null,
 	registrationmentReceipt: null,
+};
+
+export const accessLocalStorage = () => {
+	try {
+		// Get from local storage by key
+		const item = window.localStorage.getItem(ACCOUNTS_KEY);
+		// Parse stored json or if none return initialState
+		if (item) {
+			return JSON.parse(item);
+		}
+	} catch (e) {
+		throw e;
+	}
+};
+
+export const setLocalStorage = (valueToStore: object) => {
+	if (typeof valueToStore !== 'object') {
+		throw 'you need to pass an object to setLocalStorage';
+	}
+
+	try {
+		const localStore = accessLocalStorage();
+		const item = { ...localStore, ...valueToStore };
+		window.localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(item));
+	} catch (error) {
+		// A more advanced implementation would handle the error case
+		console.log(error);
+	}
 };
 
 const useLocalStorage = <T extends StateConfig>(): [

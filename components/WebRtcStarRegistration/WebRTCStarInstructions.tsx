@@ -1,7 +1,7 @@
 import { Link, Text, Flex, Button } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { P2PRegistereeSteps } from '@utils/types';
+import { P2PRegistereeSteps, P2PRelayerSteps } from '@utils/types';
 import NextLink from 'next/link';
 import React from 'react';
 
@@ -29,7 +29,7 @@ export const WebRTCStarInstructions = () => {
 					<Button
 						onClick={() =>
 							setLocalState({
-								step: P2PRegistereeSteps.ConnectToPeer,
+								step: P2PRelayerSteps.WaitForConnection,
 								isRegistering: false,
 							})
 						}
