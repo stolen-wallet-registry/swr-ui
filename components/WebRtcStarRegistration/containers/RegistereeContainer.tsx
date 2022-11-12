@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, useMediaQuery } from '@chakra-ui/react';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
@@ -9,10 +9,8 @@ import AcknowledgeAndSign from '../Registeree/AcknowledgeAndSign';
 import WaitForAcknowledgementPayment from '../Registeree/WaitForAcknowledgementPayment';
 import WaitForRegistrationPayment from '../Registeree/WaitForRegistrationPayment';
 import RegisterAndSign from '../Registeree/RegisterAndSign';
-import AcknowledgementPeerPayment from '../Relayer/AcknowledgementPayment';
 
 import GracePeriod from '../GracePeriod';
-import RegisterPeerPayment from '../Relayer/RegistrationPayment';
 
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
@@ -36,6 +34,7 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 	const [status, setStatus] = useState('waiting to connect to peer.');
 	const [error, setError] = useState<Error | unknown>();
 	const [tempRelayer, setTempRelayer] = useState('');
+	const [isLargerThan500] = useMediaQuery('(min-width: 500px)');
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
@@ -75,7 +74,14 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 	};
 
 	return (
-		<Flex mt={3} mb={10} p={5} gap={5} justifyContent="center">
+		<Flex
+			mt={3}
+			mb={10}
+			p={5}
+			gap={5}
+			flexDirection={isLargerThan500 ? 'row' : 'column'}
+			justifyContent="center"
+		>
 			{libp2p && localState.connectToPeer && (
 				<PeerList
 					connected={connected}

@@ -71,7 +71,7 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({}) => {
 			);
 
 			const receipt = await tx.wait();
-
+			console.log(receipt);
 			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
 			console.log(receipt);
 		} catch (error) {

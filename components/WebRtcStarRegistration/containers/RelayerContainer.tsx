@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, useMediaQuery } from '@chakra-ui/react';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps, P2PRelayerSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
@@ -35,6 +35,7 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 	const [connected, setIsConnected] = useState(false);
 	const [status, setStatus] = useState('waiting to connect to peer.');
 	const [error, setError] = useState<Error | unknown>();
+	const [isLargerThan500] = useMediaQuery('(min-width: 500px)');
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
@@ -73,7 +74,14 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 	};
 
 	return (
-		<Flex mt={3} mb={10} p={5} gap={5} justifyContent="center">
+		<Flex
+			mt={3}
+			mb={10}
+			p={5}
+			gap={5}
+			flexDirection={isLargerThan500 ? 'row' : 'column'}
+			justifyContent="center"
+		>
 			{libp2p && localState.connectToPeer && (
 				<>
 					<PeerList
@@ -91,41 +99,6 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 			{step === P2PRelayerSteps.AcknowledgementPayment && <AcknowledgementPayment />}
 			{step === P2PRelayerSteps.GracePeriod && <GracePeriod />}
 			{step === P2PRelayerSteps.WaitForRegistrationSign && <WaitForRegistrationSign />}
-			{/* {step === P2PRelayerSteps.RegistrationPayment && <RegistrationPayment />} */}
-			{/* {libp2p && localState.connectToPeer && (
-				<PeerList
-					connected={connected}
-					libp2p={libp2p!}
-					peerId={localState?.connectToPeer}
-					multiaddress={localState?.connectToPeerAddrs}
-				/>
-			)}
-			{step === P2PRegistereeSteps.ConnectToPeer && (
-				<ConnectToPeer setConnectToPeerInfo={setConnectToPeerInfo} />
-			)}
-			{step === P2PRegistereeSteps.AcknowledgeAndSign && (
-				<AcknowledgeAndSign
-					address={address!}
-					onOpen={onOpen}
-					setNextStep={() =>
-						setLocalState({ step: P2PRegistereeSteps.WaitForAcknowledgementPayment })
-					}
-				/>
-			)}
-			{step === P2PRegistereeSteps.WaitForAcknowledgementPayment && (
-				<WaitForAcknowledgementPayment />
-			)}
-			{step === P2PRegistereeSteps.GracePeriod && <GracePeriod />}
-			{step === P2PRegistereeSteps.RegisterAndSign && (
-				<RegisterAndSign
-					address={address}
-					onOpen={onOpen}
-					setNextStep={() => setLocalState({ step: P2PRegistereeSteps.WaitForRegistrationPayment })}
-				/>
-			)}
-			{step === P2PRegistereeSteps.WaitForRegistrationPayment && (
-				<WaitForRegistrationPayment />
-			)} */}
 		</Flex>
 	);
 };

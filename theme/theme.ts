@@ -14,6 +14,12 @@ const config: ThemeConfig = {
 	useSystemColorMode: true,
 };
 
+const baseStylePopper = {
+	w: '100%',
+	maxW: 'xs',
+	zIndex: 10,
+};
+
 const theme = extendTheme({
 	config,
 	colors: {
@@ -21,6 +27,16 @@ const theme = extendTheme({
 	},
 	fonts,
 	breakpoints,
+	components: {
+		Popover: {
+			baseStyle: {
+				popper: ({ width }: { width: string | number }) => ({
+					...baseStylePopper,
+					maxW: width ? width : baseStylePopper.maxW,
+				}),
+			},
+		},
+	},
 });
 
 export { theme };

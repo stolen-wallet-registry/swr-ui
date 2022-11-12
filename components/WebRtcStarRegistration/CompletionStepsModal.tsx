@@ -26,7 +26,7 @@ export const CompletionStepsModal = ({ isOpen, onClose }: CompletionStepsModalPr
 			<ModalContent>
 				<ModalHeader>Modal Title</ModalHeader>
 				<ModalCloseButton />
-				<ModalBody>
+				<ModalBody width="fit-content">
 					<CompletionSteps />
 				</ModalBody>
 
