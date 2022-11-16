@@ -299,6 +299,7 @@ export const Connection = () => {
 							libp2p={libp2pInstance}
 							address={address!}
 							onOpen={nftDisclosure.onOpen}
+							setStep={setRegistereeStep}
 						/>
 					)}
 
@@ -308,6 +309,7 @@ export const Connection = () => {
 							libp2p={libp2pInstance}
 							address={address!}
 							onOpen={nftDisclosure.onOpen}
+							setStep={setRealyerStep}
 						/>
 					)}
 				</Box>

@@ -17,7 +17,7 @@ const GracePeriod: React.FC<GracePeriodInterface> = ({ setNextStep, step, expire
 	}
 
 	const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
-		expiry: expirey?.toNumber(),
+		expiry: expirey?.toNumber() * 1000,
 		onExpire: () => {
 			console.log('onExpire');
 			setNextStep();
@@ -34,6 +34,12 @@ const GracePeriod: React.FC<GracePeriodInterface> = ({ setNextStep, step, expire
 			setNextStep();
 		}
 	}, [isRunning]);
+
+	useEffect(() => {
+		if (seconds === 0) {
+			setNextStep();
+		}
+	}, [seconds]);
 
 	return (
 		<RegistrationSection title="Grace Period">

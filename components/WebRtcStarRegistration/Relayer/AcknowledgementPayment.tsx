@@ -61,14 +61,16 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p 
 
 			const receipt = await tx.wait();
 			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
+
+			console.log(receipt);
+
 			await relayerPostBackMsg({
 				libp2p: libp2p,
 				localState: accessLocalStorage(),
 				protocol: PROTOCOLS.REG_PAY,
 			});
-			console.log(receipt);
-			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
-			console.log(receipt);
+
+			setLocalState({ step: SelfRelaySteps.GracePeriod });
 		} catch (error) {
 			console.error(error);
 		}
@@ -77,7 +79,11 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p 
 	return (
 		<RegistrationSection title="Pay for Acknowledgement">
 			<Flex flexDirection="column">
-				<Text mb={5}>Sign and Pay for Acknowledgement from {localState.trustedRelayerFor}</Text>
+				<Text mb={5}>
+					We recieved the signature from your peer! Now, sign and pay for the Acknowledgement from:
+				</Text>
+
+				<Text fontWeight="bold">{localState.trustedRelayerFor}</Text>
 			</Flex>
 			<Flex justifyContent="flex-end" gap={5}>
 				<Button onClick={signAndPay}>Sign and Pay</Button>
