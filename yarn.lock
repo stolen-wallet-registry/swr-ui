@@ -5217,10 +5217,10 @@
     "@chainlink/contracts" "^0.4.1"
     "@connext/nxtp-contracts" "^0.2.0-beta.17"
 
-"@wallet-hygiene/swr-contracts@^0.0.76":
-  version "0.0.76"
-  resolved "https://registry.yarnpkg.com/@wallet-hygiene/swr-contracts/-/swr-contracts-0.0.76.tgz#e45339105e2a24fbb2749ade7ab96db04aaefbf5"
-  integrity sha512-GaSuXstyw/l+abb2wbe7B6Vgcrrpf0j4F6+oyzY4Z9DSa3t4ugniKVRAEdysw3MGfd0Ib8IaNwdwC6sqsv+3KA==
+"@wallet-hygiene/swr-contracts@^0.0.78":
+  version "0.0.78"
+  resolved "https://registry.yarnpkg.com/@wallet-hygiene/swr-contracts/-/swr-contracts-0.0.78.tgz#415fe63bcee45fb679c0b17eaf60e3446bfb6d01"
+  integrity sha512-iq8aVPEI1QC8YWnK0aogwoU0XjM45U22S1XATo8crKYZ1G+pDcBEk9gcNBK8W3R+ca8rgbHb8Clbrx+AY5U7/A==
   dependencies:
     "@chainlink/contracts" "^0.4.1"
     "@connext/nxtp-contracts" "^0.2.0-beta.17"

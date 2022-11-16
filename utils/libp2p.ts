@@ -74,10 +74,11 @@ export interface ProtcolHandlers {
 
 const dialerLibp2p = async (handlers: ProtcolHandlers[]): Promise<DialerLibp2pInterface> => {
 	const wrtcStar = webRTCStar();
-	const registereeCID = await createFromJSON(registereeCidJSON);
+	// const registereeCID = await createFromJSON(registereeCidJSON);
+	// peerId: registereeCID,
+
 	// Create our libp2p node
 	const libp2p = await createLibp2p({
-		peerId: registereeCID,
 		addresses: {
 			// Add the signaling server address, along with our PeerId to our multiaddrs list
 			// libp2p will automatically attempt to dial to the signaling server so that it can
@@ -131,11 +132,11 @@ const dialerLibp2p = async (handlers: ProtcolHandlers[]): Promise<DialerLibp2pIn
 
 const listenerLibp2p = async (handlers: ProtcolHandlers[]): Promise<ListenerLibp2pInterface> => {
 	const wrtcStar = webRTCStar();
-	const relayerCID = await createFromJSON(relayerCidJSON);
+	// const relayerCID = await createFromJSON(relayerCidJSON);
+	// peerId: relayerCID,
 
 	// Create our libp2p node
 	const libp2p = await createLibp2p({
-		peerId: relayerCID,
 		addresses: {
 			// Add the signaling server address, along with our PeerId to our multiaddrs list
 			// libp2p will automatically attempt to dial to the signaling server so that it can

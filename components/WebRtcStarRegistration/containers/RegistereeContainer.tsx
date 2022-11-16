@@ -15,10 +15,9 @@ import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { registereeConnectMessage } from '@utils/libp2p';
-import { useNetwork, useSigner } from 'wagmi';
-import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { BigNumber } from 'ethers';
+import { SessionExpired } from '../SessionExpired';
+import { RegistreeSuccess } from '../Registeree/RegistreeSuccess';
 
 interface RegistreeContainerProps {
 	step: P2PRegistereeSteps;
@@ -27,8 +26,6 @@ interface RegistreeContainerProps {
 	address: string;
 	onOpen: () => void;
 }
-
-const initialExpirey = () => BigNumber.from(new Date().getTime() + 60);
 
 const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 	step,
@@ -41,16 +38,8 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 	const [connected, setIsConnected] = useState(false);
 	const [status, setStatus] = useState('waiting to connect to peer.');
 	const [error, setError] = useState<Error | unknown>();
-	const [expirey, setExpirey] = useState<BigNumber>();
 	const [tempRelayer, setTempRelayer] = useState('');
-	const { chain } = useNetwork();
-	const { data: signer } = useSigner();
 	const [isLargerThan500] = useMediaQuery('(min-width: 500px)');
-
-	const registryContract = StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
-		signer!
-	);
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
@@ -89,17 +78,30 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 		}
 	};
 
-	const resolveExpirey = async () => {
-		const startTime = await registryContract['getStartTime()']();
+	// const resolveExpirey = async () => {
+	// 	const registryContract = StolenWalletRegistryFactory.connect(
+	// 		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+	// 		signer!
+	// 	);
 
-		setExpirey(startTime);
-	};
+	// 	const isExpired = await registryContract.regististrationPeriodExpired();
+
+	// 	setRegistrationExpired(isExpired);
+	// };
+
+	// useEffect(() => {
+	// 	if (
+	// 		step === P2PRegistereeSteps.GracePeriod ||
+	// 		step === P2PRegistereeSteps.RegisterAndSign ||
+	// 		step === P2PRegistereeSteps.WaitForRegistrationPayment
+	// 	) {
+	// 		resolveExpirey();
+	// 	}
+	// }, [step]);
 
 	useEffect(() => {
-		if (step === P2PRegistereeSteps.GracePeriod) {
-			resolveExpirey();
-		}
-	}, [step]);
+		setStep(localState.step as P2PRegistereeSteps);
+	}, []);
 
 	return (
 		<Flex
@@ -136,9 +138,8 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 			{step === P2PRegistereeSteps.WaitForAcknowledgementPayment && (
 				<WaitForAcknowledgementPayment />
 			)}
-			{step === P2PRegistereeSteps.GracePeriod && expirey && (
+			{step === P2PRegistereeSteps.GracePeriod && (
 				<GracePeriod
-					expirey={expirey || initialExpirey()}
 					setNextStep={() => {
 						setStep(P2PRegistereeSteps.RegisterAndSign);
 						setLocalState({ step: P2PRegistereeSteps.RegisterAndSign });
@@ -156,6 +157,8 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 				/>
 			)}
 			{step === P2PRegistereeSteps.WaitForRegistrationPayment && <WaitForRegistrationPayment />}
+			{step === P2PRegistereeSteps.Success && <RegistreeSuccess />}
+			{step === P2PRegistereeSteps.Expired && <SessionExpired />}
 		</Flex>
 	);
 };

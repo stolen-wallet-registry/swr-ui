@@ -3,7 +3,7 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 import useLocalStorage, { accessLocalStorage, StateConfig } from '@hooks/useLocalStorage';
-import { SelfRelaySteps } from '@utils/types';
+import { P2PRelayerSteps, SelfRelaySteps } from '@utils/types';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
 import { Contract, Signer, ethers } from 'ethers';
 import {
@@ -16,9 +16,10 @@ import { Libp2p } from 'libp2p';
 
 interface AcknowledgementPaymentProps {
 	libp2p: Libp2p;
+	setNextStep: () => void;
 }
 
-const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p }) => {
+const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p, setNextStep }) => {
 	const { isConnected } = useAccount();
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
@@ -70,7 +71,7 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p 
 				protocol: PROTOCOLS.REG_PAY,
 			});
 
-			setLocalState({ step: SelfRelaySteps.GracePeriod });
+			setNextStep();
 		} catch (error) {
 			console.error(error);
 		}

@@ -1,6 +1,6 @@
 import { Flex, useMediaQuery } from '@chakra-ui/react';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { P2PRegistereeSteps, P2PRelayerSteps } from '@utils/types';
+import { P2PRegistereeSteps, P2PRelayerSteps, SelfRelaySteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
 import React, { useEffect, useState } from 'react';
 import { PeerList } from '../PeerList';
@@ -17,15 +17,25 @@ import { BigNumber } from 'ethers';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { useNetwork, useSigner } from 'wagmi';
+import RegistrationPayment from '../Relayer/RegistrationPayment';
+import { RelayerSuccess } from '../Relayer/RelayerSuccess';
+import { SessionExpired } from '../SessionExpired';
 
 interface RelayerContainerProps {
 	step: P2PRelayerSteps;
+	setStep: (step: P2PRelayerSteps) => void;
 	libp2p: Libp2p;
 	address: string;
 	onOpen: () => void;
 }
 
-const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, address, onOpen }) => {
+const RealyerContainer: React.FC<RelayerContainerProps> = ({
+	step,
+	setStep,
+	libp2p,
+	address,
+	onOpen,
+}) => {
 	const [localState, setLocalState] = useLocalStorage();
 	const [connected, setIsConnected] = useState(false);
 	const [status, setStatus] = useState('waiting to connect to peer.');
@@ -35,11 +45,6 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 	const { chain } = useNetwork();
 
 	const [isLargerThan500] = useMediaQuery('(min-width: 500px)');
-
-	const registryContract = StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
-		signer!
-	);
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
@@ -77,17 +82,30 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 		}
 	};
 
-	const resolveExpirey = async () => {
-		const startTime = await registryContract['getStartTime(address)'](localState.address!);
+	// const resolveExpirey = async () => {
+	// 	const registryContract = StolenWalletRegistryFactory.connect(
+	// 		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+	// 		signer!
+	// 	);
 
-		setExpirey(startTime);
-	};
+	// 	const isExpired = await registryContract.regististrationPeriodExpired();
+
+	// 	setRegistrationExpired(isExpired);
+	// };
+
+	// useEffect(() => {
+	// 	if (
+	// 		step === P2PRelayerSteps.GracePeriod ||
+	// 		step === P2PRelayerSteps.WaitForRegistrationSign ||
+	// 		step === P2PRelayerSteps.RegistrationPayment
+	// 	) {
+	// 		resolveExpirey();
+	// 	}
+	// }, [step]);
 
 	useEffect(() => {
-		if (step === P2PRelayerSteps.GracePeriod) {
-			resolveExpirey();
-		}
-	}, [step]);
+		setStep(localState.step as P2PRelayerSteps);
+	}, []);
 
 	return (
 		<Flex
@@ -113,15 +131,37 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 				<WaitForAcknowledgementSign libp2p={libp2p} localState={localState} />
 			)}
 			{step === P2PRelayerSteps.AcknowledgementPayment && (
-				<AcknowledgementPayment libp2p={libp2p} />
+				<AcknowledgementPayment
+					libp2p={libp2p}
+					setNextStep={() => {
+						setStep(P2PRelayerSteps.GracePeriod);
+						setLocalState({ step: P2PRelayerSteps.GracePeriod });
+					}}
+				/>
 			)}
 			{step === P2PRelayerSteps.GracePeriod && (
 				<GracePeriod
-					expirey={expirey}
-					setNextStep={() => setLocalState({ step: P2PRelayerSteps.WaitForRegistrationSign })}
+					setNextStep={() => {
+						setStep(P2PRelayerSteps.WaitForRegistrationSign);
+						setLocalState({ step: P2PRelayerSteps.WaitForRegistrationSign });
+					}}
 				/>
 			)}
-			{step === P2PRelayerSteps.WaitForRegistrationSign && <WaitForRegistrationSign />}
+			{step === P2PRelayerSteps.WaitForRegistrationSign && (
+				<WaitForRegistrationSign setExpiredStep={() => {}} />
+			)}
+			{step === P2PRelayerSteps.RegistrationPayment && (
+				<RegistrationPayment
+					address={address!}
+					onOpen={onOpen}
+					setNextStep={() => {
+						setStep(P2PRelayerSteps.Success);
+						setLocalState({ step: P2PRelayerSteps.Success });
+					}}
+				/>
+			)}
+			{step === P2PRelayerSteps.Success && <RelayerSuccess />}
+			{step === P2PRelayerSteps.Expired && <SessionExpired />}
 		</Flex>
 	);
 };

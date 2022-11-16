@@ -6,11 +6,13 @@ import { CONTRACT_ADDRESSES } from '@utils/constants';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { BigNumber, ethers, Signer } from 'ethers';
 import { useState, useEffect } from 'react';
-import { useNetwork, useProvider, useSigner, useSignTypedData } from 'wagmi';
+import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 import { Stream } from '@libp2p/interface-connection';
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
 import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import { pipe } from 'it-pipe';
+import useContractPeriods from '@hooks/useContractPeriods';
+import { Timer } from '@components/Timer';
 
 interface RegisterAndSignProps {
 	address: string;
@@ -25,8 +27,16 @@ const RegisterAndSign: React.FC<RegisterAndSignProps> = ({ address, onOpen, setN
 	const typedSignature = useSignTypedData();
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
-	const provider = useProvider();
+
 	const [localState, setLocalState] = useLocalStorage();
+
+	const { expired, registrationExpiration } = useContractPeriods(localState.address!);
+
+	useEffect(() => {
+		if (expired) {
+			setNextStep();
+		}
+	}, [expired]);
 
 	const handleSign = async () => {
 		try {
@@ -84,6 +94,10 @@ const RegisterAndSign: React.FC<RegisterAndSignProps> = ({ address, onOpen, setN
 
 	return (
 		<RegistrationSection title="Include NFTs?">
+			{registrationExpiration && (
+				<Timer expiry={registrationExpiration} setNextStep={setNextStep} />
+			)}
+
 			{localState.isRegistering ? (
 				<>
 					<Flex>

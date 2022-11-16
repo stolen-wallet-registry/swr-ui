@@ -25,6 +25,7 @@ export enum P2PRegistereeSteps {
 	RegisterAndSign = 'register-and-sign',
 	WaitForRegistrationPayment = 'wait-for-register-payment',
 	Success = 'success',
+	Expired = 'expired',
 }
 
 export enum P2PRelayerSteps {
@@ -35,6 +36,8 @@ export enum P2PRelayerSteps {
 	GracePeriod = 'grace-period',
 	WaitForRegistrationSign = 'wait-for-registration-sign',
 	RegistrationPayment = 'registration-payment',
+	Success = 'success',
+	Expired = 'expired',
 }
 
 // export type StandardSteps =

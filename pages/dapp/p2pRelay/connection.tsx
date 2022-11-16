@@ -1,6 +1,5 @@
-import { Text, Flex, useDisclosure, Box, Button, useMediaQuery, Center } from '@chakra-ui/react';
+import { Flex, useDisclosure, Box, useMediaQuery, Center } from '@chakra-ui/react';
 import DappLayout from '@components/DappLayout';
-import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import useLocalStorage, {
 	accessLocalStorage,
 	setLocalStorage,
@@ -156,16 +155,13 @@ export const Connection = () => {
 						const relayerState: Partial<StateConfig> = JSON.parse(data);
 
 						const newState = {
-							...localState,
+							...accessLocalStorage(),
 							...relayerState,
 							connectedToPeer: true,
 							step: P2PRelayerSteps.WaitForAcknowledgementSign,
 						};
 
 						setLocalStorage(newState);
-
-						// prettier-ignore
-						console.log(`recieved relayer state: ${JSON.stringify(relayerState)}`);
 
 						// TODO - resolve window.libp2p for libp2p instance
 						await relayerPostBackMsg({
@@ -181,12 +177,10 @@ export const Connection = () => {
 						setSignatureLocalStorage(acknowledgementSignature);
 
 						setLocalStorage({
+							...accessLocalStorage(),
 							trustedRelayerFor: acknowledgementSignature.address,
 							step: P2PRelayerSteps.AcknowledgementPayment,
 						});
-
-						// prettier-ignore
-						console.log(`recieved acknowledgement signature: ${JSON.stringify(acknowledgementSignature)}`);
 
 						// TODO - resolve window.libp2p for libp2p instance
 						await relayerPostBackMsg({
@@ -198,11 +192,8 @@ export const Connection = () => {
 						setRealyerStep(P2PRelayerSteps.AcknowledgementPayment);
 						break;
 					case PROTOCOLS.REG_SIG:
-						const registerSignature: setLocalStorageProps = JSON.parse(data);
-						setSignatureLocalStorage(registerSignature);
-
-						// prettier-ignore
-						console.log(`recieved register signature: ${JSON.stringify(registerSignature)}`);
+						const registerSignatureHash: setLocalStorageProps = JSON.parse(data);
+						setSignatureLocalStorage(registerSignatureHash);
 
 						// TODO - resolve window.libp2p for libp2p instance
 						await relayerPostBackMsg({
@@ -233,10 +224,10 @@ export const Connection = () => {
 
 				const protocolHandlers: ProtcolHandlers[] = [
 					{ protocol: PROTOCOLS.CONNECT, streamHandler },
-					{ protocol: PROTOCOLS.ACK_PAY, streamHandler },
 					{ protocol: PROTOCOLS.ACK_REC, streamHandler },
-					{ protocol: PROTOCOLS.REG_PAY, streamHandler },
+					{ protocol: PROTOCOLS.ACK_PAY, streamHandler },
 					{ protocol: PROTOCOLS.REG_REC, streamHandler },
+					{ protocol: PROTOCOLS.REG_PAY, streamHandler },
 				];
 
 				instance = await dialerLibp2p(protocolHandlers);

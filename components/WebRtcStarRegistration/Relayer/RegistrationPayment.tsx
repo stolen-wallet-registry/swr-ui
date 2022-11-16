@@ -11,6 +11,8 @@ import { Stream } from '@libp2p/interface-connection';
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
 import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import { pipe } from 'it-pipe';
+import useContractPeriods from '@hooks/useContractPeriods';
+import { Timer } from '@components/Timer';
 
 interface RegistrationPaymentProps {
 	address: string;
@@ -31,6 +33,8 @@ const RegistrationPayment: React.FC<RegistrationPaymentProps> = ({
 	const { chain } = useNetwork();
 	const provider = useProvider();
 	const [localState, setLocalState] = useLocalStorage();
+
+	const { expired, registrationExpiration } = useContractPeriods(localState.address!);
 
 	const handleSign = async () => {
 		try {
@@ -86,8 +90,17 @@ const RegistrationPayment: React.FC<RegistrationPaymentProps> = ({
 		}
 	}, [address]);
 
+	useEffect(() => {
+		if (expired) {
+			setNextStep();
+		}
+	}, [expired]);
+
 	return (
 		<RegistrationSection title="Include NFTs?">
+			{registrationExpiration && (
+				<Timer expiry={registrationExpiration} setNextStep={setNextStep} />
+			)}
 			{localState.isRegistering ? (
 				<>
 					<Flex>

@@ -23,14 +23,12 @@ interface getSignatureProps {
 interface UseableSignatureProps {
 	value: string;
 	deadline: BigNumber;
-	startTime: BigNumber;
 	nonce: BigNumber;
 }
 
 export interface setLocalStorageProps extends getSignatureProps {
 	value: string;
 	deadline: BigNumber;
-	startTime: BigNumber;
 	deadlineDate?: Date;
 	nonce: BigNumber;
 }
@@ -38,7 +36,6 @@ export interface setLocalStorageProps extends getSignatureProps {
 interface setSignatureProps extends getSignatureProps {
 	value: any;
 	ttl: BigNumber;
-	startTime: BigNumber;
 	nonce: BigNumber;
 }
 
@@ -48,13 +45,11 @@ export const setSignatureLocalStorage = ({
 	address,
 	value,
 	deadline,
-	startTime,
 	nonce,
 }: setLocalStorageProps) => {
 	const item = {
 		value,
 		deadline,
-		startTime,
 		startTimeDate: new Date(Date.now() + 1 * 60 * 1000), // TODO come  back to this and insert startTime.
 		deadlineDate: new Date(Date.now() + 6 * 60 * 1000), // TODO come  back to this and insert deadline.
 		nonce,
@@ -77,7 +72,6 @@ export const setSignatureLocalStorage = ({
 export const setSignatureWithExpiry = ({
 	keyRef,
 	value,
-	startTime,
 	ttl,
 	chainId,
 	address,
@@ -101,7 +95,6 @@ export const setSignatureWithExpiry = ({
 		chainId,
 		address,
 		value,
-		startTime,
 		deadline: ttl,
 		nonce,
 	});

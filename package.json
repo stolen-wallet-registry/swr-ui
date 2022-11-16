@@ -28,7 +28,7 @@
 		"@libp2p/websockets": "^5.0.0",
 		"@rainbow-me/rainbowkit": "^0.7.1",
 		"@svgr/webpack": "^6.5.0",
-		"@wallet-hygiene/swr-contracts": "^0.0.76",
+		"@wallet-hygiene/swr-contracts": "^0.0.78",
 		"axios": "^0.26.1",
 		"ethers": "^5.7.2",
 		"framer-motion": "^6.4.3",
