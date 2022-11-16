@@ -83,8 +83,7 @@ const dialerLibp2p = async (handlers: ProtcolHandlers[]): Promise<DialerLibp2pIn
 			// Add the signaling server address, along with our PeerId to our multiaddrs list
 			// libp2p will automatically attempt to dial to the signaling server so that it can
 			// receive inbound connections from other peers
-			// '/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
-			listen: ['/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
+			listen: ['/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star', '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
 		},
 		transports: [webSockets(), wrtcStar.transport],
 		connectionEncryption: [noise()],
@@ -141,8 +140,7 @@ const listenerLibp2p = async (handlers: ProtcolHandlers[]): Promise<ListenerLibp
 			// Add the signaling server address, along with our PeerId to our multiaddrs list
 			// libp2p will automatically attempt to dial to the signaling server so that it can
 			// receive inbound connections from other peers
-			// '/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
-			listen: ['/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
+			listen: ['/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star', '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
 		},
 		transports: [webSockets(), wrtcStar.transport],
 		connectionEncryption: [noise()],

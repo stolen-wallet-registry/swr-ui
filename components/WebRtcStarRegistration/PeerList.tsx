@@ -87,20 +87,7 @@ export const PeerList = ({ libp2p, connected, peerId, multiaddress }: PeerListPr
 	};
 
 	const ConnectionDetails = () => {
-		return !connected ? (
-			<Flex flexDirection="column" gap={3} mb={4}>
-				<Text>
-					connecting to PeerID:{' '}
-					<span style={{ fontWeight: 'bold', fontSize: 14 }}>{peerId?.toString()}</span>
-				</Text>
-				<Text>
-					connecting to Peer Address:{' '}
-					<span style={{ fontWeight: 'bold', fontSize: 12 }}>
-						{truncate(multiaddress?.toString(), { length: 35 })}
-					</span>
-				</Text>
-			</Flex>
-		) : (
+		return (
 			<Flex flexDirection="column" gap={2} pb={3}>
 				<Text>
 					connected to: <span style={{ fontWeight: 'bold' }}>{peerId?.toString()}</span>
@@ -118,7 +105,7 @@ export const PeerList = ({ libp2p, connected, peerId, multiaddress }: PeerListPr
 
 	useEffect(() => {
 		const getPeerList = async () => {
-			const list = await libp2p.getPeers().filter((pid) => pid.equals(peerId!));
+			const list = await libp2p.getPeers().filter((pid) => peerId && pid.equals(peerId));
 
 			setPeers(list);
 		};
@@ -132,7 +119,7 @@ export const PeerList = ({ libp2p, connected, peerId, multiaddress }: PeerListPr
 	return (
 		<RegistrationSection title="Connection Details">
 			<PeerDetails />
-			<ConnectionDetails />
+			{peerId?.toString() && multiaddress?.toString() && <ConnectionDetails />}
 			{peers.length > 0 && (
 				<>
 					<Heading as="h4">Trusted Peer List</Heading>

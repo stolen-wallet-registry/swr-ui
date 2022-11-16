@@ -38,6 +38,12 @@ interface RelayerMessageProps {
 	message: string;
 }
 
+interface RelayerCallbackProps {
+	success: boolean;
+	message: string;
+	step: P2PRegistereeSteps;
+}
+
 export const Connection = () => {
 	const [localState, setLocalState] = useLocalStorage();
 	const [libp2pInstance, setLibp2pInstance] = useState<Libp2p>();
@@ -56,6 +62,17 @@ export const Connection = () => {
 		fallback: false, // return false on the server, and re-evaluate on the client side
 	});
 
+	const handleRelayerCallback = ({ success, message, step }: RelayerCallbackProps) => {
+		if (success) {
+			setLocalStorage({ step });
+			setRegistereeStep(step);
+			console.log(message);
+		} else {
+			console.log(message);
+			throw new Error(message);
+		}
+	};
+
 	const registerHandler = async ({ stream }: { stream: Stream }) => {
 		pipe(
 			// Read from the stream (the source)
@@ -73,67 +90,38 @@ export const Connection = () => {
 				}
 
 				const protocol = stream.stat.protocol;
+
 				switch (protocol) {
 					case PROTOCOLS.CONNECT:
 						const connect: RelayerMessageProps = JSON.parse(data);
-						if (connect.success) {
-							setLocalStorage({
-								connectedToPeer: true,
-								step: P2PRegistereeSteps.AcknowledgeAndSign,
-							});
-							setRegistereeStep(P2PRegistereeSteps.AcknowledgeAndSign);
-							console.log(connect.message);
-						} else {
-							console.log(connect.message);
-							throw new Error(connect.message);
-						}
+						handleRelayerCallback({ ...connect, step: P2PRegistereeSteps.AcknowledgeAndSign });
+						setLocalStorage({
+							connectedToPeer: true,
+							step: P2PRegistereeSteps.AcknowledgeAndSign,
+						});
 						break;
 					case PROTOCOLS.ACK_REC:
 						const message: RelayerMessageProps = JSON.parse(data);
-						if (message.success) {
-							setLocalStorage({
-								step: P2PRegistereeSteps.WaitForAcknowledgementPayment,
-							});
-							setRegistereeStep(P2PRegistereeSteps.WaitForAcknowledgementPayment);
-						} else {
-							console.log(message.message);
-							throw new Error(message.message);
-						}
+						handleRelayerCallback({
+							...message,
+							step: P2PRegistereeSteps.WaitForAcknowledgementPayment,
+						});
 						break;
 					case PROTOCOLS.ACK_PAY:
 						const ackowledgePay: RelayerMessageProps = JSON.parse(data);
-
-						if (ackowledgePay.success) {
-							setLocalStorage({ step: P2PRegistereeSteps.GracePeriod });
-							setRegistereeStep(P2PRegistereeSteps.GracePeriod);
-							console.log(ackowledgePay.message);
-						} else {
-							console.log(ackowledgePay.message);
-							throw new Error(ackowledgePay.message);
-						}
+						handleRelayerCallback({ ...ackowledgePay, step: P2PRegistereeSteps.GracePeriod });
 						break;
 					case PROTOCOLS.REG_REC:
-						const m: RelayerMessageProps = JSON.parse(data);
-						if (m.success) {
-							setLocalStorage({
-								step: P2PRegistereeSteps.WaitForRegistrationPayment,
-							});
-							setRegistereeStep(P2PRegistereeSteps.WaitForRegistrationPayment);
-						} else {
-							console.log(m.message);
-							throw new Error(m.message);
-						}
+						const registerReceived: RelayerMessageProps = JSON.parse(data);
+						handleRelayerCallback({
+							...registerReceived,
+							step: P2PRegistereeSteps.WaitForRegistrationPayment,
+						});
 						break;
 					case PROTOCOLS.REG_PAY:
 						const registerPay: RelayerMessageProps = JSON.parse(data);
-						if (registerPay.success) {
-							setLocalStorage({ step: P2PRegistereeSteps.Success });
-							setRegistereeStep(P2PRegistereeSteps.Success);
-							console.log(registerPay.message);
-						} else {
-							console.log(registerPay.message);
-							throw new Error(registerPay.message);
-						}
+						handleRelayerCallback({ ...registerPay, step: P2PRegistereeSteps.GracePeriod });
+						break;
 					default:
 						console.log(`recieved unknown protocol: ${protocol}`);
 						console.log(data);
@@ -163,12 +151,10 @@ export const Connection = () => {
 				}
 
 				const protocol = stream.stat.protocol;
-
 				switch (protocol) {
 					case PROTOCOLS.CONNECT:
 						const relayerState: Partial<StateConfig> = JSON.parse(data);
 
-						setRealyerStep(P2PRelayerSteps.WaitForAcknowledgementSign);
 						const newState = {
 							...localState,
 							...relayerState,
@@ -177,7 +163,8 @@ export const Connection = () => {
 						};
 
 						setLocalStorage(newState);
-						console.log(localState);
+
+						// prettier-ignore
 						console.log(`recieved relayer state: ${JSON.stringify(relayerState)}`);
 
 						// TODO - resolve window.libp2p for libp2p instance
@@ -186,28 +173,35 @@ export const Connection = () => {
 							localState: newState,
 							protocol: PROTOCOLS.CONNECT,
 						});
+
+						setRealyerStep(P2PRelayerSteps.WaitForAcknowledgementSign);
 						break;
 					case PROTOCOLS.ACK_SIG:
 						const acknowledgementSignature: setLocalStorageProps = JSON.parse(data);
 						setSignatureLocalStorage(acknowledgementSignature);
+
 						setLocalStorage({
 							trustedRelayerFor: acknowledgementSignature.address,
 							step: P2PRelayerSteps.AcknowledgementPayment,
 						});
-						setRealyerStep(P2PRelayerSteps.AcknowledgementPayment);
-						console.log(
-							`recieved acknowledgement signature: ${JSON.stringify(acknowledgementSignature)}`
-						);
+
+						// prettier-ignore
+						console.log(`recieved acknowledgement signature: ${JSON.stringify(acknowledgementSignature)}`);
+
 						// TODO - resolve window.libp2p for libp2p instance
 						await relayerPostBackMsg({
 							libp2p: window.libp2p,
 							localState: accessLocalStorage(),
 							protocol: PROTOCOLS.ACK_REC,
 						});
+
+						setRealyerStep(P2PRelayerSteps.AcknowledgementPayment);
 						break;
 					case PROTOCOLS.REG_SIG:
 						const registerSignature: setLocalStorageProps = JSON.parse(data);
 						setSignatureLocalStorage(registerSignature);
+
+						// prettier-ignore
 						console.log(`recieved register signature: ${JSON.stringify(registerSignature)}`);
 
 						// TODO - resolve window.libp2p for libp2p instance
@@ -216,6 +210,8 @@ export const Connection = () => {
 							localState: accessLocalStorage(),
 							protocol: PROTOCOLS.REG_REC,
 						});
+
+						setRealyerStep(P2PRelayerSteps.RegistrationPayment);
 						break;
 					default:
 						console.log(`recieved unknown protocol: ${protocol}`);

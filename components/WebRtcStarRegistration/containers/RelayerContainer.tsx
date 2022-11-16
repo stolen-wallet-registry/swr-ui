@@ -1,18 +1,10 @@
 import { Flex, useMediaQuery } from '@chakra-ui/react';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { P2PRegistereeSteps, P2PRelayerSteps } from '@utils/types';
+import { P2PRelayerSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
 import React, { useState } from 'react';
 import { PeerList } from '../PeerList';
-import { ConnectToPeer } from '../Registeree/ConnectToPeer';
-import AcknowledgeAndSign from '../Registeree/AcknowledgeAndSign';
-import WaitForAcknowledgementPayment from '../Registeree/WaitForAcknowledgementPayment';
-import WaitForRegistrationPayment from '../Registeree/WaitForRegistrationPayment';
-import RegisterAndSign from '../Registeree/RegisterAndSign';
-import AcknowledgementPeerPayment from '../Relayer/AcknowledgementPayment';
-
 import GracePeriod from '../GracePeriod';
-import RegisterPeerPayment from '../Relayer/RegistrationPayment';
 
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
@@ -21,7 +13,6 @@ import WaitForAcknowledgementSign from '../Relayer/WaitForAcknowledgementSign';
 import WaitForConnection from '../Relayer/WaitForConnection';
 import WaitForRegistrationSign from '../Relayer/WaitForRegistrationSign';
 import AcknowledgementPayment from '../Relayer/AcknowledgementPayment';
-import RegistrationPayment from '../Relayer/RegistrationPayment';
 
 interface RelayerContainerProps {
 	step: P2PRelayerSteps;
@@ -82,7 +73,7 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 			flexDirection={isLargerThan500 ? 'row' : 'column'}
 			justifyContent="center"
 		>
-			{libp2p && localState.connectToPeer && (
+			{libp2p && (
 				<>
 					<PeerList
 						connected={connected}
@@ -96,7 +87,9 @@ const RealyerContainer: React.FC<RelayerContainerProps> = ({ step, libp2p, addre
 			{step === P2PRelayerSteps.WaitForAcknowledgementSign && (
 				<WaitForAcknowledgementSign libp2p={libp2p} localState={localState} />
 			)}
-			{step === P2PRelayerSteps.AcknowledgementPayment && <AcknowledgementPayment />}
+			{step === P2PRelayerSteps.AcknowledgementPayment && (
+				<AcknowledgementPayment libp2p={libp2p} />
+			)}
 			{step === P2PRelayerSteps.GracePeriod && <GracePeriod />}
 			{step === P2PRelayerSteps.WaitForRegistrationSign && <WaitForRegistrationSign />}
 		</Flex>
