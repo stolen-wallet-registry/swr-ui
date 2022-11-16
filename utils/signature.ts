@@ -2,6 +2,7 @@ import { signTypedDataProps } from '@hooks/use712Signature';
 import { BigNumber } from 'ethers';
 import { useAccount, useNetwork } from 'wagmi';
 
+export type KEY_REF_TYPES = '0xack' | '0xreg';
 export const ACKNOWLEDGEMENT_KEY = '0xack';
 export const REGISTRATION_KEY = '0xreg';
 
@@ -22,13 +23,14 @@ interface getSignatureProps {
 interface UseableSignatureProps {
 	value: string;
 	deadline: BigNumber;
+	startTime: BigNumber;
 	nonce: BigNumber;
 }
 
 export interface setLocalStorageProps extends getSignatureProps {
 	value: string;
 	deadline: BigNumber;
-	startTime?: Date;
+	startTime: BigNumber;
 	deadlineDate?: Date;
 	nonce: BigNumber;
 }
@@ -36,6 +38,7 @@ export interface setLocalStorageProps extends getSignatureProps {
 interface setSignatureProps extends getSignatureProps {
 	value: any;
 	ttl: BigNumber;
+	startTime: BigNumber;
 	nonce: BigNumber;
 }
 
@@ -45,12 +48,14 @@ export const setSignatureLocalStorage = ({
 	address,
 	value,
 	deadline,
+	startTime,
 	nonce,
 }: setLocalStorageProps) => {
 	const item = {
 		value,
 		deadline,
-		startTime: new Date(Date.now() + 1 * 60 * 1000), // TODO come  back to this and insert startTime.
+		startTime,
+		startTimeDate: new Date(Date.now() + 1 * 60 * 1000), // TODO come  back to this and insert startTime.
 		deadlineDate: new Date(Date.now() + 6 * 60 * 1000), // TODO come  back to this and insert deadline.
 		nonce,
 	};
@@ -72,6 +77,7 @@ export const setSignatureLocalStorage = ({
 export const setSignatureWithExpiry = ({
 	keyRef,
 	value,
+	startTime,
 	ttl,
 	chainId,
 	address,
@@ -80,11 +86,12 @@ export const setSignatureWithExpiry = ({
 	// `item` is an object which contains the original value
 	// as well as the time when it's supposed to expire
 	// TODO for some reason the time is using an hour ahead - fix this.
-	const oneHour = 1 * 60 * 60;
-	const time = ttl.toNumber() + oneHour;
+	// const oneHour = 1 * 60 * 60;
+	const time = ttl; // .toNumber() + oneHour;
 	const item = {
 		value: value,
-		deadline: ttl,
+
+		deadline: time,
 		startTime: new Date(Date.now() + 1 * 60 * 1000), // TODO come  back to this and insert startTime.
 		deadlineDate: new Date(Date.now() + 6 * 60 * 1000), // TODO come  back to this and insert deadline.
 	};
@@ -94,6 +101,7 @@ export const setSignatureWithExpiry = ({
 		chainId,
 		address,
 		value,
+		startTime,
 		deadline: ttl,
 		nonce,
 	});

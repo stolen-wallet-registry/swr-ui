@@ -7,18 +7,26 @@ import DappLayout from '@components/DappLayout';
 import { StandardSteps } from '@utils/types';
 import { Flex, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { ACKNOWLEDGEMENT_KEY } from '@utils/signature';
+import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry, KEY_REF_TYPES } from '@utils/signature';
 import StandardAckowledgement from '@components/StandardRegistration/StandardAckowledgement';
 
 // TODO expract this out into useModal
-interface StandardRegistrationInterface {}
+interface StandardRegistrationInterface {
+	keyRef: KEY_REF_TYPES;
+}
 
-const StandardRegistration: React.FC<StandardRegistrationInterface> = () => {
+const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ keyRef }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { chain } = useNetwork();
 	const { address } = useAccount();
 
 	const [localState, setLocalState] = useLocalStorage();
+
+	const { deadline } = getSignatureWithExpiry({
+		chainId: chain?.id!,
+		address: address!,
+		keyRef,
+	});
 
 	const setNextStep = () => {
 		setLocalState({ step: StandardSteps.GracePeriod });
@@ -48,9 +56,7 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = () => {
 					<GracePeriod
 						setLocalState={setLocalState}
 						nextStep={StandardSteps.RegisterAndPay}
-						keyRef={ACKNOWLEDGEMENT_KEY}
-						address={address as string}
-						chainId={chain?.id!}
+						deadline={deadline}
 					/>
 				)}
 				{localState.step === StandardSteps.RegisterAndPay && (

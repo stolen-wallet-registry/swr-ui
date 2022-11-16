@@ -2,33 +2,25 @@ import { Flex, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import useTimer from '@hooks/useTimer';
 import { useEffect } from 'react';
-import { RegistrationValues } from '@utils/types';
-import { getSignatureWithExpiry } from '@utils/signature';
-import { useAccount, useNetwork } from 'wagmi';
-import { StateConfig } from '@hooks/useLocalStorage';
+import { BigNumber } from 'ethers';
+import { P2PRegistereeSteps, P2PRelayerSteps } from '@utils/types';
 
 interface GracePeriodInterface {
-	setLocalState: (val: Partial<StateConfig>) => void;
-	nextStep: RegistrationValues;
-	address: string;
-	chainId: number;
-	keyRef: string;
+	setNextStep: () => void;
+	expirey: BigNumber | null;
+	step?: P2PRelayerSteps | P2PRegistereeSteps;
 }
 
-const GracePeriod: React.FC<GracePeriodInterface> = ({
-	setLocalState,
-	nextStep,
-	keyRef,
-	address,
-	chainId,
-}) => {
-	// const { value, deadline } = getSignatureWithExpiry({ chainId, address, keyRef });
+const GracePeriod: React.FC<GracePeriodInterface> = ({ setNextStep, step, expirey }) => {
+	if (!expirey) {
+		return <></>;
+	}
 
 	const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
-		expiry: new Date().getTime(),
+		expiry: expirey?.toNumber(),
 		onExpire: () => {
 			console.log('onExpire');
-			setLocalState({ step: nextStep });
+			setNextStep();
 		},
 	});
 
@@ -39,7 +31,7 @@ const GracePeriod: React.FC<GracePeriodInterface> = ({
 	useEffect(() => {
 		if (!isRunning) {
 			console.log('here test grace period');
-			setLocalState({ step: nextStep });
+			setNextStep();
 		}
 	}, [isRunning]);
 

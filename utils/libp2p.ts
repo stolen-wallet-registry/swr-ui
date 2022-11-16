@@ -74,16 +74,16 @@ export interface ProtcolHandlers {
 
 const dialerLibp2p = async (handlers: ProtcolHandlers[]): Promise<DialerLibp2pInterface> => {
 	const wrtcStar = webRTCStar();
-	const registereeCID = await createFromJSON(registereeCidJSON);
-
+	// const registereeCID = await createFromJSON(registereeCidJSON);
+	// peerId: registereeCID,
 	// Create our libp2p node
 	const libp2p = await createLibp2p({
-		peerId: registereeCID,
 		addresses: {
 			// Add the signaling server address, along with our PeerId to our multiaddrs list
 			// libp2p will automatically attempt to dial to the signaling server so that it can
 			// receive inbound connections from other peers
-			listen: ['/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star', '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
+			// '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
+			listen: ['/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
 		},
 		transports: [webSockets(), wrtcStar.transport],
 		connectionEncryption: [noise()],
@@ -131,16 +131,16 @@ const dialerLibp2p = async (handlers: ProtcolHandlers[]): Promise<DialerLibp2pIn
 
 const listenerLibp2p = async (handlers: ProtcolHandlers[]): Promise<ListenerLibp2pInterface> => {
 	const wrtcStar = webRTCStar();
-	const relayerCID = await createFromJSON(relayerCidJSON);
-
+	// const relayerCID = await createFromJSON(relayerCidJSON);
+	// peerId: relayerCID,
 	// Create our libp2p node
 	const libp2p = await createLibp2p({
-		peerId: relayerCID,
 		addresses: {
 			// Add the signaling server address, along with our PeerId to our multiaddrs list
 			// libp2p will automatically attempt to dial to the signaling server so that it can
 			// receive inbound connections from other peers
-			listen: ['/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star', '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
+			// '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
+			listen: ['/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
 		},
 		transports: [webSockets(), wrtcStar.transport],
 		connectionEncryption: [noise()],

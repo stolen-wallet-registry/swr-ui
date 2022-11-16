@@ -2,7 +2,7 @@ import { Flex, useMediaQuery } from '@chakra-ui/react';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PeerList } from '../PeerList';
 import { ConnectToPeer } from '../Registeree/ConnectToPeer';
 import AcknowledgeAndSign from '../Registeree/AcknowledgeAndSign';
@@ -10,11 +10,16 @@ import WaitForAcknowledgementPayment from '../Registeree/WaitForAcknowledgementP
 import WaitForRegistrationPayment from '../Registeree/WaitForRegistrationPayment';
 import RegisterAndSign from '../Registeree/RegisterAndSign';
 
-import GracePeriod from '../GracePeriod';
+import GracePeriod from '@components/SharedRegistration/GracePeriod';
 
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { registereeConnectMessage } from '@utils/libp2p';
+import { useNetwork, useSigner } from 'wagmi';
+import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry } from '@utils/signature';
+import { CONTRACT_ADDRESSES } from '@utils/constants';
+import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
+import { BigNumber } from 'ethers';
 
 interface RegistreeContainerProps {
 	step: P2PRegistereeSteps;
@@ -33,8 +38,16 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 	const [connected, setIsConnected] = useState(false);
 	const [status, setStatus] = useState('waiting to connect to peer.');
 	const [error, setError] = useState<Error | unknown>();
+	const [expirey, setExpirey] = useState<BigNumber | null>(null);
 	const [tempRelayer, setTempRelayer] = useState('');
+	const { chain } = useNetwork();
+	const { data: signer } = useSigner();
 	const [isLargerThan500] = useMediaQuery('(min-width: 500px)');
+
+	const registryContract = StolenWalletRegistryFactory.connect(
+		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+		signer!
+	);
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
@@ -73,6 +86,18 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 		}
 	};
 
+	const resolveExpirey = async () => {
+		if (step === P2PRegistereeSteps.GracePeriod) {
+			const startTime = await registryContract['getStartTime()']();
+
+			setExpirey(startTime);
+		}
+	};
+
+	useEffect(() => {
+		resolveExpirey();
+	}, [step]);
+
 	return (
 		<Flex
 			mt={3}
@@ -108,7 +133,12 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 			{step === P2PRegistereeSteps.WaitForAcknowledgementPayment && (
 				<WaitForAcknowledgementPayment />
 			)}
-			{step === P2PRegistereeSteps.GracePeriod && <GracePeriod />}
+			{step === P2PRegistereeSteps.GracePeriod && (
+				<GracePeriod
+					expirey={expirey!}
+					setNextStep={() => setLocalState({ step: P2PRegistereeSteps.RegisterAndSign })}
+				/>
+			)}
 			{step === P2PRegistereeSteps.RegisterAndSign && (
 				<RegisterAndSign
 					address={address}
