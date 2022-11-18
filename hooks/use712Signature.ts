@@ -2,7 +2,7 @@ import { Chain } from '@rainbow-me/rainbowkit';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { Signer } from 'ethers';
 import { CONTRACT_ADDRESSES, DOMAIN_SALTS } from '../utils/constants';
-import { StateConfig, ACCOUNTS_KEY } from './useLocalStorage';
+import { StateConfig, ACCOUNTS_KEY, accessLocalStorage } from './useLocalStorage';
 interface Domain712 {
 	name: string;
 	version: string;
@@ -32,7 +32,7 @@ export const buildAcknowledgementStruct = async ({
 	chain,
 	address,
 }: AcknowledgementValues): Promise<signTypedDataProps> => {
-	const localState: StateConfig = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) as string);
+	const localState: StateConfig = accessLocalStorage();
 
 	const stollenWalletRegistry = new StolenWalletRegistryFactory(signer as Signer).attach(
 		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
@@ -65,6 +65,54 @@ export const buildAcknowledgementStruct = async ({
 			chainId: chain?.id!,
 			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
 			salt: DOMAIN_SALTS.ACKNOWLEDGEMENT_OF_REGISTRY,
+		},
+		value: {
+			owner: localState.address,
+			forwarder: localState.trustedRelayer,
+			nonce,
+			deadline,
+		},
+	};
+};
+
+export const buildRegistrationStruct = async ({
+	signer,
+	chain,
+	address,
+}: AcknowledgementValues): Promise<signTypedDataProps> => {
+	const localState: StateConfig = accessLocalStorage();
+
+	const stollenWalletRegistry = new StolenWalletRegistryFactory(signer as Signer).attach(
+		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
+	);
+
+	if (!chain?.id) {
+		throw new Error('Chain ID not found');
+	}
+
+	if (!localState.address || !localState.trustedRelayer) {
+		throw new Error('Missing required data');
+	}
+
+	const { deadline } = await stollenWalletRegistry.generateHashStruct(localState.trustedRelayer);
+	const nonce = await stollenWalletRegistry.nonces(address!);
+
+	return {
+		types: {
+			Registration: [
+				{ name: 'owner', type: 'address' },
+				{ name: 'forwarder', type: 'address' },
+				{ name: 'nonce', type: 'uint256' },
+				{ name: 'deadline', type: 'uint256' },
+			],
+		},
+		primaryType: 'Registration',
+		domain: {
+			name: 'Registration',
+			version: '4',
+			chainId: chain?.id!,
+			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
+			salt: DOMAIN_SALTS.REGISTRATION,
 		},
 		value: {
 			owner: localState.address,

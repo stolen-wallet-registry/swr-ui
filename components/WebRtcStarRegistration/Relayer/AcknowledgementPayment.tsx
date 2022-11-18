@@ -68,7 +68,7 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p,
 			await relayerPostBackMsg({
 				libp2p: libp2p,
 				localState: accessLocalStorage(),
-				protocol: PROTOCOLS.REG_PAY,
+				protocol: PROTOCOLS.ACK_PAY,
 			});
 
 			setNextStep();

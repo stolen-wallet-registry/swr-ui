@@ -1,5 +1,5 @@
 import { Flex, useMediaQuery } from '@chakra-ui/react';
-import useLocalStorage from '@hooks/useLocalStorage';
+import useLocalStorage, { accessLocalStorage } from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
 import React, { useEffect, useState } from 'react';
@@ -15,9 +15,9 @@ import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { registereeConnectMessage } from '@utils/libp2p';
-import { BigNumber } from 'ethers';
 import { SessionExpired } from '../SessionExpired';
 import { RegistreeSuccess } from '../Registeree/RegistreeSuccess';
+import { useSigner } from 'wagmi';
 
 interface RegistreeContainerProps {
 	step: P2PRegistereeSteps;
@@ -36,10 +36,9 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 }) => {
 	const [localState, setLocalState] = useLocalStorage();
 	const [connected, setIsConnected] = useState(false);
-	const [status, setStatus] = useState('waiting to connect to peer.');
-	const [error, setError] = useState<Error | unknown>();
 	const [tempRelayer, setTempRelayer] = useState('');
-	const [isLargerThan500] = useMediaQuery('(min-width: 500px)');
+	const [isSmallerThan1000] = useMediaQuery('(max-width: 1200px)');
+	const { data: signer, status: st } = useSigner();
 
 	const setConnectToPeerInfo = async (
 		e: React.MouseEvent<HTMLElement>,
@@ -47,7 +46,6 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 		multiaddress: MultiaddrInput
 	) => {
 		e.preventDefault();
-		setStatus('trying to connect...');
 		try {
 			const connPeerId = peerIdFromString(peerId);
 			const connAddr = multiaddr(multiaddress);
@@ -68,58 +66,20 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 				}
 			} catch (error) {
 				console.log(error);
-				setError(error);
 				setIsConnected(false);
 			}
 		} catch (error) {
 			console.log(error);
-
-			setStatus(`failed to connect: ${error}`);
 		}
 	};
-
-	// const resolveExpirey = async () => {
-	// 	const registryContract = StolenWalletRegistryFactory.connect(
-	// 		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
-	// 		signer!
-	// 	);
-
-	// 	const isExpired = await registryContract.regististrationPeriodExpired();
-
-	// 	setRegistrationExpired(isExpired);
-	// };
-
-	// useEffect(() => {
-	// 	if (
-	// 		step === P2PRegistereeSteps.GracePeriod ||
-	// 		step === P2PRegistereeSteps.RegisterAndSign ||
-	// 		step === P2PRegistereeSteps.WaitForRegistrationPayment
-	// 	) {
-	// 		resolveExpirey();
-	// 	}
-	// }, [step]);
+	console.log({ status: st });
 
 	useEffect(() => {
 		setStep(localState.step as P2PRegistereeSteps);
 	}, []);
 
 	return (
-		<Flex
-			mt={3}
-			mb={10}
-			p={5}
-			gap={5}
-			flexDirection={isLargerThan500 ? 'row' : 'column'}
-			justifyContent="center"
-		>
-			{libp2p && localState.connectToPeer && (
-				<PeerList
-					connected={connected}
-					libp2p={libp2p!}
-					peerId={localState?.connectToPeer}
-					multiaddress={localState?.connectToPeerAddrs}
-				/>
-			)}
+		<>
 			{step === P2PRegistereeSteps.ConnectToPeer && (
 				<ConnectToPeer setConnectToPeerInfo={setConnectToPeerInfo} />
 			)}
@@ -131,7 +91,9 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 					address={address!}
 					onOpen={onOpen}
 					setNextStep={() =>
-						setLocalState({ step: P2PRegistereeSteps.WaitForAcknowledgementPayment })
+						setLocalState({
+							step: P2PRegistereeSteps.WaitForAcknowledgementPayment,
+						})
 					}
 				/>
 			)}
@@ -140,7 +102,9 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 			)}
 			{step === P2PRegistereeSteps.GracePeriod && (
 				<GracePeriod
-					setNextStep={() => {
+					signer={signer!}
+					address={address}
+					setExpiryStep={() => {
 						setStep(P2PRegistereeSteps.RegisterAndSign);
 						setLocalState({ step: P2PRegistereeSteps.RegisterAndSign });
 					}}
@@ -148,18 +112,40 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 			)}
 			{step === P2PRegistereeSteps.RegisterAndSign && (
 				<RegisterAndSign
+					libp2p={libp2p}
+					signer={signer!}
 					address={address}
 					onOpen={onOpen}
 					setNextStep={() => {
 						setStep(P2PRegistereeSteps.WaitForRegistrationPayment);
 						setLocalState({ step: P2PRegistereeSteps.WaitForRegistrationPayment });
 					}}
+					setExpiryStep={() => {
+						setStep(P2PRegistereeSteps.Expired);
+						setLocalState({ step: P2PRegistereeSteps.Expired });
+					}}
 				/>
 			)}
-			{step === P2PRegistereeSteps.WaitForRegistrationPayment && <WaitForRegistrationPayment />}
+			{step === P2PRegistereeSteps.WaitForRegistrationPayment && (
+				<WaitForRegistrationPayment
+					signer={signer!}
+					address={address}
+					setExpiryStep={() => {
+						setStep(P2PRegistereeSteps.Expired);
+						setLocalState({ step: P2PRegistereeSteps.Expired });
+					}}
+				/>
+			)}
 			{step === P2PRegistereeSteps.Success && <RegistreeSuccess />}
 			{step === P2PRegistereeSteps.Expired && <SessionExpired />}
-		</Flex>
+			{libp2p && localState.connectToPeer && (
+				<PeerList
+					libp2p={libp2p!}
+					peerId={localState?.connectToPeer}
+					multiaddress={localState?.connectToPeerAddrs}
+				/>
+			)}
+		</>
 	);
 };
 

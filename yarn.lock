@@ -5217,10 +5217,10 @@
     "@chainlink/contracts" "^0.4.1"
     "@connext/nxtp-contracts" "^0.2.0-beta.17"
 
-"@wallet-hygiene/swr-contracts@^0.0.78":
-  version "0.0.78"
-  resolved "https://registry.yarnpkg.com/@wallet-hygiene/swr-contracts/-/swr-contracts-0.0.78.tgz#415fe63bcee45fb679c0b17eaf60e3446bfb6d01"
-  integrity sha512-iq8aVPEI1QC8YWnK0aogwoU0XjM45U22S1XATo8crKYZ1G+pDcBEk9gcNBK8W3R+ca8rgbHb8Clbrx+AY5U7/A==
+"@wallet-hygiene/swr-contracts@^0.0.83":
+  version "0.0.83"
+  resolved "https://registry.yarnpkg.com/@wallet-hygiene/swr-contracts/-/swr-contracts-0.0.83.tgz#dbfd94e3451f9f9eb89f1cee30b51e4595170836"
+  integrity sha512-oZd6/yZhOHsdyJCiM3xR5XtCBHqdG9OO5i09T9tq4crvlkImXNQQWJC7ZDuSyHR/gtMF2iQhGPX2B+pFyWQwTQ==
   dependencies:
     "@chainlink/contracts" "^0.4.1"
     "@connext/nxtp-contracts" "^0.2.0-beta.17"
@@ -7051,6 +7051,11 @@ datastore-core@^8.0.1:
     it-pushable "^3.0.0"
     it-take "^1.0.1"
     uint8arrays "^4.0.2"
+
+date-fns@^2.29.3:
+  version "2.29.3"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz#27402d2fc67eb442b511b70bbdf98e6411cd68a8"
+  integrity sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.6.9:
   version "2.6.9"

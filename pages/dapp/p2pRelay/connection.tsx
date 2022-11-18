@@ -56,7 +56,7 @@ export const Connection = () => {
 		P2PRelayerSteps.WaitForConnection
 	);
 
-	const [isLargerThan600] = useMediaQuery('(min-width: 600px)', {
+	const [isSmallerThan1000] = useMediaQuery('(max-width: 1200px)', {
 		ssr: true,
 		fallback: false, // return false on the server, and re-evaluate on the client side
 	});
@@ -83,8 +83,9 @@ export const Connection = () => {
 			async function (source) {
 				// For each chunk of data
 				let data = '';
+
+				// Output the data as a utf8 string
 				for await (const msg of source) {
-					// Output the data as a utf8 string
 					data += msg;
 				}
 
@@ -105,10 +106,12 @@ export const Connection = () => {
 							...message,
 							step: P2PRegistereeSteps.WaitForAcknowledgementPayment,
 						});
+
 						break;
 					case PROTOCOLS.ACK_PAY:
 						const ackowledgePay: RelayerMessageProps = JSON.parse(data);
 						handleRelayerCallback({ ...ackowledgePay, step: P2PRegistereeSteps.GracePeriod });
+
 						break;
 					case PROTOCOLS.REG_REC:
 						const registerReceived: RelayerMessageProps = JSON.parse(data);
@@ -116,10 +119,12 @@ export const Connection = () => {
 							...registerReceived,
 							step: P2PRegistereeSteps.WaitForRegistrationPayment,
 						});
+
 						break;
 					case PROTOCOLS.REG_PAY:
 						const registerPay: RelayerMessageProps = JSON.parse(data);
-						handleRelayerCallback({ ...registerPay, step: P2PRegistereeSteps.GracePeriod });
+						handleRelayerCallback({ ...registerPay, step: P2PRegistereeSteps.Success });
+
 						break;
 					default:
 						console.log(`recieved unknown protocol: ${protocol}`);
@@ -144,6 +149,7 @@ export const Connection = () => {
 			async function (source) {
 				// For each chunk of data
 				let data = '';
+
 				for await (const msg of source) {
 					// Output the data as a utf8 string
 					data += msg;
@@ -171,13 +177,13 @@ export const Connection = () => {
 						});
 
 						setRealyerStep(P2PRelayerSteps.WaitForAcknowledgementSign);
+
 						break;
 					case PROTOCOLS.ACK_SIG:
 						const acknowledgementSignature: setLocalStorageProps = JSON.parse(data);
 						setSignatureLocalStorage(acknowledgementSignature);
 
 						setLocalStorage({
-							...accessLocalStorage(),
 							trustedRelayerFor: acknowledgementSignature.address,
 							step: P2PRelayerSteps.AcknowledgementPayment,
 						});
@@ -268,6 +274,7 @@ export const Connection = () => {
 		return <div>loading...</div>;
 	}
 
+	console.log(isSmallerThan1000);
 	return (
 		<DappLayout
 			isOpen={nftDisclosure.isOpen}
@@ -275,38 +282,37 @@ export const Connection = () => {
 			heading="Peer to Peer Relay"
 			subHeading="sign with one wallet, have your peer pay for you."
 		>
+			<Center mt={5}>
+				<CompletionSteps />
+			</Center>
 			<Flex
-				flexDirection={isLargerThan600 ? 'column' : 'row'}
 				mt={3}
 				mb={10}
 				p={5}
 				gap={5}
+				flexDirection={isSmallerThan1000 ? 'column' : 'row'}
 				justifyContent="center"
+				alignItems="center"
 			>
-				<Box>
-					{localState.isRegistering && registereeStep && (
-						<RegistereeContainer
-							step={registereeStep}
-							libp2p={libp2pInstance}
-							address={address!}
-							onOpen={nftDisclosure.onOpen}
-							setStep={setRegistereeStep}
-						/>
-					)}
+				{localState.isRegistering && registereeStep && (
+					<RegistereeContainer
+						step={registereeStep}
+						libp2p={libp2pInstance}
+						address={address!}
+						onOpen={nftDisclosure.onOpen}
+						setStep={setRegistereeStep}
+					/>
+				)}
 
-					{!localState.isRegistering && relayerStep && (
-						<RelayerContainer
-							step={relayerStep}
-							libp2p={libp2pInstance}
-							address={address!}
-							onOpen={nftDisclosure.onOpen}
-							setStep={setRealyerStep}
-						/>
-					)}
-				</Box>
-				<Center>
-					<CompletionSteps />
-				</Center>
+				{!localState.isRegistering && relayerStep && (
+					<RelayerContainer
+						step={relayerStep}
+						libp2p={libp2pInstance}
+						address={address!}
+						onOpen={nftDisclosure.onOpen}
+						setStep={setRealyerStep}
+					/>
+				)}
 			</Flex>
 		</DappLayout>
 	);

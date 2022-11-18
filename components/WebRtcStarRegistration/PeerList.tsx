@@ -11,12 +11,11 @@ import useCopyToClipboard from '@hooks/useCopyToClipboard';
 
 interface PeerListProps {
 	libp2p: Libp2p;
-	connected: boolean;
 	peerId?: string | null;
 	multiaddress?: string | null;
 }
 
-export const PeerList = ({ libp2p, connected, peerId, multiaddress }: PeerListProps) => {
+export const PeerList = ({ libp2p, peerId, multiaddress }: PeerListProps) => {
 	const [copyValue, setCopyValue] = useCopyToClipboard();
 	const toast = useToast();
 
@@ -103,6 +102,19 @@ export const PeerList = ({ libp2p, connected, peerId, multiaddress }: PeerListPr
 		);
 	};
 
+	const PeerList = ({ peers }: { peers: PeerId[] }) => {
+		return (
+			<>
+				<Heading as="h4">Trusted Peer List</Heading>
+				<UnorderedList>
+					{peers.map((peer) => (
+						<li key={peer.toString()}>{peer.toString()}</li>
+					))}
+				</UnorderedList>
+			</>
+		);
+	};
+
 	useEffect(() => {
 		const getPeerList = async () => {
 			const list = await libp2p.getPeers().filter((pid) => peerId && pid.equals(peerId));
@@ -120,16 +132,7 @@ export const PeerList = ({ libp2p, connected, peerId, multiaddress }: PeerListPr
 		<RegistrationSection title="Connection Details">
 			<PeerDetails />
 			{peerId?.toString() && multiaddress?.toString() && <ConnectionDetails />}
-			{peers.length > 0 && (
-				<>
-					<Heading as="h4">Trusted Peer List</Heading>
-					<UnorderedList>
-						{peers.map((peer: PeerId) => (
-							<li key={peer.toString()}>{peer.toString()}</li>
-						))}
-					</UnorderedList>
-				</>
-			)}
+			{peers.length > 0 && <PeerList peers={peers} />}
 		</RegistrationSection>
 	);
 };

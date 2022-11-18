@@ -27,6 +27,8 @@ export type StateConfig = {
 	trustedRelayerFor: string | null;
 	includeWalletNFT: boolean | null;
 	includeSupportNFT: boolean | null;
+	includeWalletNFTAgree: boolean | null;
+	includeSupportNFTAgree: boolean | null;
 	isRegistering: boolean | null;
 	peerId: string | null;
 	peerAddrs: string | null;
@@ -48,6 +50,8 @@ export const initialState: StateConfig = {
 	trustedRelayerFor: null,
 	includeWalletNFT: null,
 	includeSupportNFT: null,
+	includeWalletNFTAgree: null,
+	includeSupportNFTAgree: null,
 	isRegistering: null,
 	peerId: null,
 	peerAddrs: null,
@@ -125,7 +129,7 @@ const useLocalStorage = <T extends StateConfig>(): [
 	const setLocalState = (value: Partial<T> | T) => {
 		try {
 			// Allow value to be a function so we have same API as useState
-			const valueToStore = { ...localState, ...value };
+			const valueToStore = { ...accessLocalStorage(), ...value };
 			// Save state
 			setState(valueToStore);
 			// Save to local storage

@@ -1,17 +1,21 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import useTimer from '@hooks/useTimer';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
-
+import { BigNumber } from 'ethers';
+import React, { useEffect } from 'react';
+import useCurrentBlock from '@hooks/useCurrentBlock';
 interface TimerProps {
-	expiry: Date;
-	setNextStep: () => void;
+	expiryBlock: BigNumber;
+	setExpiryStep: () => void;
 	fontSize?: string;
 }
 
-export const Timer: React.FC<TimerProps> = ({ expiry, setNextStep, fontSize = '30px' }) => {
-	const { seconds, minutes, isRunning, start } = useTimer({
-		expiry: expiry.getTime(),
-		onExpire: () => setNextStep(),
+export const Timer: React.FC<TimerProps> = ({ expiryBlock, setExpiryStep, fontSize = '30px' }) => {
+	const { currentBlock, estimatedBlocksLeft, timerExpiry, isExpired } =
+		useCurrentBlock(expiryBlock);
+
+	const { seconds, minutes, start, restart } = useTimer({
+		expiry: timerExpiry || 0,
+		onExpire: () => {},
 	});
 
 	useEffect(() => {
@@ -19,22 +23,40 @@ export const Timer: React.FC<TimerProps> = ({ expiry, setNextStep, fontSize = '3
 	}, []);
 
 	useEffect(() => {
-		if (!isRunning) {
-			setNextStep();
+		if (timerExpiry) {
+			restart(timerExpiry);
 		}
-	}, [isRunning]);
+	}, [timerExpiry]);
 
 	useEffect(() => {
-		if (seconds === 0) {
-			setNextStep();
+		if (isExpired) {
+			setExpiryStep();
 		}
-	}, [seconds]);
+	}, [isExpired]);
+
+	if (currentBlock === null) {
+		return null;
+	}
 
 	return (
-		<Box style={{ fontSize, padding: 5 }}>
-			<span style={{ fontWeight: 'bold' }}>
+		<Flex
+			flexDirection="column"
+			justifyContent="flex-end"
+			alignItems="center"
+			style={{ fontSize: '16px', padding: 5 }}
+			mb={5}
+		>
+			<Box style={{ fontSize, fontWeight: 'bold' }}>
 				{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} Time Left
-			</span>
-		</Box>
+			</Box>
+			<Box style={{ fontWeight: 'bold' }}>
+				{estimatedBlocksLeft?.toString() || '--'} Blocks left - {currentBlock?.toNumber() || '--'}/
+				{expiryBlock?.toNumber() || '--'}
+			</Box>
+			<Box style={{ fontSize: '12px', fontStyle: 'italic' }}>
+				**the above time remaining and blocks remaining are based on{' '}
+				<span style={{ fontWeight: 'bold' }}>Estimates only.</span>
+			</Box>
+		</Flex>
 	);
 };

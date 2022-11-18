@@ -190,7 +190,7 @@ const relayerPostBackMsg = async ({
 	protocol,
 }: {
 	libp2p: Libp2p;
-	localState: StateConfig;
+	localState: Partial<StateConfig>;
 	protocol: string;
 }) => {
 	try {

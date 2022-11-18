@@ -1,29 +1,28 @@
 import { Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { Timer } from '@components/Timer';
-import useContractPeriods from '@hooks/useContractPeriods';
+import useRegBlocksLeft from '@hooks/useRegBlocksLeft';
 import useLocalStorage from '@hooks/useLocalStorage';
+import { Signer } from 'ethers';
 import React, { useEffect } from 'react';
 
 interface WaitForRegistrationSignProps {
-	setExpiredStep: () => void;
+	setExpiryStep: () => void;
+	address: string;
+	signer: Signer;
 }
 
-const WaitForTRegistrationSign: React.FC<WaitForRegistrationSignProps> = ({ setExpiredStep }) => {
+const WaitForRegistrationSign: React.FC<WaitForRegistrationSignProps> = ({
+	setExpiryStep,
+	address,
+	signer,
+}) => {
 	const [localState, _] = useLocalStorage();
-	const { expired, gracePeriodExpiration } = useContractPeriods(localState.address!);
-
-	useEffect(() => {
-		if (expired) {
-			setExpiredStep();
-		}
-	}, [expired]);
+	const { expiryBlock } = useRegBlocksLeft(address, signer);
 
 	return (
 		<RegistrationSection title="Wait for Registration Signature">
-			{gracePeriodExpiration && (
-				<Timer expiry={gracePeriodExpiration} setNextStep={setExpiredStep} />
-			)}
+			{expiryBlock && <Timer expiryBlock={expiryBlock} setExpiryStep={setExpiryStep} />}
 			<Text mb={5}>
 				We are waiting on peer {localState.connectToPeer} to signature for adding their wallet to
 				the registry.
@@ -36,4 +35,4 @@ const WaitForTRegistrationSign: React.FC<WaitForRegistrationSignProps> = ({ setE
 	);
 };
 
-export default WaitForTRegistrationSign;
+export default WaitForRegistrationSign;

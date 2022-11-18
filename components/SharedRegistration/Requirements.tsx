@@ -8,13 +8,7 @@ import { useNetwork } from 'wagmi';
 
 import capitalize from 'lodash/capitalize';
 import useLocalStorage from '@hooks/useLocalStorage';
-import {
-	RegistrationValues,
-	StandardSteps,
-	SelfRelaySteps,
-	P2PRelaySteps,
-	RegistrationTypes,
-} from '@utils/types';
+import { RegistrationValues, StandardSteps, SelfRelaySteps, RegistrationTypes } from '@utils/types';
 import router from 'next/router';
 import WebRTCStarInstructions from '@components/WebRtcStarRegistration/WebRTCStarInstructions';
 
@@ -35,16 +29,6 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 		setLocalState({ step: step, stepSet: true });
 		router.push(`/dapp/${localState?.registrationType}`, undefined, { shallow: true });
 	};
-
-	useEffect(() => {
-		const prefetch = async () => {
-			await router.prefetch('/dapp/p2pRelay');
-			await router.prefetch('/dapp/selfRelay');
-			await router.prefetch('/dapp/standardRelay');
-		};
-
-		prefetch();
-	}, []);
 
 	console.log({ localState });
 
@@ -129,25 +113,26 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 			</>
 		);
 	};
-	const PeerToPeerRelayRequirements = () => {
-		return (
-			<>
-				<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-					<ConnectedStep />
-					<SupportedChainStep />
-					<WebRTCStarInstructions />
-				</OrderedList>
-				<Button
-					alignSelf="flex-end"
-					width={[200, 250]}
-					m={5}
-					onClick={() => handleBegin(P2PRegistereeSteps.Instructions)}
-				>
-					Begin
-				</Button>
-			</>
-		);
-	};
+
+	// const PeerToPeerRelayRequirements = () => {
+	// 	return (
+	// 		<>
+	// 			<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
+	// 				<ConnectedStep />
+	// 				<SupportedChainStep />
+	// 				<WebRTCStarInstructions />
+	// 			</OrderedList>
+	// 			<Button
+	// 				alignSelf="flex-end"
+	// 				width={[200, 250]}
+	// 				m={5}
+	// 				onClick={() => handleBegin(P2PRegistereeSteps.Instructions)}
+	// 			>
+	// 				Begin
+	// 			</Button>
+	// 		</>
+	// 	);
+	// };
 
 	return (
 		<RegistrationSection title={`${capitalize(registrationType)} Registration`}>

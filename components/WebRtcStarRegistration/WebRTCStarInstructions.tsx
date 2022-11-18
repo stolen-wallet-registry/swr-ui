@@ -1,5 +1,4 @@
 import { Link, Text, Flex, Button } from '@chakra-ui/react';
-import RegistrationSection from '@components/RegistrationSection';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps, P2PRelayerSteps } from '@utils/types';
 import NextLink from 'next/link';
@@ -25,7 +24,7 @@ export const WebRTCStarInstructions = () => {
 				</Text>
 			</Flex>
 			<Flex justifyContent="space-between">
-				<NextLink href="/dapp/p2pRelay/connection" prefetch={true} passHref>
+				<NextLink href="/dapp/p2pRelay/connection" passHref>
 					<Button
 						onClick={() =>
 							setLocalState({
@@ -38,7 +37,7 @@ export const WebRTCStarInstructions = () => {
 						Assist with Registration
 					</Button>
 				</NextLink>
-				<NextLink href="/dapp/p2pRelay/connection" prefetch={true} passHref>
+				<NextLink href="/dapp/p2pRelay/connection" passHref>
 					<Button
 						onClick={() =>
 							setLocalState({

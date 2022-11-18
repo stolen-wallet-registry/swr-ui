@@ -36,10 +36,6 @@ const DappLayout: React.FunctionComponent<DappLayoutProps> = ({
 	const { chain } = useNetwork();
 
 	useEffect(() => {
-		const prefetch = async () => {
-			await router.prefetch('/dapp');
-		};
-		prefetch();
 		setIsMounted(true);
 	}, []);
 
