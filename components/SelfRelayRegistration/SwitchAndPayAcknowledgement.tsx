@@ -1,32 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Flex, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
-import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
-import { SelfRelaySteps } from '@utils/types';
+import { useAccount, useNetwork, useSigner } from 'wagmi';
+import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
-import { Contract, Signer, ethers } from 'ethers';
-import {
-	StolenWalletRegistryAbi,
-	StolenWalletRegistryFactory,
-} from '@wallet-hygiene/swr-contracts';
+import { ethers } from 'ethers';
+import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry } from '@utils/signature';
 
-interface SwitchAndPayAcknowledgementProps {}
+interface SwitchAndPayAcknowledgementProps {
+	setNextStep: () => void;
+}
 
-const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = ({}) => {
-	const { connector, address, isConnected } = useAccount({
-		onConnect({ address, connector, isReconnected }) {
-			console.log('Connected', { address, connector, isReconnected });
-		},
-	});
+const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = ({
+	setNextStep,
+}) => {
+	const { address, isConnected } = useAccount();
 
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
 	const [localState, setLocalState] = useLocalStorage();
 	const [isMounted, setIsMounted] = useState(false);
-	const provider = useProvider();
-	const [deadline, setDeadline] = useState<ethers.BigNumber | null>(null);
 	console.log(signer);
 
 	const registryContract = StolenWalletRegistryFactory.connect(
@@ -34,34 +28,16 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 		signer!
 	);
 
-	useEffect(() => {
-		setIsMounted(true);
-	}, []);
-
-	// useEffect(() => {
-	// 	const getDeadline = async () => {
-	// 		const deadline = await registryContract['getDeadline(address)'](localState.address!);
-	// 		debugger;
-	// 		setDeadline(deadline);
-	// 	};
-	// 	getDeadline();
-	// }, []);
-
-	if (!isMounted || !isConnected) {
-		return null;
-	}
-
 	const signAndPay = async () => {
 		try {
 			const storedSignature = getSignatureWithExpiry({
 				keyRef: ACKNOWLEDGEMENT_KEY,
 				chainId: chain?.id!,
-				address: localState.trustedRelayerFor!,
+				address: localState.address!,
 			});
 
-			// const deadline = ethers.BigNumber.from(new Date(storedSignature.deadline).getTime());
 			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
-			// storedSignature.deadline,
+
 			const tx = await registryContract.acknowledgementOfRegistry(
 				storedSignature.deadline,
 				storedSignature.nonce,
@@ -80,16 +56,25 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 		}
 	};
 
-	const backButtonAction = () => {
-		setLocalState({ step: SelfRelaySteps.AcknowledgeAndSign });
-	};
+	useEffect(() => {
+		if (localState.acknowledgementReceipt) {
+			setNextStep();
+		}
+	}, [localState.acknowledgementReceipt]);
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
+
+	if (!isMounted || !isConnected || !signer) {
+		return null;
+	}
 
 	if (isConnected && address !== localState.trustedRelayer) {
 		return (
 			<RegistrationSection title="Waiting Trusted Relayer">
 				<Text>Please switch to your other account ({localState.trustedRelayer})</Text>
 				<Text> so you can pay for the acknowledgement step and proceed</Text>
-				<Button onClick={backButtonAction}>Back</Button>
 			</RegistrationSection>
 		);
 	}
@@ -101,7 +86,6 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 				<Text mb={5}>Sign and Pay for Acknowledgement from {localState.address}</Text>
 			</Flex>
 			<Flex justifyContent="flex-end" gap={5}>
-				<Button onClick={backButtonAction}>Back</Button>
 				<Button onClick={signAndPay}>Sign and Pay</Button>
 			</Flex>
 		</RegistrationSection>

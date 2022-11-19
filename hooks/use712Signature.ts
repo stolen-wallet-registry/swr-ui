@@ -42,7 +42,7 @@ export const buildAcknowledgementStruct = async ({
 		throw new Error('Chain ID not found');
 	}
 
-	if (!localState.address || !localState.trustedRelayer) {
+	if (!address || !localState.trustedRelayer) {
 		throw new Error('Missing required data');
 	}
 
@@ -67,7 +67,7 @@ export const buildAcknowledgementStruct = async ({
 			salt: DOMAIN_SALTS.ACKNOWLEDGEMENT_OF_REGISTRY,
 		},
 		value: {
-			owner: localState.address,
+			owner: address,
 			forwarder: localState.trustedRelayer,
 			nonce,
 			deadline,
@@ -89,13 +89,13 @@ export const buildRegistrationStruct = async ({
 	if (!chain?.id) {
 		throw new Error('Chain ID not found');
 	}
-
-	if (!localState.address || !localState.trustedRelayer) {
+	debugger;
+	if (!address || !localState.trustedRelayer) {
 		throw new Error('Missing required data');
 	}
 
 	const { deadline } = await stollenWalletRegistry.generateHashStruct(localState.trustedRelayer);
-	const nonce = await stollenWalletRegistry.nonces(address!);
+	const nonce = await stollenWalletRegistry.nonces(address);
 
 	return {
 		types: {
@@ -115,7 +115,7 @@ export const buildRegistrationStruct = async ({
 			salt: DOMAIN_SALTS.REGISTRATION,
 		},
 		value: {
-			owner: localState.address,
+			owner: address,
 			forwarder: localState.trustedRelayer,
 			nonce,
 			deadline,

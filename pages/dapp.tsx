@@ -4,7 +4,7 @@ import DappLayout from '../components/DappLayout';
 import pick from 'lodash/pick';
 
 import type { GetStaticProps } from 'next';
-import { LightMode, useColorMode, Flex } from '@chakra-ui/react';
+import { LightMode, useColorMode, Flex, Text, Center } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -13,8 +13,7 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import Requirements from '@components/SharedRegistration/Requirements';
 import ButtonChoices from '@components/ButtonChoices';
-import router from 'next/router';
-import { optimism } from '@utils/chains';
+import RegistrationSection from '@components/RegistrationSection';
 
 interface DappProps {
 	messages: IntlMessages;
@@ -77,7 +76,26 @@ const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
 						</Flex>
 					</>
 				) : (
-					<div>Please Connect to your wallet</div>
+					<Center>
+						<RegistrationSection title="Please connect to your wallet">
+							<figure>
+								<blockquote cite="https://en.wikipedia.org/wiki/Marcus_Aurelius">
+									<Text>
+										“Not to feel exasperated, or defeated, or despondent because your days aren’t
+										packed with wise and moral actions. But to get back up when you fail, to
+										celebrate behaving like a human—however imperfectly—and fully embrace the
+										pursuit that you’ve embarked on.”
+									</Text>
+								</blockquote>
+								<br />
+								<figcaption>
+									<Text style={{ fontWeight: 'bold' }} textAlign="end">
+										Marcus Aurelius, <cite>Meditations - Book V, Passage 9</cite>
+									</Text>
+								</figcaption>
+							</figure>
+						</RegistrationSection>
+					</Center>
 				)}
 			</Flex>
 		);

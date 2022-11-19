@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSigner } from 'wagmi';
 
 import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
 
@@ -8,23 +8,21 @@ import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import SwitchAndPayAcknowledgement from '@components/SelfRelayRegistration/SwitchAndPayAcknowledgement';
 import SwitchAndPayRegistration from '@components/SelfRelayRegistration/SwitchAndPayRegistration';
-import Acknowledgement from '@components/SharedRegistration/Acknowledgement';
-import RegisterAndSign from '@components/SelfRelayRegistration/RegisterAndSIgn';
 import DappLayout from '@components/DappLayout';
 import { SelfRelaySteps } from '@utils/types';
 import { Flex, useDisclosure } from '@chakra-ui/react';
-import { ACKNOWLEDGEMENT_KEY } from '@utils/signature';
 import SelfRelayAcknowledgement from '@components/SelfRelayRegistration/SelfRelayAcknowledgement';
+import Success from '@components/SharedRegistration/Success';
+import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
+import SwitchAndSignRegistration from '@components/SelfRelayRegistration/SwitchAndSignRegistration';
+
 interface SelfRelayRegistrationInterface {}
 
 const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
-	const { connector, address, isConnected } = useAccount({
-		onConnect({ address, connector, isReconnected }) {
-			console.log('Connected', { address, connector, isReconnected });
-		},
-	});
+	const { address } = useAccount();
 
 	const [localState, setLocalState] = useLocalStorage();
 	const [tempRelayer, setTempRelayer] = useState('');
@@ -35,6 +33,10 @@ const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = () => {
 			step: SelfRelaySteps.SwitchAndPayOne,
 		});
 	};
+
+	if (!signer) {
+		return null;
+	}
 
 	return (
 		<DappLayout
@@ -50,22 +52,44 @@ const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = () => {
 						setNextStep={setNextStep}
 						tempRelayer={tempRelayer}
 						setTempRelayer={setTempRelayer}
-						address={address as string}
+						address={address!}
 						onOpen={onOpen}
 					/>
 				)}
-				{localState.step === SelfRelaySteps.SwitchAndPayOne && <SwitchAndPayAcknowledgement />}
-				{localState.step === SelfRelaySteps.GracePeriod && (
-					<GracePeriod
-						setLocalState={setLocalState}
-						nextStep={SelfRelaySteps.RegisterAndSign}
-						address={address as string}
-						chainId={chain?.id!}
-						keyRef={ACKNOWLEDGEMENT_KEY}
+				{localState.step === SelfRelaySteps.SwitchAndPayOne && (
+					<SwitchAndPayAcknowledgement
+						setNextStep={() => setLocalState({ step: SelfRelaySteps.GracePeriod })}
 					/>
 				)}
-				{localState.step === SelfRelaySteps.RegisterAndSign && <RegisterAndSign />}
-				{localState.step === SelfRelaySteps.SwitchAndPayTwo && <SwitchAndPayRegistration />}
+				{localState.step === SelfRelaySteps.GracePeriod && (
+					<GracePeriod
+						setExpiryStep={() => setLocalState({ step: SelfRelaySteps.RegisterAndSign })}
+						address={address!}
+						signer={signer}
+					/>
+				)}
+				{localState.step === SelfRelaySteps.RegisterAndSign && (
+					<SwitchAndSignRegistration
+						signer={signer!}
+						setExpiryStep={() => setLocalState({ step: SelfRelaySteps.Expired })}
+						address={address!}
+						onOpen={onOpen}
+						setNextStep={() => {
+							setLocalState({ step: SelfRelaySteps.SwitchAndPayTwo });
+						}}
+					/>
+				)}
+				{localState.step === SelfRelaySteps.SwitchAndPayTwo && (
+					<SwitchAndPayRegistration
+						signer={signer!}
+						setExpiryStep={() => setLocalState({ step: SelfRelaySteps.Expired })}
+						setNextStep={() => {
+							setLocalState({ step: SelfRelaySteps.Success });
+						}}
+					/>
+				)}
+				{localState.step === SelfRelaySteps.Success && <Success />}
+				{localState.step === SelfRelaySteps.Expired && <SessionExpired />}
 			</Flex>
 		</DappLayout>
 	);

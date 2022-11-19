@@ -7,6 +7,8 @@ export enum StandardSteps {
 	AcknowledgeAndPay = 'acknowledge-and-pay',
 	GracePeriod = 'grace-period',
 	RegisterAndPay = 'register-and-pay',
+	Success = 'success',
+	Expired = 'expired',
 }
 
 export enum SelfRelaySteps {
@@ -15,6 +17,8 @@ export enum SelfRelaySteps {
 	GracePeriod = 'grace-period',
 	RegisterAndSign = 'register-and-sign',
 	SwitchAndPayTwo = 'switch-and-pay-two',
+	Success = 'success',
+	Expired = 'expired',
 }
 
 export enum P2PRegistereeSteps {

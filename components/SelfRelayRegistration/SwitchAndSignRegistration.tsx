@@ -10,51 +10,47 @@ import {
 	InputLeftElement,
 } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { buildAcknowledgementStruct } from '@hooks/use712Signature';
+import { Timer } from '@components/Timer';
+import { buildRegistrationStruct } from '@hooks/use712Signature';
 import useDebounce from '@hooks/useDebounce';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { ACKNOWLEDGEMENT_KEY, setSignatureWithExpiry } from '@utils/signature';
-import { BigNumber, ethers } from 'ethers';
+import useRegBlocksLeft from '@hooks/useRegBlocksLeft';
+import { REGISTRATION_KEY, setSignatureWithExpiry } from '@utils/signature';
+import { BigNumber, ethers, Signer } from 'ethers';
 import { useState, useEffect } from 'react';
 import { FaWallet } from 'react-icons/fa';
 import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 
-interface AcknowledgementProps {
+interface RegistrationProps {
 	address: string;
 	onOpen: () => void;
 	setNextStep: () => void;
-	tempRelayer: string;
-	setTempRelayer: React.Dispatch<React.SetStateAction<string>>;
+	setExpiryStep: () => void;
+	signer: Signer;
 }
 
-const Acknowledgement: React.FC<AcknowledgementProps> = ({
+const SwitchAndSignRegistration: React.FC<RegistrationProps> = ({
 	address,
 	onOpen,
-	setTempRelayer,
-	tempRelayer,
 	setNextStep,
+	setExpiryStep,
+	signer,
 }) => {
 	const [localState, setLocalState] = useLocalStorage();
-	const [relayerIsValid, setRelayerIsValid] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
 	const [nonce, setNonce] = useState<BigNumber | null>(null);
-	const debouncedTrustedRelayer = useDebounce(tempRelayer, 500);
 
+	const { expiryBlock } = useRegBlocksLeft(localState.address!, signer);
 	const typedSignature = useSignTypedData();
-	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
 
 	const checkValidEns = (address: string) => {
 		return address?.split('.')?.at(-1) === 'eth';
 	};
 
-	const handleChangeRelayer = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTempRelayer(e.target.value);
-	};
-
 	const handleSignature = async () => {
 		try {
-			const { domain, types, value } = await buildAcknowledgementStruct({
+			const { domain, types, value } = await buildRegistrationStruct({
 				signer,
 				address,
 				chain,
@@ -62,33 +58,45 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 
 			setDeadline(value.deadline);
 			setNonce(value.nonce);
+
 			await typedSignature.signTypedDataAsync({ domain, types, value });
 		} catch (error) {
 			console.log(error);
+			throw error;
 		}
 	};
 
 	useEffect(() => {
-		setLocalState({ trustedRelayer: debouncedTrustedRelayer });
-		setRelayerIsValid(ethers.utils.isAddress(debouncedTrustedRelayer));
-	}, [debouncedTrustedRelayer]);
-
-	useEffect(() => {
 		if (typedSignature.data) {
 			setSignatureWithExpiry({
-				keyRef: ACKNOWLEDGEMENT_KEY,
+				keyRef: REGISTRATION_KEY,
 				value: typedSignature.data,
 				ttl: deadline!,
 				chainId: chain?.id!,
 				address: address!,
 				nonce: nonce!,
 			});
+
 			setNextStep();
 		}
 	}, [typedSignature.data]);
 
+	if (!signer) {
+		return null;
+	}
+
+	if (address !== localState.address) {
+		return (
+			<RegistrationSection title="Waiting Original Singer">
+				<Text>Please switch to your other account ({localState.address})</Text>
+				<Text> so you can pay for the registration step and proceed</Text>
+			</RegistrationSection>
+		);
+	}
+
 	return (
 		<RegistrationSection title="Include NFTs?">
+			{expiryBlock && <Timer expiryBlock={expiryBlock} setExpiryStep={setExpiryStep} />}
 			<Flex>
 				<Text mr={20}>
 					Include{' '}
@@ -145,27 +153,6 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 					</Checkbox>
 				</CheckboxGroup>
 			</Flex>
-			<Flex flexDirection="column">
-				<Text>What is your other wallet address?</Text>
-				<InputGroup>
-					<InputLeftElement pointerEvents="none" children={<FaWallet color="gray.300" />} />
-					<Input
-						value={tempRelayer}
-						placeholder="Trusted Relayer"
-						size="md"
-						isRequired
-						focusBorderColor="black.700"
-						isInvalid={!relayerIsValid}
-						onChange={handleChangeRelayer}
-					/>
-				</InputGroup>
-				<Text fontSize="sm">
-					*Once you sign, you will need to Switch to this wallet before proceeding.
-				</Text>
-				<Text fontSize="sm">
-					**you will use the "Trusted Relayer" wallet to pay for the Registration.
-				</Text>
-			</Flex>
 			<Flex alignSelf="flex-end">
 				<Button m={5} onClick={onOpen}>
 					View NFT
@@ -173,17 +160,13 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				<Button
 					m={5}
 					onClick={handleSignature}
-					disabled={
-						localState.includeWalletNFT === null ||
-						localState.includeSupportNFT === null ||
-						!relayerIsValid
-					}
+					disabled={localState.includeWalletNFT === null || localState.includeSupportNFT === null}
 				>
-					Sign Acknowledgement
+					Sign Registration
 				</Button>
 			</Flex>
 		</RegistrationSection>
 	);
 };
 
-export default Acknowledgement;
+export default SwitchAndSignRegistration;

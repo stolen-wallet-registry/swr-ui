@@ -6,7 +6,7 @@ import { CONTRACT_ADDRESSES } from '@utils/constants';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { BigNumber, ethers, Signer } from 'ethers';
 import { useState, useEffect } from 'react';
-import { useNetwork, useProvider, useSigner, useSignTypedData } from 'wagmi';
+import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 
 interface StandardAcknowledgementProps {
 	address: string;
@@ -25,7 +25,6 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 	const typedSignature = useSignTypedData();
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
-	const provider = useProvider();
 	const [localState, setLocalState] = useLocalStorage();
 
 	const handleSign = async () => {
@@ -143,7 +142,6 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 						disabled={
 							localState.includeWalletNFT === null ||
 							localState.includeSupportNFT === null ||
-							// acknowledgement === null ||
 							(localState.registrationType !== 'standardRelay' && !relayerIsValid)
 						}
 					>
@@ -156,7 +154,6 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 						disabled={
 							localState.includeWalletNFT === null ||
 							localState.includeSupportNFT === null ||
-							// acknowledgement === null ||
 							(localState.registrationType !== 'standardRelay' && !relayerIsValid)
 						}
 					>

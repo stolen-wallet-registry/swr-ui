@@ -12,7 +12,7 @@ import { relayerPostBackMsg, PROTOCOLS } from '@utils/libp2p';
 import { getSignatureWithExpiry, REGISTRATION_KEY } from '@utils/signature';
 import { Libp2p } from 'libp2p';
 
-interface RegistrationPaymentProps {
+interface RegistrationProps {
 	libp2p: Libp2p;
 	signer: Signer;
 	address: string;
@@ -21,7 +21,7 @@ interface RegistrationPaymentProps {
 	setExpiryStep: () => void;
 }
 
-const RegistrationPayment: React.FC<RegistrationPaymentProps> = ({
+const RegistrationPayment: React.FC<RegistrationProps> = ({
 	libp2p,
 	address,
 	signer,
@@ -62,7 +62,7 @@ const RegistrationPayment: React.FC<RegistrationPaymentProps> = ({
 			);
 
 			const receipt = await tx.wait();
-			setLocalState({ registrationmentReceipt: JSON.stringify(receipt) });
+			setLocalState({ registrationReceipt: JSON.stringify(receipt) });
 			setReceipt(receipt);
 		} catch (error) {
 			console.error(error);

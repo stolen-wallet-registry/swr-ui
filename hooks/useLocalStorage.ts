@@ -36,7 +36,7 @@ export type StateConfig = {
 	connectToPeerAddrs: string | null;
 	connectedToPeer: boolean;
 	acknowledgementReceipt?: string | null;
-	registrationmentReceipt?: string | null;
+	registrationReceipt?: string | null;
 };
 
 export const initialState: StateConfig = {
@@ -59,7 +59,7 @@ export const initialState: StateConfig = {
 	connectToPeerAddrs: null,
 	connectedToPeer: false,
 	acknowledgementReceipt: null,
-	registrationmentReceipt: null,
+	registrationReceipt: null,
 };
 
 export const accessLocalStorage = () => {
