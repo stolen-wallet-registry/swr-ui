@@ -1,6 +1,4 @@
-import { signTypedDataProps } from '@hooks/use712Signature';
 import { BigNumber } from 'ethers';
-import { useAccount, useNetwork } from 'wagmi';
 
 export type KEY_REF_TYPES = '0xack' | '0xreg';
 export const ACKNOWLEDGEMENT_KEY = '0xack';

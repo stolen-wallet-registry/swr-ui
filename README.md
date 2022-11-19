@@ -45,3 +45,30 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - github actions
 - dependabot
+
+##### EIP-2771: Secure Protocol for Native Meta Transactions
+
+1) Check that the `Forwarder` is trusted, the signature to be extracted contains the original signer and their specified trusted forwarder.
+2) extract the `owner` from the original transaction and compare the owner against the signature user.
+3) once the signature is verified, the transacton can proceed.
+
+##### EIP-712: Typed structured data hashing and signing
+
+TLDR - EIP712 is all about user friendliness by injecting a clear message into the signing transactions.
+
+1) string name -  the user readable name of signing domain, i.e. the name of the DApp or the protocol.
+2) string version -  the current major version of the signing domain.
+3) uint256 chainId -  the EIP-155 chain id.
+4) address verifyingContract -  the address of the contract that will verify the signature.
+5) bytes32 salt -  an disambiguating salt for the protocol.
+
+Typed Data:
+
+1) address owner - signer to confirm of transaction - user to apply contract logic to.
+2) address trustedRelayer - msg.sender of contract transaction, check that signer included them as trusted relayer.
+3) uint256 nonce - nonces[owner] - basic prevention replay attacks
+4) uint256 deadline - invalidates the transaction if users took to long to accomplish the transaction flow
+
+##### WebRTCStar
+
+- libp2p WebRTC transport that includes a discovery mechanism provided by the signalling-star

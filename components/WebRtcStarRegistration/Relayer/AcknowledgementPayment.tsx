@@ -80,9 +80,9 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p,
 	return (
 		<RegistrationSection title="Pay for Acknowledgement">
 			<Flex flexDirection="column">
-				<Text mb={5}>
-					We recieved the signature from your peer! Now, sign and pay for the Acknowledgement from:
-				</Text>
+				<Text mb={5}>We recieved the signature from your peer!</Text>
+
+				<Text mb={5}>Now, sign and pay for the Acknowledgement from:</Text>
 
 				<Text fontWeight="bold">{localState.trustedRelayerFor}</Text>
 			</Flex>

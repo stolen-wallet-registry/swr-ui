@@ -1,3 +1,4 @@
+// FOR TESTING PURPSOES ONLY
 export const relayerCidJSON = {
 	id: 'Qma3GsJmB47xYuyahPZPSadh1avvxfyYQwk8R3UnFrQ6aP',
 	privKey:

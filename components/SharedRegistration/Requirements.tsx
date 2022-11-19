@@ -114,26 +114,6 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 		);
 	};
 
-	// const PeerToPeerRelayRequirements = () => {
-	// 	return (
-	// 		<>
-	// 			<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
-	// 				<ConnectedStep />
-	// 				<SupportedChainStep />
-	// 				<WebRTCStarInstructions />
-	// 			</OrderedList>
-	// 			<Button
-	// 				alignSelf="flex-end"
-	// 				width={[200, 250]}
-	// 				m={5}
-	// 				onClick={() => handleBegin(P2PRegistereeSteps.Instructions)}
-	// 			>
-	// 				Begin
-	// 			</Button>
-	// 		</>
-	// 	);
-	// };
-
 	return (
 		<RegistrationSection title={`${capitalize(registrationType)} Registration`}>
 			<Box pb={10}>Requirements:</Box>

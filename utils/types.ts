@@ -2,6 +2,7 @@ import { off } from 'process';
 
 export type RegistrationTypes = 'standardRelay' | 'selfRelay' | 'p2pRelay';
 
+// TODO do these need requirements?
 export enum StandardSteps {
 	AcknowledgeAndPay = 'acknowledge-and-pay',
 	GracePeriod = 'grace-period',
@@ -39,31 +40,6 @@ export enum P2PRelayerSteps {
 	Success = 'success',
 	Expired = 'expired',
 }
-
-// export type StandardSteps =
-// 	| 'requirements'
-// 	| 'acknowledge-and-pay'
-// 	| 'grace-period'
-// 	| 'register-and-pay';
-
-// export type SelfRelaySteps =
-// 	| 'requirements'
-// 	| 'acknowledge-and-sign'
-// 	| 'switch-and-pay-one'
-// 	| 'grace-period'
-// 	| 'register-and-sign'
-// 	| 'switch-and-pay-two';
-
-// export type P2PRelaySteps =
-// 	| 'requirements'
-// 	| 'connect-to-peer'
-// 	| 'acknowledge-and-pay'
-// 	| 'send-to-peer'
-// 	| 'wait-for-peer-init-pay'
-// 	| 'grace-period'
-// 	| 'sign-register'
-// 	| 'send-to-peer'
-// 	| 'wait-for-peer-register-pay';
 
 export const RegistrationValueMap = {
 	standardRelay: StandardSteps,
