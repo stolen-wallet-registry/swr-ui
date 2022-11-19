@@ -3,21 +3,21 @@ import useLocalStorage, { accessLocalStorage } from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
 import React, { useEffect, useState } from 'react';
-import { PeerList } from '../PeerList';
-import { ConnectToPeer } from '../Registeree/ConnectToPeer';
-import AcknowledgeAndSign from '../Registeree/AcknowledgeAndSign';
-import WaitForAcknowledgementPayment from '../Registeree/WaitForAcknowledgementPayment';
-import WaitForRegistrationPayment from '../Registeree/WaitForRegistrationPayment';
-import RegisterAndSign from '../Registeree/RegisterAndSign';
 
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
 
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { registereeConnectMessage } from '@utils/libp2p';
-import { SessionExpired } from '../SessionExpired';
-import { RegistreeSuccess } from '../Registeree/RegistreeSuccess';
 import { useSigner } from 'wagmi';
+import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
+import { PeerList } from '../PeerList';
+import AcknowledgeAndSign from '../Registeree/AcknowledgeAndSign';
+import { ConnectToPeer } from '../Registeree/ConnectToPeer';
+import RegisterAndSign from '../Registeree/RegisterAndSign';
+import { RegistreeSuccess } from '../Registeree/RegistreeSuccess';
+import WaitForAcknowledgementPayment from '../Registeree/WaitForAcknowledgementPayment';
+import WaitForRegistrationPayment from '../Registeree/WaitForRegistrationPayment';
 
 interface RegistreeContainerProps {
 	step: P2PRegistereeSteps;

@@ -2,17 +2,17 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRelayerSteps } from '@utils/types';
 import { Libp2p } from 'libp2p';
 import React, { useEffect } from 'react';
-import { PeerList } from '../PeerList';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
 
+import { useSigner } from 'wagmi';
+import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
+import { PeerList } from '../PeerList';
+import AcknowledgementPayment from '../Relayer/AcknowledgementPayment';
+import RegistrationPayment from '../Relayer/RegistrationPayment';
+import { RelayerSuccess } from '../Relayer/RelayerSuccess';
 import WaitForAcknowledgementSign from '../Relayer/WaitForAcknowledgementSign';
 import WaitForConnection from '../Relayer/WaitForConnection';
 import WaitForRegistrationSign from '../Relayer/WaitForRegistrationSign';
-import AcknowledgementPayment from '../Relayer/AcknowledgementPayment';
-import { useSigner } from 'wagmi';
-import RegistrationPayment from '../Relayer/RegistrationPayment';
-import { RelayerSuccess } from '../Relayer/RelayerSuccess';
-import { SessionExpired } from '../SessionExpired';
 
 interface RelayerContainerProps {
 	step: P2PRelayerSteps;

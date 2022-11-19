@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 
-import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
+import useLocalStorage from '@hooks/useLocalStorage';
 
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';

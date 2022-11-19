@@ -1,4 +1,4 @@
-import { useAccount, useNetwork, useSigner } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import useLocalStorage from '@hooks/useLocalStorage';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
@@ -7,7 +7,7 @@ import DappLayout from '@components/DappLayout';
 import { StandardSteps } from '@utils/types';
 import { Flex, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry, KEY_REF_TYPES } from '@utils/signature';
+import { KEY_REF_TYPES } from '@utils/signature';
 import StandardAckowledgement from '@components/StandardRegistration/StandardAckowledgement';
 import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
 import Success from '@components/SharedRegistration/Success';
@@ -19,17 +19,10 @@ interface StandardRegistrationInterface {
 
 const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ keyRef }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { chain } = useNetwork();
 	const { address } = useAccount();
-	const { data: signer, isSuccess } = useSigner();
+	const { data: signer } = useSigner();
 
 	const [localState, setLocalState] = useLocalStorage();
-
-	// const { deadline } = getSignatureWithExpiry({
-	// 	chainId: chain?.id!,
-	// 	address: address!,
-	// 	keyRef,
-	// });
 
 	const setNextStep = () => {
 		setLocalState({ step: StandardSteps.GracePeriod });
