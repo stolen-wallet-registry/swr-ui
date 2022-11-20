@@ -1,19 +1,11 @@
 {
-	"extends": [
-		"next/core-web-vitals",
-		"react-app"
-	],
-	"plugins": [
-		"prettier",
-		"testing-library"
-	],
+	"extends": ["next/core-web-vitals", "react-app"],
+	"parser": "babel-eslint",
+	"plugins": ["prettier", "testing-library"],
 	"rules": {
 		"react/react-in-jsx-scope": "off",
 		"prettier/prettier": "error",
-		"no-mixed-spaces-and-tabs": [
-			"warn",
-			"smart-tabs"
-		],
+		"no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
 		"comma-dangle": [
 			"error",
 			{
@@ -30,13 +22,8 @@
 	},
 	"overrides": [
 		{
-			"files": [
-				"**/__tests__/**/*.[jt]s?(x)",
-				"**/?(*.)+(spec|test).[jt]s?(x)"
-			],
-			"extends": [
-				"plugin:testing-library/react"
-			]
+			"files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+			"extends": ["plugin:testing-library/react"]
 		}
 	]
 }

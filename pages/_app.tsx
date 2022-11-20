@@ -9,6 +9,7 @@ function App({ Component, pageProps }: AppProps) {
 	return (
 		<ChakraProvider theme={theme}>
 			<RainbowKitWagmiProvider>
+				{/* @ts-ignore */}
 				<NextIntlLocaleProvider pageProps={pageProps}>
 					<Component {...pageProps} />
 				</NextIntlLocaleProvider>
