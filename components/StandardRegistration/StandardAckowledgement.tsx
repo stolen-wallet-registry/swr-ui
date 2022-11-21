@@ -34,10 +34,10 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 				address,
 				chain,
 			});
+
 			setDeadline(value.deadline);
 			setNonce(value.nonce);
 
-			//@ts-ignore
 			await typedSignature.signTypedDataAsync({ domain, types, value });
 		} catch (error) {
 			console.log(error);

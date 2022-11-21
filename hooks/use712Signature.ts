@@ -89,7 +89,7 @@ export const buildRegistrationStruct = async ({
 	if (!chain?.id) {
 		throw new Error('Chain ID not found');
 	}
-	debugger;
+
 	if (!address || !localState.trustedRelayer) {
 		throw new Error('Missing required data');
 	}
