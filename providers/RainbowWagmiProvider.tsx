@@ -52,7 +52,7 @@ export const supporttedChains = [
 ];
 
 const { chains, provider } = configureChains(supporttedChains, [
-	alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID! }),
 	publicProvider(),
 ]);
 

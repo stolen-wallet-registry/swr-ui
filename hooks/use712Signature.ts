@@ -1,14 +1,13 @@
 import { Chain } from '@rainbow-me/rainbowkit';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { Signer } from 'ethers';
-import { CONTRACT_ADDRESSES, DOMAIN_SALTS } from '../utils/constants';
+import { CONTRACT_ADDRESSES } from '../utils/constants';
 import { StateConfig, ACCOUNTS_KEY, accessLocalStorage } from './useLocalStorage';
 interface Domain712 {
 	name: string;
 	version: string;
 	chainId: number;
-	verifyingContract: string;
-	salt: string;
+	verifyingContract: `0x${string}`;
 }
 export interface signTypedDataProps {
 	domain: Domain712;
@@ -64,7 +63,6 @@ export const buildAcknowledgementStruct = async ({
 			version: '4',
 			chainId: chain?.id!,
 			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
-			salt: DOMAIN_SALTS.ACKNOWLEDGEMENT_OF_REGISTRY,
 		},
 		value: {
 			owner: address,
@@ -112,7 +110,6 @@ export const buildRegistrationStruct = async ({
 			version: '4',
 			chainId: chain?.id!,
 			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
-			salt: DOMAIN_SALTS.REGISTRATION,
 		},
 		value: {
 			owner: address,

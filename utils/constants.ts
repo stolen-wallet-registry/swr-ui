@@ -1,4 +1,4 @@
-const CONTRACT_ADDRESSES: { [key: string]: { [address: string]: string } } = {
+const CONTRACT_ADDRESSES: { [key: string]: { [address: string]: `0x${string}` } } = {
 	Localhost: {
 		MockV3Provider: '0x5fbdb2315678afecb367f032d93f642f64180aa3',
 		StolenWalletRegistry: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
@@ -7,39 +7,34 @@ const CONTRACT_ADDRESSES: { [key: string]: { [address: string]: string } } = {
 		MockV3Provider: '0x8e4fc8bb14d36d5bedf8760e936a32beac0ded09',
 		StolenWalletRegistry: '0x675b6cc0844c8879189126f7B77C5F62E17409eB',
 	},
-	Polygon: {
-		MockV3Provider: '',
-		StolenWalletRegistry: '',
-	},
-	Optimism: {
-		MockV3Provider: '',
-		StolenWalletRegistry: '',
-	},
-	ArbitrumOne: {
-		MockV3Provider: '',
-		StolenWalletRegistry: '',
-	},
-	OptimismKovan: {
-		MockV3Provider: '',
-		StolenWalletRegistry: '',
-	},
-	PolygonMumbai: {
-		MockV3Provider: '',
-		StolenWalletRegistry: '',
-	},
-	ArbitrumRinkeby: {
-		MockV3Provider: '',
-		StolenWalletRegistry: '',
-	},
+	// Polygon: {
+	// 	MockV3Provider: '',
+	// 	StolenWalletRegistry: '',
+	// },
+	// Optimism: {
+	// 	MockV3Provider: '',
+	// 	StolenWalletRegistry: '',
+	// },
+	// ArbitrumOne: {
+	// 	MockV3Provider: '',
+	// 	StolenWalletRegistry: '',
+	// },
+	// OptimismKovan: {
+	// 	MockV3Provider: '',
+	// 	StolenWalletRegistry: '',
+	// },
+	// PolygonMumbai: {
+	// 	MockV3Provider: '',
+	// 	StolenWalletRegistry: '',
+	// },
+	// ArbitrumRinkeby: {
+	// 	MockV3Provider: '',
+	// 	StolenWalletRegistry: '',
+	// },
 	Foundry: {
 		MockV3Provider: '0x5fbdb2315678afecb367f032d93f642f64180aa3',
 		StolenWalletRegistry: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
 	},
 };
 
-const DOMAIN_SALTS = {
-	ACKNOWLEDGEMENT_OF_REGISTRY: '0xe7e338c8a96606d405ae49875289174c38181bda641043e953b12964ad115f49',
-	REGISTRATION: '0x86fdecd3151a18dd477feb379432be4107d347c2ee6bc63ca6212c6d674c17f9',
-};
-
-export { CONTRACT_ADDRESSES, DOMAIN_SALTS };
+export { CONTRACT_ADDRESSES };
