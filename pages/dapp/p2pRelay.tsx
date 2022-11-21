@@ -1,12 +1,10 @@
-import { Text, Flex, Link, Button, useDisclosure } from '@chakra-ui/react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
 import DappLayout from '@components/DappLayout';
-import RegistrationSection from '@components/RegistrationSection';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import WebRTCStarInstructions from '@components/WebRtcStarRegistration/WebRTCStarInstructions';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps } from '@utils/types';
-import NextLink from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 
 interface P2PRelayInterface {}
 
