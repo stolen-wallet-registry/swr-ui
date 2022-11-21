@@ -15,22 +15,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
 	const initialColor = COLORS[randomNumber()];
 	console.log(context);
 	return {
-		props: {
-			initialColor,
-			// You can get the messages from anywhere you like. The recommended
-			// pattern is to put them in JSON files separated by language and read
-			// the desired one based on the `locale` received from Next.js.
-			messages: (await import(`../messages/index/${context.locale}.json`)).default,
-		},
+		props: { initialColor },
 	};
 };
 
 interface HomeProps extends AppProps {
 	initialColor: ColorValues;
-	messages: Record<any, any>;
 }
 
-const Home: NextPage<HomeProps> = ({ initialColor, messages }) => {
+const Home: NextPage<HomeProps> = ({ initialColor }) => {
 	const [color, setColor] = useState<ColorValues>(initialColor);
 	const [show, setShow] = useState<showColorProps>('home');
 	const { setColorMode } = useColorMode();

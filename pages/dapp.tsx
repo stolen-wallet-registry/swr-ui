@@ -15,29 +15,7 @@ import Requirements from '@components/SharedRegistration/Requirements';
 import ButtonChoices from '@components/ButtonChoices';
 import RegistrationSection from '@components/RegistrationSection';
 
-interface DappProps {
-	messages: IntlMessages;
-	previewMessages: Record<PreviewMessageKey, IntlMessages>;
-}
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-	const namespaces = ['Preview'];
-	const defaultLanguage = (await import(`../messages/dapp/${locale}.json`)).default;
-	return {
-		props: {
-			// importing
-			messages: defaultLanguage,
-			previewMessages: {
-				default: pick(defaultLanguage, namespaces),
-				en: pick((await import(`../messages/dapp/en.json`)).default, namespaces),
-				es: pick((await import(`../messages/dapp/es.json`)).default, namespaces),
-				fr: pick((await import(`../messages/dapp/fr.json`)).default, namespaces),
-			},
-		},
-	};
-};
-
-const Dapp: React.FC<DappProps> = ({ previewMessages, messages }) => {
+const Dapp: React.FC = () => {
 	const { setColorMode } = useColorMode();
 	const [isMounted, setIsMounted] = useState(false);
 	const [localState] = useLocalStorage();
