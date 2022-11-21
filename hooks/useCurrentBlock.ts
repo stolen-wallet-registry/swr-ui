@@ -10,9 +10,20 @@ const useCurrentBlock = (expiryBlock: BigNumber) => {
 	const provider = useProvider();
 	const [currentBlock, setCurrentBlock] = useState<BigNumber | null>(null);
 	const [estimatedBlocksLeft, setEstimatedBlocksLeft] = React.useState<BigNumber | null>(null);
+	const [avgBlockTime, setAvgBlockTime] = React.useState<number>(AVERAGE_BLOCK_TIME);
 	const [expiry, setExpiry] = useState<BigNumber | null>(null);
 	const [timerExpiry, setTimerExpiry] = useState<number | null>(null);
 	const [isExpired, setIsExpired] = useState(false);
+
+	const getAverageBlockTime = async () => {
+		const currentNumber = await provider.getBlockNumber();
+		const span = 5;
+		const currentBlock = await provider.getBlock(currentNumber);
+		const firstBlock = await provider.getBlock(currentNumber - span);
+		const avg = Math.round((currentBlock.timestamp - firstBlock.timestamp) / (span * 1.0));
+
+		setAvgBlockTime(avg);
+	};
 
 	const refetchBlockNumber = async () => {
 		const blockNumber = BigNumber.from(await provider.getBlockNumber());
@@ -20,7 +31,7 @@ const useCurrentBlock = (expiryBlock: BigNumber) => {
 		setCurrentBlock(blockNumber);
 
 		if (expiryBlock.gt(blockNumber)) {
-			const timeLeft = expiryBlock.sub(blockNumber).mul(AVERAGE_BLOCK_TIME);
+			const timeLeft = expiryBlock.sub(blockNumber).mul(avgBlockTime);
 			setExpiry(timeLeft);
 			setEstimatedBlocksLeft(expiryBlock.sub(blockNumber));
 			setTimerExpiry(addSeconds(new Date(), timeLeft.toNumber()).getTime());
@@ -30,18 +41,21 @@ const useCurrentBlock = (expiryBlock: BigNumber) => {
 	};
 
 	useEffect(() => {
+		getAverageBlockTime();
+		refetchBlockNumber();
+	}, []);
+
+	useEffect(() => {
 		let interval: NodeJS.Timer | null = null;
 
 		if (provider) {
 			interval = setInterval(() => {
 				refetchBlockNumber();
-			}, 5000);
+			}, 10000);
 		}
 
 		return () => {
-			if (interval) {
-				clearInterval(interval);
-			}
+			interval && clearInterval(interval);
 		};
 	}, [provider]);
 
@@ -55,13 +69,11 @@ const useCurrentBlock = (expiryBlock: BigNumber) => {
 				} else {
 					setEstimatedBlocksLeft(BigNumber.from(0));
 				}
-			}, 13000);
+			}, avgBlockTime);
 		}
 
 		return () => {
-			if (interval) {
-				clearInterval(interval);
-			}
+			interval && clearInterval(interval);
 		};
 	}, [currentBlock]);
 

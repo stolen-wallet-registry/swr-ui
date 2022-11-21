@@ -54,8 +54,7 @@ export const Timer: React.FC<TimerProps> = ({ expiryBlock, setExpiryStep, fontSi
 				{expiryBlock?.toNumber() || '--'}
 			</Box>
 			<Box style={{ fontSize: '12px', fontStyle: 'italic' }}>
-				**the above time remaining and blocks remaining are based on{' '}
-				<span style={{ fontWeight: 'bold' }}>Estimates only.</span>
+				*time remaining based on <span style={{ fontWeight: 'bold' }}>Estimates.</span>
 			</Box>
 		</Flex>
 	);

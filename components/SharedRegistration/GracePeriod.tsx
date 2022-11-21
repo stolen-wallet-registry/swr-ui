@@ -17,7 +17,7 @@ const GracePeriod: React.FC<GracePeriodInterface> = ({ setExpiryStep, address, s
 	return (
 		<RegistrationSection title="Grace Period">
 			{startBlock && <Timer expiryBlock={startBlock} setExpiryStep={setExpiryStep} />}
-			<Flex flexDirection="column" gap={5}>
+			<Flex flexDirection="column" justifyContent="center" gap={5}>
 				<Text mr={20}>Please wait for the Grace Period to complete</Text>
 				<Text mr={20}>Then you can Pay to Register your wallet as Stolen</Text>
 			</Flex>
