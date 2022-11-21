@@ -1,6 +1,6 @@
 {
 	"extends": ["next/core-web-vitals", "react-app"],
-	"parser": "babel-eslint",
+	"parser": "@babel/eslint-parser",
 	"plugins": ["prettier", "testing-library"],
 	"rules": {
 		"react/react-in-jsx-scope": "off",

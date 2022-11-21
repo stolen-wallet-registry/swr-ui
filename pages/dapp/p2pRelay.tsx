@@ -10,7 +10,7 @@ interface P2PRelayInterface {}
 
 const P2PRelayRegistration: React.FC<P2PRelayInterface> = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [localState, setLocalState] = useLocalStorage();
+	const [localState, _] = useLocalStorage();
 
 	return (
 		<DappLayout
