@@ -11,7 +11,7 @@ import {
 	StolenWalletRegistryFactory,
 } from '@wallet-hygiene/swr-contracts';
 import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry } from '@utils/signature';
-import { PROTOCOLS, relayerPostBackMsg } from '@utils/libp2p';
+import { passStreamData, PROTOCOLS, relayerPostBackMsg } from '@utils/libp2p';
 import { Libp2p } from 'libp2p';
 
 interface AcknowledgementPaymentProps {
@@ -65,10 +65,11 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p,
 
 			console.log(receipt);
 
-			await relayerPostBackMsg({
+			await passStreamData({
 				libp2p: libp2p,
 				localState: accessLocalStorage(),
 				protocol: PROTOCOLS.ACK_PAY,
+				streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
 			});
 
 			setNextStep();

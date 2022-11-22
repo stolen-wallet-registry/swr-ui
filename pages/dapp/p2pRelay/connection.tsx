@@ -9,13 +9,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Libp2p } from 'libp2p';
 
-import {
-	listenerLibp2p,
-	dialerLibp2p,
-	ProtcolHandlers,
-	PROTOCOLS,
-	relayerPostBackMsg,
-} from '@utils/libp2p';
+import { ProtcolHandlers, PROTOCOLS, passStreamData, startLibP2PNode } from '@utils/libp2p';
 
 import { pipe } from 'it-pipe';
 import { Stream } from '@libp2p/interface-connection';
@@ -89,47 +83,43 @@ export const Connection = () => {
 					data += msg;
 				}
 
-				const protocol = stream.stat.protocol;
+				const parsedData: RelayerMessageProps = JSON.parse(data);
 
-				switch (protocol) {
+				switch (stream.stat.protocol) {
 					case PROTOCOLS.CONNECT:
-						const connect: RelayerMessageProps = JSON.parse(data);
-						handleRelayerCallback({ ...connect, step: P2PRegistereeSteps.AcknowledgeAndSign });
+						handleRelayerCallback({ ...parsedData, step: P2PRegistereeSteps.AcknowledgeAndSign });
 						setLocalStorage({
 							connectedToPeer: true,
 							step: P2PRegistereeSteps.AcknowledgeAndSign,
 						});
 						break;
 					case PROTOCOLS.ACK_REC:
-						const message: RelayerMessageProps = JSON.parse(data);
 						handleRelayerCallback({
-							...message,
+							...parsedData,
 							step: P2PRegistereeSteps.WaitForAcknowledgementPayment,
 						});
 
 						break;
 					case PROTOCOLS.ACK_PAY:
-						const ackowledgePay: RelayerMessageProps = JSON.parse(data);
-						handleRelayerCallback({ ...ackowledgePay, step: P2PRegistereeSteps.GracePeriod });
+						handleRelayerCallback({ ...parsedData, step: P2PRegistereeSteps.GracePeriod });
 
 						break;
 					case PROTOCOLS.REG_REC:
-						const registerReceived: RelayerMessageProps = JSON.parse(data);
 						handleRelayerCallback({
-							...registerReceived,
+							...parsedData,
 							step: P2PRegistereeSteps.WaitForRegistrationPayment,
 						});
 
 						break;
 					case PROTOCOLS.REG_PAY:
-						const registerPay: RelayerMessageProps = JSON.parse(data);
-						handleRelayerCallback({ ...registerPay, step: P2PRegistereeSteps.Success });
-
+						handleRelayerCallback({ ...parsedData, step: P2PRegistereeSteps.Success });
 						break;
 					default:
-						console.log(`recieved unknown protocol: ${protocol}`);
+						console.log(`recieved unknown protocol: ${stream.stat.protocol}`);
 						console.log(data);
-						throw new Error(`recieved unknown protocol: ${protocol}\n and data: ${data}`);
+						throw new Error(
+							`recieved unknown protocol: ${stream.stat.protocol}\n and data: ${data}`
+						);
 				}
 
 				console.log(stream.stat);
@@ -155,14 +145,13 @@ export const Connection = () => {
 					data += msg;
 				}
 
-				const protocol = stream.stat.protocol;
-				switch (protocol) {
-					case PROTOCOLS.CONNECT:
-						const relayerState: Partial<StateConfig> = JSON.parse(data);
+				const parsedData: Partial<StateConfig> | setLocalStorageProps = JSON.parse(data);
 
+				switch (stream.stat.protocol) {
+					case PROTOCOLS.CONNECT:
 						const newState = {
 							...accessLocalStorage(),
-							...relayerState,
+							...parsedData,
 							connectedToPeer: true,
 							step: P2PRelayerSteps.WaitForAcknowledgementSign,
 						};
@@ -170,50 +159,53 @@ export const Connection = () => {
 						setLocalStorage(newState);
 
 						// TODO - resolve window.libp2p for libp2p instance
-						await relayerPostBackMsg({
+						await passStreamData({
 							libp2p: window.libp2p,
 							localState: newState,
 							protocol: PROTOCOLS.CONNECT,
+							streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
 						});
 
 						setRealyerStep(P2PRelayerSteps.WaitForAcknowledgementSign);
 
 						break;
 					case PROTOCOLS.ACK_SIG:
-						const acknowledgementSignature: setLocalStorageProps = JSON.parse(data);
-						setSignatureLocalStorage(acknowledgementSignature);
+						setSignatureLocalStorage(parsedData as setLocalStorageProps);
 
 						setLocalStorage({
-							trustedRelayerFor: acknowledgementSignature.address,
+							trustedRelayerFor: parsedData.address,
 							step: P2PRelayerSteps.AcknowledgementPayment,
 						});
 
 						// TODO - resolve window.libp2p for libp2p instance
-						await relayerPostBackMsg({
+						await passStreamData({
 							libp2p: window.libp2p,
 							localState: accessLocalStorage(),
 							protocol: PROTOCOLS.ACK_REC,
+							streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
 						});
 
 						setRealyerStep(P2PRelayerSteps.AcknowledgementPayment);
 						break;
 					case PROTOCOLS.REG_SIG:
-						const registerSignatureHash: setLocalStorageProps = JSON.parse(data);
-						setSignatureLocalStorage(registerSignatureHash);
+						setSignatureLocalStorage(parsedData as setLocalStorageProps);
 
 						// TODO - resolve window.libp2p for libp2p instance
-						await relayerPostBackMsg({
+						await passStreamData({
 							libp2p: window.libp2p,
 							localState: accessLocalStorage(),
 							protocol: PROTOCOLS.REG_REC,
+							streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
 						});
 
 						setRealyerStep(P2PRelayerSteps.RegistrationPayment);
 						break;
 					default:
-						console.log(`recieved unknown protocol: ${protocol}`);
+						console.log(`recieved unknown protocol: ${stream.stat.protocol}`);
 						console.log(data);
-						throw new Error(`recieved unknown protocol: ${protocol}\n and data: ${data}`);
+						throw new Error(
+							`recieved unknown protocol: ${stream.stat.protocol}\n and data: ${data}`
+						);
 				}
 
 				console.log(stream.stat);
@@ -236,7 +228,7 @@ export const Connection = () => {
 					{ protocol: PROTOCOLS.REG_PAY, streamHandler },
 				];
 
-				instance = await dialerLibp2p(protocolHandlers);
+				instance = await startLibP2PNode(protocolHandlers);
 			} else {
 				const streamHandler = { handler: relayHandler, options: {} };
 
@@ -246,7 +238,7 @@ export const Connection = () => {
 					{ protocol: PROTOCOLS.REG_SIG, streamHandler },
 				];
 
-				instance = await listenerLibp2p(protocolHandlers);
+				instance = await startLibP2PNode(protocolHandlers);
 			}
 			const { libp2p, peerId, multiaddresses } = instance;
 

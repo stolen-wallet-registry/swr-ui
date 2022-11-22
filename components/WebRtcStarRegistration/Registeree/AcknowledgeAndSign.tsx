@@ -8,7 +8,7 @@ import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 import { FaWallet } from 'react-icons/fa';
 import { setSignatureWithExpiry, ACKNOWLEDGEMENT_KEY } from '@utils/signature';
 import useDebounce from '@hooks/useDebounce';
-import { PROTOCOLS, registereePassSignature } from '@utils/libp2p';
+import { passStreamData, PROTOCOLS, registereePassSignature } from '@utils/libp2p';
 import { Libp2p } from 'libp2p';
 
 interface AcknowledgeAndSignProps {
@@ -42,12 +42,21 @@ const AcknowledgeAndSign: React.FC<AcknowledgeAndSignProps> = ({
 			return;
 		}
 
-		await registereePassSignature({
-			libp2p,
-			localState,
+		const signatureData = {
 			signature: typedSignature?.data!,
 			deadline,
 			nonce,
+			address: localState.address,
+			chainId: localState.network,
+			keyRef: ACKNOWLEDGEMENT_KEY,
+		};
+
+		const streamData = JSON.stringify(signatureData);
+
+		await passStreamData({
+			libp2p,
+			localState,
+			streamData,
 			protocol: PROTOCOLS.ACK_SIG,
 		});
 

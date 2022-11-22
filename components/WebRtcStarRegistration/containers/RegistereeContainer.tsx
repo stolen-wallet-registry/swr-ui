@@ -8,7 +8,7 @@ import GracePeriod from '@components/SharedRegistration/GracePeriod';
 
 import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
-import { registereeConnectMessage } from '@utils/libp2p';
+import { passStreamData, PROTOCOLS } from '@utils/libp2p';
 import { useSigner } from 'wagmi';
 import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
 import { PeerList } from '../PeerList';
@@ -55,8 +55,24 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 				connectToPeerAddrs: connAddr!.toString(),
 			});
 
+			const state = accessLocalStorage();
+
+			const relayerState = {
+				network: state.network,
+				includeWalletNFT: state.includeWalletNFT,
+				includeSupportNFT: state.includeSupportNFT,
+				connectToPeer: connPeerId.toString(),
+				connectToPeerAddrs: connAddr!.toString(),
+			};
+
 			try {
-				const stat = await registereeConnectMessage({ libp2p, localState });
+				const stat = await passStreamData({
+					libp2p,
+					localState,
+					streamData: JSON.stringify(relayerState),
+					protocol: PROTOCOLS.CONNECT,
+				});
+
 				console.log(stat);
 
 				if (stat?.timeline) {

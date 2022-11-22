@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import useRegBlocksLeft from '@hooks/useRegBlocksLeft';
 import { Timer } from '@components/Timer';
-import { relayerPostBackMsg, PROTOCOLS } from '@utils/libp2p';
+import { passStreamData, PROTOCOLS } from '@utils/libp2p';
 import { getSignatureWithExpiry, REGISTRATION_KEY } from '@utils/signature';
 import { Libp2p } from 'libp2p';
 
@@ -81,10 +81,11 @@ const RegistrationPayment: React.FC<RegistrationProps> = ({
 
 	useEffect(() => {
 		if (receipt?.status === 1) {
-			relayerPostBackMsg({
+			passStreamData({
 				libp2p: libp2p,
 				localState: accessLocalStorage(),
 				protocol: PROTOCOLS.REG_PAY,
+				streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
 			});
 
 			setNextStep();

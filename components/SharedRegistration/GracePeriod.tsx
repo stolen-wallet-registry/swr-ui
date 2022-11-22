@@ -1,6 +1,5 @@
 import { Flex, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { useEffect } from 'react';
 import useRegBlocksLeft from '@hooks/useRegBlocksLeft';
 import { Timer } from '@components/Timer';
 import { Signer } from 'ethers';
