@@ -10,7 +10,7 @@ import capitalize from 'lodash/capitalize';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { RegistrationValues, StandardSteps, SelfRelaySteps, RegistrationTypes } from '@utils/types';
 import router from 'next/router';
-import WebRTCStarInstructions from '@components/WebRtcStarRegistration/WebRTCStarInstructions';
+import WebRTCStarInstructions from '@components/WebRtcRegistration/WebRTCStarInstructions';
 
 interface RequirementProps {
 	address: string;

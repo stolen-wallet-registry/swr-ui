@@ -9,10 +9,7 @@ import { Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { KEY_REF_TYPES } from '@utils/signature';
 import StandardAckowledgement from '@components/StandardRegistration/StandardAckowledgement';
-import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
-import Success from '@components/SharedRegistration/Success';
-
-// TODO expract this out into useModal
+import { Success, SessionExpired } from '@components/SharedRegistration/DisplayPrompts';
 interface StandardRegistrationInterface {
 	keyRef: KEY_REF_TYPES;
 }

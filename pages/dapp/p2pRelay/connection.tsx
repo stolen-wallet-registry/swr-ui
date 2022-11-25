@@ -17,14 +17,11 @@ import { useAccount } from 'wagmi';
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
 import * as lp from 'it-length-prefixed';
 import map from 'it-map';
-import RegistereeContainer from '@components/WebRtcStarRegistration/containers/RegistereeContainer';
+import RegistereeContainer from '@components/WebRtcRegistration/containers/RegistereeContainer';
 import { setLocalStorageProps, setSignatureLocalStorage } from '@utils/signature';
 import { P2PRegistereeSteps, P2PRelayerSteps } from '@utils/types';
-import RelayerContainer from '@components/WebRtcStarRegistration/containers/RelayerContainer';
+import RelayerContainer from '@components/WebRtcRegistration/containers/RelayerContainer';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
-
-// evt.detail.remoteAddr.toJSON()
-// '/dns4/am6.bootstrap.libp2p.io/tcp/443/wss/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb'
 
 interface RelayerMessageProps {
 	success: boolean;
@@ -266,7 +263,6 @@ export const Connection = () => {
 		return <div>loading...</div>;
 	}
 
-	console.log(isSmallerThan1000);
 	return (
 		<DappLayout
 			isOpen={nftDisclosure.isOpen}

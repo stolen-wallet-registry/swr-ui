@@ -34,7 +34,7 @@ import { RAINBOWKIT_COLORS } from '../theme/rainbowkit-themes/base';
 
 const APP_NAME = 'The Stollen Wallet Registry';
 
-export const testnets = [
+const testnets = [
 	chain.goerli,
 	// chain.optimismKovan,
 	// chain.polygonMumbai,
@@ -43,7 +43,7 @@ export const testnets = [
 	chain.localhost,
 ];
 
-export const supporttedChains = [
+const supporttedChains = [
 	// chain.mainnet,
 	// chain.polygon,
 	// chain.optimism,

@@ -5,14 +5,16 @@ import React, { useEffect } from 'react';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
 
 import { useSigner } from 'wagmi';
-import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
 import { PeerList } from '../PeerList';
 import AcknowledgementPayment from '../Relayer/AcknowledgementPayment';
 import RegistrationPayment from '../Relayer/RegistrationPayment';
-import { RelayerSuccess } from '../Relayer/RelayerSuccess';
-import WaitForAcknowledgementSign from '../Relayer/WaitForAcknowledgementSign';
-import WaitForConnection from '../Relayer/WaitForConnection';
-import WaitForRegistrationSign from '../Relayer/WaitForRegistrationSign';
+import { SessionExpired } from '@components/SharedRegistration/DisplayPrompts';
+import {
+	RelayerSuccess,
+	WaitForAcknowledgementSign,
+	WaitForConnection,
+	WaitForRegistrationSign,
+} from '../RelayerShared';
 
 interface RelayerContainerProps {
 	step: P2PRelayerSteps;

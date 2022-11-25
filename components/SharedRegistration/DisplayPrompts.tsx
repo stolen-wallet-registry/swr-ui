@@ -45,4 +45,19 @@ const Success = () => {
 	);
 };
 
-export default Success;
+const SessionExpired = () => {
+	const [localState, _] = useLocalStorage();
+
+	return (
+		<RegistrationSection title="Session Expired">
+			<Text mb={5}>your session for registering has expired.</Text>
+			<Text>
+				In order to successfully register {localState.address}, click the{' '}
+				<span style={{ fontWeight: 'bold' }}>Restart Session</span> button above{' '}
+				{localState.registrationType === 'p2pRelay' ? 'and have your peer restart theirs.' : ''}
+			</Text>
+		</RegistrationSection>
+	);
+};
+
+export { Success, P2PSuccess, SessionExpired };

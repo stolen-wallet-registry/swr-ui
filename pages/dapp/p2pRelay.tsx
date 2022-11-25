@@ -1,7 +1,7 @@
 import { Flex, useDisclosure } from '@chakra-ui/react';
 import DappLayout from '@components/DappLayout';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
-import WebRTCStarInstructions from '@components/WebRtcStarRegistration/WebRTCStarInstructions';
+import WebRTCStarInstructions from '@components/WebRtcRegistration/WebRTCStarInstructions';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { P2PRegistereeSteps } from '@utils/types';
 import React from 'react';

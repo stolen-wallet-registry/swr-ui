@@ -10,14 +10,16 @@ import { multiaddr, MultiaddrInput } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { passStreamData, PROTOCOLS } from '@utils/libp2p';
 import { useSigner } from 'wagmi';
-import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
 import { PeerList } from '../PeerList';
 import AcknowledgeAndSign from '../Registeree/AcknowledgeAndSign';
 import { ConnectToPeer } from '../Registeree/ConnectToPeer';
 import RegisterAndSign from '../Registeree/RegisterAndSign';
-import { RegistreeSuccess } from '../Registeree/RegistreeSuccess';
-import WaitForAcknowledgementPayment from '../Registeree/WaitForAcknowledgementPayment';
-import WaitForRegistrationPayment from '../Registeree/WaitForRegistrationPayment';
+import { SessionExpired } from '@components/SharedRegistration/DisplayPrompts';
+import {
+	WaitForAcknowledgementPayment,
+	WaitForRegistrationPayment,
+	RegistreeSuccess,
+} from '../RegistereeShared';
 
 interface RegistreeContainerProps {
 	step: P2PRegistereeSteps;

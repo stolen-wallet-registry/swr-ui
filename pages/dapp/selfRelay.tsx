@@ -1,27 +1,25 @@
 import React, { useState } from 'react';
 
-import { useAccount, useNetwork, useSigner } from 'wagmi';
+import { Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react';
+import { useAccount, useSigner } from 'wagmi';
 
+import { SelfRelaySteps } from '@utils/types';
 import useLocalStorage from '@hooks/useLocalStorage';
 
+import DappLayout from '@components/DappLayout';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
+import SelfRelayAcknowledgement from '@components/SelfRelayRegistration/SelfRelayAcknowledgement';
+import SwitchAndSignRegistration from '@components/SelfRelayRegistration/SwitchAndSignRegistration';
 import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import SwitchAndPayAcknowledgement from '@components/SelfRelayRegistration/SwitchAndPayAcknowledgement';
 import SwitchAndPayRegistration from '@components/SelfRelayRegistration/SwitchAndPayRegistration';
-import DappLayout from '@components/DappLayout';
-import { SelfRelaySteps } from '@utils/types';
-import { Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react';
-import SelfRelayAcknowledgement from '@components/SelfRelayRegistration/SelfRelayAcknowledgement';
-import Success from '@components/SharedRegistration/Success';
-import { SessionExpired } from '@components/SharedRegistration/SessionExpired';
-import SwitchAndSignRegistration from '@components/SelfRelayRegistration/SwitchAndSignRegistration';
+import { SessionExpired, Success } from '@components/SharedRegistration/DisplayPrompts';
 
 interface SelfRelayRegistrationInterface {}
 
 const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { data: signer } = useSigner();
-	const { chain } = useNetwork();
 	const { address } = useAccount();
 
 	const [localState, setLocalState] = useLocalStorage();

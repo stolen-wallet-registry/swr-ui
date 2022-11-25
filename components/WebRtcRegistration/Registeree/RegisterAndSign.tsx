@@ -8,7 +8,7 @@ import { useNetwork, useSignTypedData } from 'wagmi';
 import useRegBlocksLeft from '@hooks/useRegBlocksLeft';
 import { Timer } from '@components/Timer';
 import { setSignatureWithExpiry, REGISTRATION_KEY } from '@utils/signature';
-import { registereePassSignature, PROTOCOLS } from '@utils/libp2p';
+import { passStreamData, PROTOCOLS } from '@utils/libp2p';
 import { Libp2p } from 'libp2p';
 
 interface RegisterAndSignProps {
@@ -42,13 +42,17 @@ const RegisterAndSign: React.FC<RegisterAndSignProps> = ({
 			return;
 		}
 
-		await registereePassSignature({
-			libp2p,
-			localState,
+		const streamData = {
 			signature: typedSignature?.data!,
 			deadline,
 			nonce,
+		};
+
+		await passStreamData({
+			libp2p,
+			localState,
 			protocol: PROTOCOLS.REG_SIG,
+			streamData: JSON.stringify(streamData),
 		});
 
 		setNextStep();
