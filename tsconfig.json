@@ -18,7 +18,7 @@
 		"declaration": true,
 		"paths": {
 			"@assets/*": ["./assets/*"],
-			"@providers/*": ["./providers/*"],
+			"@providers/*": ["Context/*"],
 			"@components/*": ["./components/*"],
 			"@interfaces/*": ["./interfaces/*"],
 			"@containers/*": ["./containers/*"],

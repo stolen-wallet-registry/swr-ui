@@ -2,7 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 import { theme } from '../theme';
 import { AppProps } from 'next/app';
-import RainbowKitWagmiProvider from '@providers/RainbowWagmiProvider';
+import RainbowKitWagmiProvider from 'contexts/RainbowKit/RainbowWagmiProvider';
 
 function App({ Component, pageProps }: AppProps) {
 	return (

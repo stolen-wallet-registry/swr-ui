@@ -4,14 +4,13 @@ import DappLayout from '../components/DappLayout';
 
 import { LightMode, useColorMode, Flex, Text, Center, Button, SimpleGrid } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { Chain, useAccount, useNetwork } from 'wagmi';
 
 import { RegistrationTypes } from '@utils/types';
 import useLocalStorage from '@hooks/useLocalStorage';
 import CompletionSteps from '@components/SharedRegistration/CompletionSteps';
 import Requirements from '@components/SharedRegistration/Requirements';
 import RegistrationSection from '@components/RegistrationSection';
-import { capitalize } from 'lodash';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 interface ButtonChoicesInterface {
@@ -66,9 +65,7 @@ const ButtonChoices: React.FC<ButtonChoicesInterface> = ({
 	);
 };
 
-const ConnectWallet: React.FC<{ currentChain: Chain }> = ({ currentChain }) => {
-	const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
-
+const ConnectWallet: React.FC = () => {
 	return (
 		<Center>
 			<RegistrationSection title="Please connect to your wallet to a supported network">

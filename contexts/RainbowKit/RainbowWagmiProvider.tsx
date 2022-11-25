@@ -21,26 +21,35 @@ import {
 	argentWallet,
 	trustWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-import appLightTheme from '../theme/rainbowkit-themes/light';
+import appLightTheme from '../../theme/rainbowkit-themes/light';
 
 import { chain, createClient, configureChains, WagmiConfig } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Text, Link } from '@chakra-ui/react';
-import { Image } from '../components/NextChalkraImage';
+import { Image } from '../../components/NextChalkraImage';
 
-import { RAINBOWKIT_COLORS } from '../theme/rainbowkit-themes/base';
+import { RAINBOWKIT_COLORS } from '../../theme/rainbowkit-themes/base';
+import customChains from './customChains';
 
 const APP_NAME = 'The Stollen Wallet Registry';
 
 const testnets = [
-	chain.goerli,
-	// chain.optimismKovan,
-	// chain.polygonMumbai,
-	// chain.arbitrumRinkeby,
 	chain.foundry,
-	chain.localhost,
+	chain.goerli,
+	chain.optimismGoerli,
+	chain.polygonMumbai,
+	customChains.arbitrumNovaChain,
+	customChains.evmosTestnet,
+	customChains.binanceTestnet,
+	customChains.mooorockTestnet,
+	customChains.moonbaseAlphaTestnet,
+	customChains.celoTestnet,
+	customChains.cronosTestnet,
+	customChains.fantomTestnet,
+	customChains.gatherTestnet,
+	customChains.bobaTestnet,
 ];
 
 const supporttedChains = [
@@ -48,6 +57,16 @@ const supporttedChains = [
 	// chain.polygon,
 	// chain.optimism,
 	// chain.arbitrum,
+	// customChains.bobaChain,
+	// customChains.fantomChian,
+	// customChains.evmosChain,
+	// customChains.binanceChain,
+	// customChains.moonBeam,
+	// customChains.moonRiver,
+	// customChains.celoChain,
+	// customChains.cronosChain,
+	// customChains.gnosisChain,
+	// customChains.gatherChain,
 	...testnets,
 ];
 

@@ -1,380 +1,551 @@
 [
-  {
-    "name": "Evmos",
-    "chain": "Evmos",
-    "rpc": [
-      "https://eth.bd.evmos.org:8545"
-    ],
-    "faucets": [],
-    "nativeCurrency": {
-      "name": "Evmos",
-      "symbol": "EVMOS",
-      "decimals": 18
-    },
-    "infoURL": "https://evmos.org",
-    "shortName": "evmos",
-    "chainId": 9001,
-    "networkId": 9001,
-    "icon": "https://defillama.com/chain-icons/rsz_evmos.jpg",
-    "explorers": [
-      {
-        "name": "Evmos EVM Explorer (Blockscout)",
-        "url": "https://evm.evmos.org",
-        "standard": "none",
-        "icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
-      },
-      {
-        "name": "Evmos Cosmos Explorer (Mintscan)",
-        "url": "https://www.mintscan.io/evmos",
-        "standard": "none",
-        "icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
-      }
-    ]
-  },
-  {
-    "name": "Evmos Testnet",
-    "chain": "Evmos",
-    "rpc": [
-      "https://eth.bd.evmos.dev:8545"
-    ],
-    "faucets": [
-      "https://faucet.evmos.dev"
-    ],
-    "nativeCurrency": {
-      "name": "test-Evmos",
-      "symbol": "tEVMOS",
-      "decimals": 18
-    },
-    "infoURL": "https://evmos.org",
-    "shortName": "evmos-testnet",
-    "chainId": 9000,
-    "networkId": 9000,
-    "icon": "https://defillama.com/chain-icons/rsz_evmos.jpg",
-    "explorers": [
-      {
-        "name": "Evmos EVM Explorer",
-        "url": "https://evm.evmos.dev",
-        "standard": "EIP3091",
-        "icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
-      },
-      {
-        "name": "Evmos Cosmos Explorer",
-        "url": "https://explorer.evmos.dev",
-        "standard": "none",
-        "icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
-      }
-    ]
-  },
-  {
-    "name": "Binance Smart Chain Mainnet",
-    "chain": "BSC",
-    "rpc": [
-      "https://bsc-dataseed1.binance.org",
-      "https://bsc-dataseed2.binance.org",
-      "https://bsc-dataseed3.binance.org",
-      "https://bsc-dataseed4.binance.org",
-      "https://bsc-dataseed1.defibit.io",
-      "https://bsc-dataseed2.defibit.io",
-      "https://bsc-dataseed3.defibit.io",
-      "https://bsc-dataseed4.defibit.io",
-      "https://bsc-dataseed1.ninicoin.io",
-      "https://bsc-dataseed2.ninicoin.io",
-      "https://bsc-dataseed3.ninicoin.io",
-      "https://bsc-dataseed4.ninicoin.io",
-      "wss://bsc-ws-node.nariox.org"
-    ],
-    "faucets": [
-      "https://free-online-app.com/faucet-for-eth-evm-chains/"
-    ],
-    "nativeCurrency": {
-      "name": "Binance Chain Native Token",
-      "symbol": "BNB",
-      "decimals": 18
-    },
-    "infoURL": "https://www.binance.org",
-    "shortName": "bnb",
-    "chainId": 56,
-    "networkId": 56,
-    "slip44": 714,
-    "icon": "https://defillama.com/chain-icons/rsz_binance.jpg",
-    "explorers": [
-      {
-        "name": "bscscan",
-        "url": "https://bscscan.com",
-        "standard": "EIP3091"
-      }
-    ]
-  },
-  {
-    "name": "Moonbeam",
-    "chain": "MOON",
-    "rpc": [
-      "https://rpc.api.moonbeam.network",
-      "wss://wss.api.moonbeam.network"
-    ],
-    "faucets": [],
-    "nativeCurrency": {
-      "name": "Glimmer",
-      "symbol": "GLMR",
-      "decimals": 18
-    },
-    "infoURL": "https://moonbeam.network/networks/moonbeam/",
-    "shortName": "mbeam",
-    "chainId": 1284,
-    "networkId": 1284,
-    "icon": "https://defillama.com/chain-icons/rsz_moonbeam.jpg",
-    "explorers": [
-      {
-        "name": "moonscan",
-        "url": "https://moonbeam.moonscan.io",
-        "standard": "none"
-      }
-    ]
-  },
-  {
-    "name": "Moonriver",
-    "chain": "MOON",
-    "rpc": [
-      "https://rpc.api.moonriver.moonbeam.network",
-      "wss://wss.api.moonriver.moonbeam.network"
-    ],
-    "faucets": [],
-    "nativeCurrency": {
-      "name": "Moonriver",
-      "symbol": "MOVR",
-      "decimals": 18
-    },
-    "infoURL": "https://moonbeam.network/networks/moonriver/",
-    "shortName": "mriver",
-    "chainId": 1285,
-    "networkId": 1285,
-    "icon": "https://defillama.com/chain-icons/rsz_moonriver.jpg",
-    "explorers": [
-      {
-        "name": "moonscan",
-        "url": "https://moonriver.moonscan.io",
-        "standard": "none"
-      }
-    ]
-  },
-  {
-    "name": "Boba Network Bobabase",
-    "chain": "Bobabase",
-    "rpc": [
-      "https://bobabase.boba.network",
-      "wss://wss.bobabase.boba.network",
-      "https://replica.bobabase.boba.network",
-      "wss://replica-wss.bobabase.boba.network"
-    ],
-    "faucets": [],
-    "nativeCurrency": {
-      "name": "Boba Token",
-      "symbol": "BOBA",
-      "decimals": 18
-    },
-    "infoURL": "https://boba.network",
-    "shortName": "Bobabase",
-    "chainId": 1297,
-    "networkId": 1297,
-    "icon": "https://defillama.com/chain-icons/rsz_boba.jpg",
-    "explorers": [
-      {
-        "name": "Blockscout",
-        "url": "https://blockexplorer.bobabase.boba.network",
-        "standard": "none"
-      }
-    ]
-  },
-  {
-    "name": "Celo Mainnet",
-    "chainId": 42220,
-    "shortName": "CELO",
-    "chain": "CELO",
-    "networkId": 42220,
-    "nativeCurrency": {
-      "name": "CELO",
-      "symbol": "CELO",
-      "decimals": 18
-    },
-    "icon": "https://defillama.com/chain-icons/rsz_celo.jpg",
-    "rpc": [
-      "https://forno.celo.org",
-      "wss://forno.celo.org/ws"
-    ],
-    "faucets": [
-      "https://free-online-app.com/faucet-for-eth-evm-chains/"
-    ],
-    "infoURL": "https://docs.celo.org/",
-    "explorers": [
-      {
-        "name": "blockscout",
-        "url": "https://explorer.celo.org",
-        "standard": "none"
-      }
-    ]
-  },
-  {
-    "name": "Avalanche Fuji Testnet",
-    "chain": "AVAX",
-    "rpc": [
-      "https://api.avax-test.network/ext/bc/C/rpc"
-    ],
-    "faucets": [
-      "https://faucet.avax-test.network/"
-    ],
-    "nativeCurrency": {
-      "name": "Avalanche",
-      "symbol": "AVAX",
-      "decimals": 18
-    },
-    "infoURL": "https://cchain.explorer.avax-test.network",
-    "shortName": "Fuji",
-    "chainId": 43113,
-    "networkId": 1,
-    "icon": "https://defillama.com/chain-icons/rsz_avalanche.jpg",
-    "explorers": [
-      {
-        "name": "snowtrace",
-        "url": "https://testnet.snowtrace.io",
-        "standard": "EIP3091"
-      }
-    ]
-  },
-  {
-    "name": "Avalanche C-Chain",
-    "chain": "AVAX",
-    "rpc": [
-      "https://api.avax.network/ext/bc/C/rpc"
-    ],
-    "faucets": [
-      "https://free-online-app.com/faucet-for-eth-evm-chains/"
-    ],
-    "nativeCurrency": {
-      "name": "Avalanche",
-      "symbol": "AVAX",
-      "decimals": 18
-    },
-    "infoURL": "https://www.avax.network/",
-    "shortName": "Avalanche",
-    "chainId": 43114,
-    "networkId": 43114,
-    "slip44": 9005,
-    "icon": "https://defillama.com/chain-icons/rsz_avalanche.jpg",
-    "explorers": [
-      {
-        "name": "snowtrace",
-        "url": "https://snowtrace.io",
-        "standard": "EIP3091"
-      }
-    ]
-  },
-  {
-    "name": "Celo Alfajores Testnet",
-    "chainId": 44787,
-    "shortName": "ALFA",
-    "chain": "CELO",
-    "networkId": 44787,
-    "nativeCurrency": {
-      "name": "CELO",
-      "symbol": "CELO",
-      "decimals": 18
-    },
-    "rpc": [
-      "https://alfajores-forno.celo-testnet.org",
-      "wss://alfajores-forno.celo-testnet.org/ws"
-    ],
-    "faucets": [
-      "https://celo.org/developers/faucet",
-      "https://cauldron.pretoriaresearchlab.io/alfajores-faucet"
-    ],
-    "infoURL": "https://docs.celo.org/"
-  },
-  {
-    "name": "Cronos Mainnet Beta",
-    "chain": "CRO",
-    "rpc": [
-      "https://evm.cronos.org"
-    ],
-    "faucets": [],
-    "nativeCurrency": {
-      "name": "Cronos",
-      "symbol": "CRO",
-      "decimals": 18
-    },
-    "infoURL": "https://cronos.org/",
-    "shortName": "cro",
-    "chainId": 25,
-    "networkId": 25,
-    "icon": "https://defillama.com/chain-icons/rsz_cronos.jpg",
-    "explorers": [
-      {
-        "name": "Cronos Explorer",
-        "url": "https://cronos.org/explorer",
-        "standard": "none"
-      }
-    ]
-  },
-  {
-    "name": "Cronos Testnet",
-    "chain": "CRO",
-    "rpc": [
-      "https://cronos-testnet-3.crypto.org:8545",
-      "wss://cronos-testnet-3.crypto.org:8546"
-    ],
-    "faucets": [
-      "https://cronos.crypto.org/faucet"
-    ],
-    "nativeCurrency": {
-      "name": "Crypto.org Test Coin",
-      "symbol": "TCRO",
-      "decimals": 18
-    },
-    "infoURL": "https://cronos.crypto.org",
-    "shortName": "tcro",
-    "chainId": 338,
-    "networkId": 338,
-    "icon": "https://defillama.com/chain-icons/rsz_cronos.jpg",
-    "explorers": [
-      {
-        "name": "Cronos Testnet Explorer",
-        "url": "https://cronos.crypto.org/explorer/testnet3",
-        "standard": "none"
-      }
-    ]
-  },
-  {
-    "name": "Gnosis Chain",
-    "chain": "GNO",
-    "rpc": [
-      "https://rpc.gnosischain.com",
-      "https://rpc.ankr.com/gnosis",
-      "https://gnosischain-rpc.gateway.pokt.network",
-      "https://gnosis-mainnet.public.blastapi.io",
-      "wss://rpc.gnosischain.com/wss"
-    ],
-    "faucets": [
-      "https://faucet.gimlu.com/gnosis",
-      "https://stakely.io/faucet/gnosis-chain-xdai",
-      "https://faucet.prussia.dev/xdai"
-    ],
-    "nativeCurrency": {
-      "name": "xDAI",
-      "symbol": "xDAI",
-      "decimals": 18
-    },
-    "infoURL": "https://developers.gnosischain.com",
-    "icon": "https://defillama.com/chain-icons/rsz_xdai.jpg",
-    "shortName": "gno",
-    "chainId": 100,
-    "networkId": 100,
-    "slip44": 700,
-    "explorers": [
-      {
-        "name": "blockscout",
-        "url": "https://blockscout.com/xdai/mainnet",
-        "icon": "https://defillama.com/chain-icons/rsz_blockscout.jpg",
-        "standard": "EIP3091"
-      }
-    ]
-  },
+	{
+		"name": "Evmos",
+		"chain": "Evmos",
+		"rpc": ["https://eth.bd.evmos.org:8545"],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Evmos",
+			"symbol": "EVMOS",
+			"decimals": 18
+		},
+		"infoURL": "https://evmos.org",
+		"shortName": "evmos",
+		"chainId": 9001,
+		"networkId": 9001,
+		"icon": "https://defillama.com/chain-icons/rsz_evmos.jpg",
+		"explorers": [
+			{
+				"name": "Evmos EVM Explorer (Blockscout)",
+				"url": "https://evm.evmos.org",
+				"standard": "none",
+				"icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
+			},
+			{
+				"name": "Evmos Cosmos Explorer (Mintscan)",
+				"url": "https://www.mintscan.io/evmos",
+				"standard": "none",
+				"icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
+			}
+		]
+	},
+	{
+		"name": "Evmos Testnet",
+		"chain": "Evmos",
+		"rpc": ["https://eth.bd.evmos.dev:8545"],
+		"faucets": ["https://faucet.evmos.dev"],
+		"nativeCurrency": {
+			"name": "test-Evmos",
+			"symbol": "tEVMOS",
+			"decimals": 18
+		},
+		"infoURL": "https://evmos.org",
+		"shortName": "evmos-testnet",
+		"chainId": 9000,
+		"networkId": 9000,
+		"icon": "https://defillama.com/chain-icons/rsz_evmos.jpg",
+		"explorers": [
+			{
+				"name": "Evmos EVM Explorer",
+				"url": "https://evm.evmos.dev",
+				"standard": "EIP3091",
+				"icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
+			},
+			{
+				"name": "Evmos Cosmos Explorer",
+				"url": "https://explorer.evmos.dev",
+				"standard": "none",
+				"icon": "https://defillama.com/chain-icons/rsz_evmos.jpg"
+			}
+		]
+	},
+	{
+		"name": "Binance Smart Chain Mainnet",
+		"chain": "BSC",
+		"rpc": [
+			"https://bsc-dataseed1.binance.org",
+			"https://bsc-dataseed2.binance.org",
+			"https://bsc-dataseed3.binance.org",
+			"https://bsc-dataseed4.binance.org",
+			"https://bsc-dataseed1.defibit.io",
+			"https://bsc-dataseed2.defibit.io",
+			"https://bsc-dataseed3.defibit.io",
+			"https://bsc-dataseed4.defibit.io",
+			"https://bsc-dataseed1.ninicoin.io",
+			"https://bsc-dataseed2.ninicoin.io",
+			"https://bsc-dataseed3.ninicoin.io",
+			"https://bsc-dataseed4.ninicoin.io",
+			"wss://bsc-ws-node.nariox.org"
+		],
+		"faucets": ["https://free-online-app.com/faucet-for-eth-evm-chains/"],
+		"nativeCurrency": {
+			"name": "Binance Chain Native Token",
+			"symbol": "BNB",
+			"decimals": 18
+		},
+		"infoURL": "https://www.binance.org",
+		"shortName": "bnb",
+		"chainId": 56,
+		"networkId": 56,
+		"slip44": 714,
+		"icon": "https://defillama.com/chain-icons/rsz_binance.jpg",
+		"explorers": [
+			{
+				"name": "bscscan",
+				"url": "https://bscscan.com",
+				"standard": "EIP3091"
+			}
+		]
+	},
+	{
+		"name": "Binance Smart Chain Testnet",
+		"chain": "BSC",
+		"rpc": [
+			"https://data-seed-prebsc-1-s1.binance.org:8545",
+			"https://data-seed-prebsc-2-s1.binance.org:8545",
+			"https://data-seed-prebsc-1-s2.binance.org:8545",
+			"https://data-seed-prebsc-2-s2.binance.org:8545",
+			"https://data-seed-prebsc-1-s3.binance.org:8545",
+			"https://data-seed-prebsc-2-s3.binance.org:8545"
+		],
+		"faucets": ["https://testnet.binance.org/faucet-smart"],
+		"nativeCurrency": {
+			"name": "Binance Chain Native Token",
+			"symbol": "tBNB",
+			"decimals": 18
+		},
+		"infoURL": "https://testnet.binance.org/",
+		"shortName": "bnbt",
+		"chainId": 97,
+		"networkId": 97,
+		"explorers": [
+			{
+				"name": "bscscan-testnet",
+				"url": "https://testnet.bscscan.com",
+				"standard": "EIP3091"
+			}
+		]
+	},
+	{
+		"name": "Moonbeam",
+		"chain": "MOON",
+		"rpc": ["https://rpc.api.moonbeam.network", "wss://wss.api.moonbeam.network"],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Glimmer",
+			"symbol": "GLMR",
+			"decimals": 18
+		},
+		"infoURL": "https://moonbeam.network/networks/moonbeam/",
+		"shortName": "mbeam",
+		"chainId": 1284,
+		"networkId": 1284,
+		"icon": "https://defillama.com/chain-icons/rsz_moonbeam.jpg",
+		"explorers": [
+			{
+				"name": "moonscan",
+				"url": "https://moonbeam.moonscan.io",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Moonriver",
+		"chain": "MOON",
+		"rpc": [
+			"https://rpc.api.moonriver.moonbeam.network",
+			"wss://wss.api.moonriver.moonbeam.network"
+		],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Moonriver",
+			"symbol": "MOVR",
+			"decimals": 18
+		},
+		"infoURL": "https://moonbeam.network/networks/moonriver/",
+		"shortName": "mriver",
+		"chainId": 1285,
+		"networkId": 1285,
+		"icon": "https://defillama.com/chain-icons/rsz_moonriver.jpg",
+		"explorers": [
+			{
+				"name": "moonscan",
+				"url": "https://moonriver.moonscan.io",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Boba Network Bobabase",
+		"chain": "Bobabase",
+		"rpc": [
+			"https://bobabase.boba.network",
+			"wss://wss.bobabase.boba.network",
+			"https://replica.bobabase.boba.network",
+			"wss://replica-wss.bobabase.boba.network"
+		],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Boba Token",
+			"symbol": "BOBA",
+			"decimals": 18
+		},
+		"infoURL": "https://boba.network",
+		"shortName": "Bobabase",
+		"chainId": 1297,
+		"networkId": 1297,
+		"icon": "https://defillama.com/chain-icons/rsz_boba.jpg",
+		"explorers": [
+			{
+				"name": "Blockscout",
+				"url": "https://blockexplorer.bobabase.boba.network",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Celo Mainnet",
+		"chainId": 42220,
+		"shortName": "CELO",
+		"chain": "CELO",
+		"networkId": 42220,
+		"nativeCurrency": {
+			"name": "CELO",
+			"symbol": "CELO",
+			"decimals": 18
+		},
+		"icon": "https://defillama.com/chain-icons/rsz_celo.jpg",
+		"rpc": ["https://forno.celo.org", "wss://forno.celo.org/ws"],
+		"faucets": ["https://free-online-app.com/faucet-for-eth-evm-chains/"],
+		"infoURL": "https://docs.celo.org/",
+		"explorers": [
+			{
+				"name": "blockscout",
+				"url": "https://explorer.celo.org",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Avalanche Fuji Testnet",
+		"chain": "AVAX",
+		"rpc": ["https://api.avax-test.network/ext/bc/C/rpc"],
+		"faucets": ["https://faucet.avax-test.network/"],
+		"nativeCurrency": {
+			"name": "Avalanche",
+			"symbol": "AVAX",
+			"decimals": 18
+		},
+		"infoURL": "https://cchain.explorer.avax-test.network",
+		"shortName": "Fuji",
+		"chainId": 43113,
+		"networkId": 1,
+		"icon": "https://defillama.com/chain-icons/rsz_avalanche.jpg",
+		"explorers": [
+			{
+				"name": "snowtrace",
+				"url": "https://testnet.snowtrace.io",
+				"standard": "EIP3091"
+			}
+		]
+	},
+	{
+		"name": "Avalanche C-Chain",
+		"chain": "AVAX",
+		"rpc": ["https://api.avax.network/ext/bc/C/rpc"],
+		"faucets": ["https://free-online-app.com/faucet-for-eth-evm-chains/"],
+		"nativeCurrency": {
+			"name": "Avalanche",
+			"symbol": "AVAX",
+			"decimals": 18
+		},
+		"infoURL": "https://www.avax.network/",
+		"shortName": "Avalanche",
+		"chainId": 43114,
+		"networkId": 43114,
+		"slip44": 9005,
+		"icon": "https://defillama.com/chain-icons/rsz_avalanche.jpg",
+		"explorers": [
+			{
+				"name": "snowtrace",
+				"url": "https://snowtrace.io",
+				"standard": "EIP3091"
+			}
+		]
+	},
+	{
+		"name": "Celo Alfajores Testnet",
+		"chainId": 44787,
+		"shortName": "ALFA",
+		"chain": "CELO",
+		"networkId": 44787,
+		"nativeCurrency": {
+			"name": "CELO",
+			"symbol": "CELO",
+			"decimals": 18
+		},
+		"rpc": [
+			"https://alfajores-forno.celo-testnet.org",
+			"wss://alfajores-forno.celo-testnet.org/ws"
+		],
+		"faucets": [
+			"https://celo.org/developers/faucet",
+			"https://cauldron.pretoriaresearchlab.io/alfajores-faucet"
+		],
+		"infoURL": "https://docs.celo.org/"
+	},
+	{
+		"name": "Cronos Mainnet Beta",
+		"chain": "CRO",
+		"rpc": ["https://evm.cronos.org"],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Cronos",
+			"symbol": "CRO",
+			"decimals": 18
+		},
+		"infoURL": "https://cronos.org/",
+		"shortName": "cro",
+		"chainId": 25,
+		"networkId": 25,
+		"icon": "https://defillama.com/chain-icons/rsz_cronos.jpg",
+		"explorers": [
+			{
+				"name": "Cronos Explorer",
+				"url": "https://cronos.org/explorer",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Cronos Testnet",
+		"chain": "CRO",
+		"rpc": ["https://cronos-testnet-3.crypto.org:8545", "wss://cronos-testnet-3.crypto.org:8546"],
+		"faucets": ["https://cronos.crypto.org/faucet"],
+		"nativeCurrency": {
+			"name": "Crypto.org Test Coin",
+			"symbol": "TCRO",
+			"decimals": 18
+		},
+		"infoURL": "https://cronos.crypto.org",
+		"shortName": "tcro",
+		"chainId": 338,
+		"networkId": 338,
+		"icon": "https://defillama.com/chain-icons/rsz_cronos.jpg",
+		"explorers": [
+			{
+				"name": "Cronos Testnet Explorer",
+				"url": "https://cronos.crypto.org/explorer/testnet3",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Gnosis Chain",
+		"chain": "GNO",
+		"rpc": [
+			"https://rpc.gnosischain.com",
+			"https://rpc.ankr.com/gnosis",
+			"https://gnosischain-rpc.gateway.pokt.network",
+			"https://gnosis-mainnet.public.blastapi.io",
+			"wss://rpc.gnosischain.com/wss"
+		],
+		"faucets": [
+			"https://faucet.gimlu.com/gnosis",
+			"https://stakely.io/faucet/gnosis-chain-xdai",
+			"https://faucet.prussia.dev/xdai"
+		],
+		"nativeCurrency": {
+			"name": "xDAI",
+			"symbol": "xDAI",
+			"decimals": 18
+		},
+		"infoURL": "https://developers.gnosischain.com",
+		"icon": "https://defillama.com/chain-icons/rsz_xdai.jpg",
+		"shortName": "gno",
+		"chainId": 100,
+		"networkId": 100,
+		"slip44": 700,
+		"explorers": [
+			{
+				"name": "blockscout",
+				"url": "https://blockscout.com/xdai/mainnet",
+				"icon": "https://defillama.com/chain-icons/rsz_blockscout.jpg",
+				"standard": "EIP3091"
+			}
+		]
+	},
+	{
+		"name": "Gather Mainnet Network",
+		"chain": "GTH",
+		"rpc": ["https://mainnet.gather.network"],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Gather",
+			"symbol": "GTH",
+			"decimals": 18
+		},
+		"infoURL": "https://gather.network",
+		"shortName": "GTH",
+		"chainId": 192837465,
+		"networkId": 192837465,
+		"explorers": [
+			{
+				"name": "Blockscout",
+				"url": "https://explorer.gather.network",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Gather Devnet Network",
+		"chain": "GTH",
+		"rpc": ["https://devnet.gather.network"],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Gather",
+			"symbol": "GTH",
+			"decimals": 18
+		},
+		"infoURL": "https://gather.network",
+		"shortName": "dGTH",
+		"chainId": 486217935,
+		"networkId": 486217935,
+		"explorers": [
+			{
+				"name": "Blockscout",
+				"url": "https://devnet-explorer.gather.network",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Gather Testnet Network",
+		"chain": "GTH",
+		"rpc": ["https://testnet.gather.network"],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Gather",
+			"symbol": "GTH",
+			"decimals": 18
+		},
+		"infoURL": "https://gather.network",
+		"shortName": "tGTH",
+		"chainId": 356256156,
+		"networkId": 356256156,
+		"explorers": [
+			{
+				"name": "Blockscout",
+				"url": "https://testnet-explorer.gather.network",
+				"standard": "none"
+			}
+		]
+	},
+	{
+		"name": "Arbitrum Nova",
+		"chainId": 42170,
+		"shortName": "arb-nova",
+		"chain": "ETH",
+		"networkId": 42170,
+		"nativeCurrency": {
+			"name": "Ether",
+			"symbol": "ETH",
+			"decimals": 18
+		},
+		"rpc": ["https://nova.arbitrum.io/rpc"],
+		"faucets": [],
+		"explorers": [
+			{
+				"name": "Arbitrum Nova Chain Explorer",
+				"url": "https://nova-explorer.arbitrum.io",
+				"icon": "blockscout",
+				"standard": "EIP3091"
+			}
+		],
+		"infoURL": "https://arbitrum.io",
+		"parent": {
+			"type": "L2",
+			"chain": "eip155-1",
+			"bridges": [{ "url": "https://bridge.arbitrum.io" }]
+		}
+	},
+	{
+		"name": "Fantom Testnet",
+		"chain": "FTM",
+		"rpc": ["https://rpc.testnet.fantom.network"],
+		"faucets": ["https://faucet.fantom.network"],
+		"nativeCurrency": {
+			"name": "Fantom",
+			"symbol": "FTM",
+			"decimals": 18
+		},
+
+		"infoURL": "https://docs.fantom.foundation/quick-start/short-guide#fantom-testnet",
+		"shortName": "tftm",
+		"chainId": 4002,
+		"networkId": 4002,
+		"icon": "fantom",
+		"explorers": [
+			{
+				"name": "ftmscan",
+				"url": "https://testnet.ftmscan.com",
+				"icon": "ftmscan",
+				"standard": "EIP3091"
+			}
+		]
+	},
+	{
+		"name": "Fantom Opera",
+		"chain": "FTM",
+		"rpc": ["https://rpc.ftm.tools"],
+		"faucets": ["https://free-online-app.com/faucet-for-eth-evm-chains/"],
+		"nativeCurrency": {
+			"name": "Fantom",
+			"symbol": "FTM",
+			"decimals": 18
+		},
+		"infoURL": "https://fantom.foundation",
+		"shortName": "ftm",
+		"chainId": 250,
+		"networkId": 250,
+		"icon": "fantom",
+		"explorers": [
+			{
+				"name": "ftmscan",
+				"url": "https://ftmscan.com",
+				"icon": "ftmscan",
+				"standard": "EIP3091"
+			}
+		]
+	},
+	{
+		"name": "Fuse Mainnet",
+		"chain": "FUSE",
+		"rpc": ["https://rpc.fuse.io"],
+		"faucets": [],
+		"nativeCurrency": {
+			"name": "Fuse",
+			"symbol": "FUSE",
+			"decimals": 18
+		},
+		"infoURL": "https://fuse.io/",
+		"shortName": "fuse",
+		"chainId": 122,
+		"networkId": 122
+	},
+	{
+		"name": "Fuse Sparknet",
+		"chain": "fuse",
+		"rpc": ["https://rpc.fusespark.io"],
+		"faucets": ["https://get.fusespark.io"],
+		"nativeCurrency": {
+			"name": "Spark",
+			"symbol": "SPARK",
+			"decimals": 18
+		},
+		"infoURL": "https://docs.fuse.io/general/fuse-network-blockchain/fuse-testnet",
+		"shortName": "spark",
+		"chainId": 123,
+		"networkId": 123
+	}
 ]
