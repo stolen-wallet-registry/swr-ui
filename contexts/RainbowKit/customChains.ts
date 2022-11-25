@@ -160,7 +160,7 @@ const evmosTestnet: Chain = {
 };
 
 const binanceChain: Chain = {
-	name: 'Binance Smart Chain Mainnet',
+	name: 'Binance Chain',
 	rpcUrls: {
 		default: 'https://bsc-dataseed1.binance.org',
 		// "https://bsc-dataseed2.binance.org",
@@ -253,7 +253,7 @@ const bobaTestnet: Chain = {
 	},
 };
 const celoChain: Chain = {
-	name: 'Celo Mainnet',
+	name: 'Celo',
 	id: 42220,
 	network: 'CELO',
 	nativeCurrency: {
@@ -298,7 +298,7 @@ const celoTestnet: Chain = {
 };
 
 const cronosChain: Chain = {
-	name: 'Cronos Mainnet Beta',
+	name: 'Cronos',
 	network: 'CRO',
 	rpcUrls: {
 		default: 'https://evm.cronos.org',
@@ -367,7 +367,7 @@ const gnosisChain: Chain = {
 };
 
 const fantomChian: Chain = {
-	name: 'Fantom Opera',
+	name: 'Fantom',
 	rpcUrls: { default: 'https://rpc.ftm.tools' },
 	nativeCurrency: {
 		name: 'Fantom',
@@ -431,7 +431,7 @@ const fuseTestnet: Chain = {
 };
 
 const gatherChain: Chain = {
-	name: 'Gather Mainnet Network',
+	name: 'Gather Network',
 	rpcUrls: { default: 'https://mainnet.gather.network' },
 	nativeCurrency: {
 		name: 'Gather',
