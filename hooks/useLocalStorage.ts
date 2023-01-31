@@ -20,7 +20,6 @@ export type StateConfig = {
 	connectedAddress: string | null;
 	registrationType: RegistrationTypes;
 	step: RegistrationValues | null;
-	stepSet: boolean;
 	address: string | undefined;
 	network: number | undefined;
 	trustedRelayer: string | null;
@@ -43,7 +42,6 @@ export const initialState: StateConfig = {
 	connectedAddress: null,
 	registrationType: 'standardRelay',
 	step: null,
-	stepSet: false,
 	address: undefined,
 	network: undefined,
 	trustedRelayer: null,

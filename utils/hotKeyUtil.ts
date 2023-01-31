@@ -92,11 +92,11 @@ function fireHotkey(e: KeyboardEvent, mapping: Mapping, preventDefault: boolean)
  *
  * For example:
  *  setupHotkeys({32: {cb: this.playMusic, or: [CMD, CTRL]})
- *    // fires on 'cmd+space' or 'ctrl+space'
+ *  fires on 'cmd+space' or 'ctrl+space'
  *  setupHotkeys({32: {cb: this.playMusic, and: [CMD, CTRL]})
- *    // fires on 'cmd+ctrl+space'
+ *  fires on 'cmd+ctrl+space'
  *  setupHotkeys({32: {cb: this.playMusic, or: [ALT, CTRL], and: [CMD, SHIFT]})
- *    // fires on 'cmd+shift+alt+space' or 'cmd+shift+ctrl+space'\
+ *  fires on 'cmd+shift+alt+space' or 'cmd+shift+ctrl+space'\
  * @returns {function} the event listener function
  */
 export function setupHotkeys(mapping: Mapping, throttleMs = 100, preventDefault = true) {

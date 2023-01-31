@@ -3,12 +3,8 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import {
 	RainbowKitProvider,
-	getDefaultWallets,
 	connectorsForWallets,
-	lightTheme,
-	darkTheme,
 	DisclaimerComponent,
-	Theme,
 	AvatarComponent,
 } from '@rainbow-me/rainbowkit';
 
@@ -52,23 +48,23 @@ const testnets = [
 ];
 
 const supporttedChains = [
-	chain.mainnet,
-	chain.optimism,
-	customChains.gnosisChain,
-	chain.arbitrum,
-	customChains.arbitrumNovaChain,
-	chain.polygon,
-	customChains.gnosisChain,
-	customChains.evmosChain,
-	customChains.binanceChain,
-	customChains.moonBeam,
-	customChains.moonRiver,
-	customChains.celoChain,
-	customChains.fantomChian,
-	customChains.cronosChain,
-	customChains.bobaChain,
-	customChains.gatherChain,
-	// ...testnets,
+	// chain.mainnet,
+	// chain.optimism,
+	// customChains.gnosisChain,
+	// chain.arbitrum,
+	// customChains.arbitrumNovaChain,
+	// chain.polygon,
+	// customChains.gnosisChain,
+	// customChains.evmosChain,
+	// customChains.binanceChain,
+	// customChains.moonBeam,
+	// customChains.moonRiver,
+	// customChains.celoChain,
+	// customChains.fantomChian,
+	// customChains.cronosChain,
+	// customChains.bobaChain,
+	// customChains.gatherChain,
+	...testnets,
 ];
 
 const { chains, provider } = configureChains(supporttedChains, [

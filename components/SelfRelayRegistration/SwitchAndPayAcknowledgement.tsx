@@ -37,7 +37,7 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 			});
 
 			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
-
+			debugger;
 			const tx = await registryContract.acknowledgementOfRegistry(
 				storedSignature.deadline,
 				storedSignature.nonce,

@@ -26,7 +26,7 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 	const nativeToken = nativeTokenList?.[`0x${chain?.id?.toString(16)}`] || 'Native Token';
 
 	const handleBegin = (step: RegistrationValues) => {
-		setLocalState({ step: step, stepSet: true });
+		setLocalState({ step: step });
 		router.push(`/dapp/${localState?.registrationType}`, undefined, { shallow: true });
 	};
 
