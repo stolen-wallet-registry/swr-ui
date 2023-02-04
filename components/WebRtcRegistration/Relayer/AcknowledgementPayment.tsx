@@ -11,7 +11,7 @@ import {
 	StolenWalletRegistryFactory,
 } from '@wallet-hygiene/swr-contracts';
 import { ACKNOWLEDGEMENT_KEY, getSignatureWithExpiry } from '@utils/signature';
-import { passStreamData, PROTOCOLS, relayerPostBackMsg } from '@utils/libp2p';
+import { passStreamData, PROTOCOLS } from '@utils/libp2p';
 import { Libp2p } from 'libp2p';
 
 interface AcknowledgementPaymentProps {

@@ -7,7 +7,7 @@ import { useAccount, useNetwork } from 'wagmi';
 import ButtonChoices from './ButtonChoices';
 import Footer from './Footer';
 import { DappHeader } from './Header';
-import MadeFrom from './MadeFrom';
+// import MadeFrom from './MadeFrom';
 import { PageHeading } from './PageHeading';
 import PreviewModal from './PreviewModal';
 

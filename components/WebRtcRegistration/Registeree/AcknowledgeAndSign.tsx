@@ -8,7 +8,7 @@ import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 import { FaWallet } from 'react-icons/fa';
 import { setSignatureWithExpiry, ACKNOWLEDGEMENT_KEY } from '@utils/signature';
 import useDebounce from '@hooks/useDebounce';
-import { passStreamData, PROTOCOLS, registereePassSignature } from '@utils/libp2p';
+import { passStreamData, PROTOCOLS } from '@utils/libp2p';
 import { Libp2p } from 'libp2p';
 
 interface AcknowledgeAndSignProps {

@@ -55,6 +55,7 @@ export const setSignatureLocalStorage = ({
 
 	try {
 		if (keyRef === ACKNOWLEDGEMENT_KEY) {
+      debugger
 			localStorage.setItem(buildAcknowledgementKey(address, chainId), JSON.stringify(item));
 		} else if (keyRef === REGISTRATION_KEY) {
 			localStorage.setItem(buildRegistertKey(address, chainId), JSON.stringify(item));
