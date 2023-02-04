@@ -63,15 +63,15 @@ const RegistereeContainer: React.FC<RegistreeContainerProps> = ({
 				network: state.network,
 				includeWalletNFT: state.includeWalletNFT,
 				includeSupportNFT: state.includeSupportNFT,
-				connectToPeer: connPeerId.toString(),
-				connectToPeerAddrs: connAddr!.toString(),
+				connectToPeer: localState.peerId,
+				connectToPeerAddrs: localState.peerAddrs,
 			};
 
 			try {
 				const stat = await passStreamData({
 					libp2p,
 					localState,
-					streamData: JSON.stringify(relayerState),
+					streamData: relayerState,
 					protocol: PROTOCOLS.CONNECT,
 				});
 

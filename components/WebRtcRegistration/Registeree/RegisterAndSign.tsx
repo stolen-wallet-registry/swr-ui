@@ -52,7 +52,7 @@ const RegisterAndSign: React.FC<RegisterAndSignProps> = ({
 			libp2p,
 			localState,
 			protocol: PROTOCOLS.REG_SIG,
-			streamData: JSON.stringify(streamData),
+			streamData,
 		});
 
 		setNextStep();

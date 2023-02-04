@@ -51,12 +51,10 @@ const AcknowledgeAndSign: React.FC<AcknowledgeAndSignProps> = ({
 			keyRef: ACKNOWLEDGEMENT_KEY,
 		};
 
-		const streamData = JSON.stringify(signatureData);
-
 		await passStreamData({
 			libp2p,
 			localState,
-			streamData,
+			streamData: signatureData,
 			protocol: PROTOCOLS.ACK_SIG,
 		});
 

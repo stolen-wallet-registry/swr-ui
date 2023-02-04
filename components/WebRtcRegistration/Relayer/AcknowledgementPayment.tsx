@@ -69,7 +69,7 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p,
 				libp2p: libp2p,
 				localState: accessLocalStorage(),
 				protocol: PROTOCOLS.ACK_PAY,
-				streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
+				streamData: { success: true, message: 'connected to relayer' },
 			});
 
 			setNextStep();

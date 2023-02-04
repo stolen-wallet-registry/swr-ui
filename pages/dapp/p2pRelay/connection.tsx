@@ -81,7 +81,6 @@ export const Connection = () => {
 				}
 
 				const parsedData: RelayerMessageProps = JSON.parse(data);
-
 				switch (stream.stat.protocol) {
 					case PROTOCOLS.CONNECT:
 						handleRelayerCallback({ ...parsedData, step: P2PRegistereeSteps.AcknowledgeAndSign });
@@ -143,7 +142,6 @@ export const Connection = () => {
 				}
 
 				const parsedData: Partial<StateConfig> | setLocalStorageProps = JSON.parse(data);
-
 				switch (stream.stat.protocol) {
 					case PROTOCOLS.CONNECT:
 						const newState = {
@@ -154,13 +152,12 @@ export const Connection = () => {
 						};
 
 						setLocalStorage(newState);
-
 						// TODO - resolve window.libp2p for libp2p instance
 						await passStreamData({
 							libp2p: window.libp2p,
 							localState: newState,
 							protocol: PROTOCOLS.CONNECT,
-							streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
+							streamData: { success: true, message: 'connected to relayer' },
 						});
 
 						setRealyerStep(P2PRelayerSteps.WaitForAcknowledgementSign);
@@ -179,7 +176,7 @@ export const Connection = () => {
 							libp2p: window.libp2p,
 							localState: accessLocalStorage(),
 							protocol: PROTOCOLS.ACK_REC,
-							streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
+							streamData: { success: true, message: 'connected to relayer' },
 						});
 
 						setRealyerStep(P2PRelayerSteps.AcknowledgementPayment);
@@ -192,7 +189,7 @@ export const Connection = () => {
 							libp2p: window.libp2p,
 							localState: accessLocalStorage(),
 							protocol: PROTOCOLS.REG_REC,
-							streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
+							streamData: { success: true, message: 'connected to relayer' },
 						});
 
 						setRealyerStep(P2PRelayerSteps.RegistrationPayment);

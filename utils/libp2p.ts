@@ -46,8 +46,10 @@ const startLibP2PNode = async (handlers: ProtcolHandlers[]): Promise<LibP2PNodeI
 			// Add the signaling server address, along with our PeerId to our multiaddrs list
 			// libp2p will automatically attempt to dial to the signaling server so that it can
 			// receive inbound connections from other peers
-			// '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
-			listen: ['/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star'],
+			listen: [
+        '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
+        '/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star'
+      ],
 		},
 		transports: [webSockets(), wrtcStar.transport],
 		connectionEncryption: [noise()],
@@ -56,11 +58,11 @@ const startLibP2PNode = async (handlers: ProtcolHandlers[]): Promise<LibP2PNodeI
 			wrtcStar.discovery,
 			bootstrap({
 				list: [
-					'/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
-					'/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
-					'/dnsaddr/bootstrap.libp2p.io/p2p/QmZa1sAxajnQjVM8WjWXoMbmPd7NsWhfKsPkErzpm9wGkp',
-					'/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa',
-					'/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt',
+					"/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
+          "/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa",
+          "/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb",
+          "/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt",
+          "/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
 				],
 			}),
 		],
@@ -98,10 +100,11 @@ const passStreamData = async ({
 	libp2p: Libp2p;
 	localState: StateConfig;
 	protocol: string;
-	streamData: string;
+	streamData: any;
 }) => {
 	const connPeerId = peerIdFromString(localState?.connectToPeer!);
 	const connAddr = multiaddr(localState.connectToPeerAddrs);
+
 
 	await libp2p!.peerStore.addressBook.set(connPeerId!, [connAddr]);
 
@@ -109,6 +112,7 @@ const passStreamData = async ({
 
 	stream = await libp2p!.dialProtocol(connAddr, [protocol]);
 
+  console.log(streamData)
 	try {
 		await pipe(
 			// Read signatureData to stream (the source)

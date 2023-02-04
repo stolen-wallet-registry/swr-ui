@@ -85,7 +85,7 @@ const RegistrationPayment: React.FC<RegistrationProps> = ({
 				libp2p: libp2p,
 				localState: accessLocalStorage(),
 				protocol: PROTOCOLS.REG_PAY,
-				streamData: JSON.stringify({ success: true, message: 'connected to relayer' }),
+				streamData: { success: true, message: 'connected to relayer' },
 			});
 
 			setNextStep();
