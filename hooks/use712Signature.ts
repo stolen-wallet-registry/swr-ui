@@ -8,6 +8,7 @@ interface Domain712 {
 	version: string;
 	chainId: number;
 	verifyingContract: `0x${string}`;
+  salt: `0x${string}`;
 }
 export interface signTypedDataProps {
 	domain: Domain712;
@@ -63,6 +64,7 @@ export const buildAcknowledgementStruct = async ({
 			version: '4',
 			chainId: chain?.id!,
 			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
+      salt: "0xe7e338c8a96606d405ae49875289174c38181bda641043e953b12964ad115f49"
 		},
 		value: {
 			owner: address,
@@ -110,6 +112,7 @@ export const buildRegistrationStruct = async ({
 			version: '4',
 			chainId: chain?.id!,
 			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
+      salt: "0x86fdecd3151a18dd477feb379432be4107d347c2ee6bc63ca6212c6d674c17f9"
 		},
 		value: {
 			owner: address,

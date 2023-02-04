@@ -56,6 +56,7 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 		const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
 			CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
 		);
+
 		const { v, r, s } = ethers.utils.splitSignature(signature);
 
 		// deadline

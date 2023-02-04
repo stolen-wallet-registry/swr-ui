@@ -45,6 +45,7 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 	};
 
 	const handleSignAndPay = async ({ signature }: { signature: string }) => {
+		console.log(CONTRACT_ADDRESSES);
 		const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
 			CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
 		);
