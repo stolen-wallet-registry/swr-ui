@@ -10,6 +10,7 @@ import { DappHeader } from './Header';
 // import MadeFrom from './MadeFrom';
 import { PageHeading } from './PageHeading';
 import PreviewModal from './PreviewModal';
+import { triggerDarkMode } from '@utils/helpers';
 
 export type ColorValues = 'red' | 'teal' | 'blue' | 'green' | 'purple';
 export const COLORS: ColorValues[] = ['red', 'teal', 'blue', 'green', 'purple'];
@@ -67,7 +68,9 @@ const DappLayout: React.FunctionComponent<DappLayoutProps> = ({
 			{/* <Text>localState:</Text> */}
 			{/* <AttributesComponent localState={localState} /> */}
 			<PageHeading heading="Registration Options" subHeading="The Stolen Wallet Registry" />
-			{heading && <PageHeading {...{ heading, subHeading }} invert={false} />}
+			{heading && (
+				<PageHeading {...{ heading, subHeading }} invert={triggerDarkMode(localState.step)} />
+			)}
 			{showButton && (
 				<Flex justifyContent="center">
 					<Button size="lg" onClick={resetState}>

@@ -1,9 +1,11 @@
+import { P2PRegistereeSteps, P2PRelayerSteps, RegistrationValues, SelfRelaySteps, StandardSteps } from "./types";
+
 export const HIGHLIGHT_STYLE = {
 	px: '1',
 	py: '1',
 	rounded: 'full',
 	color: 'white',
-	bg: 'blackAlpha.900',
+	bg: 'gray.800',
 };
 
 export const secondsFromNow = (seconds: number) => Math.floor((Date.now() + seconds * 1000) / 1000);
@@ -37,3 +39,19 @@ export const nativeTokenList: { [chainId: string]: string } = {
 	'0x539': 'ETH',
 	'0x7a69': 'ETH',
 };
+
+// TODO need to convert enums to integer values so we can use > < here.
+export const triggerDarkMode = (step: RegistrationValues | null): boolean => {
+  switch (step) {
+    case StandardSteps.RegisterAndPay:
+      return true
+    case SelfRelaySteps.RegisterAndSign, SelfRelaySteps.SwitchAndPayTwo:
+      return true
+    case P2PRegistereeSteps.RegisterAndSign, P2PRegistereeSteps.WaitForRegistrationPayment:
+      return true
+    case P2PRelayerSteps.WaitForRegistrationSign, P2PRelayerSteps.RegistrationPayment:
+      return true
+    default:
+      return false
+  }
+}

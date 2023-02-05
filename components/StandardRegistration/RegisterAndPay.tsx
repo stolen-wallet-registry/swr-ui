@@ -1,10 +1,10 @@
 import { Flex, Button, Text, Checkbox, CheckboxGroup, Spacer } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { Timer } from '@components/Timer';
-import { buildRegistrationStruct } from '@hooks/use712Signature';
 import useLocalStorage, { StateConfig } from '@hooks/useLocalStorage';
 import useRegBlocksLeft from '@hooks/useRegBlocksLeft';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
+import { buildRegistrationStruct } from '@utils/signature';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { Signer, ethers, BigNumber } from 'ethers';
 import { useState } from 'react';
@@ -52,14 +52,13 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 		}
 	};
 
-	const handleSignAndPay = async ({ signature }: { signature: string }) => {
+	const handleSignAndPay = async () => {
 		const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
 			CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
 		);
 
-		const { v, r, s } = ethers.utils.splitSignature(signature);
+		const { v, r, s } = ethers.utils.splitSignature(typedSignature.data!);
 
-		// deadline
 		const tx = await registryContract.walletRegistration(
 			deadline!,
 			nonce!,
@@ -142,7 +141,7 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 				{typedSignature.data ? (
 					<Button
 						m={5}
-						onClick={() => handleSignAndPay({ signature: typedSignature.data! })}
+						onClick={handleSignAndPay}
 						disabled={localState.includeWalletNFT === null || localState.includeSupportNFT === null}
 					>
 						Pay

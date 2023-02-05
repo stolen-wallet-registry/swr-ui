@@ -1,6 +1,6 @@
 import { Flex, Spacer, CheckboxGroup, Checkbox, Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { buildRegistrationStruct } from '@hooks/use712Signature';
+import { buildRegistrationStruct } from '@utils/signature';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { BigNumber, Signer } from 'ethers';
 import { useState, useEffect } from 'react';

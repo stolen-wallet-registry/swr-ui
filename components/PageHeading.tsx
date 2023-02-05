@@ -19,8 +19,8 @@ export const PageHeading: React.FC<PageHeadingInterface> = ({
 			</Heading>
 			{subHeading && (
 				<Heading
-					color={invert ? 'white' : 'black'}
-					backgroundColor={invert ? 'blackAlpha.900' : 'whiteAlpha.900'}
+					color={invert ? 'white' : 'gray.800'}
+					backgroundColor={invert ? 'gray.800' : 'white'}
 					textShadow={
 						invert ? '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;' : ''
 					}

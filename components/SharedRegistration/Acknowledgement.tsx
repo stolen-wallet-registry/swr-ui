@@ -10,7 +10,7 @@ import {
 	InputLeftElement,
 } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { buildAcknowledgementStruct, signTypedDataProps } from '@hooks/use712Signature';
+import { buildAcknowledgementStruct, signTypedDataProps } from '@utils/signature';
 import useDebounce from '@hooks/useDebounce';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';

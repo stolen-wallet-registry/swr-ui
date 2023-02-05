@@ -205,7 +205,7 @@ export const HomeHeader = () => {
 					px={8}
 					size="lg"
 					rounded="lg"
-					colorScheme="blackAlpha"
+					colorScheme="gray.800"
 					boxShadow="2xl"
 					_hover={{ transform: 'scale(1.1)' }}
 					_active={{ transform: 'translateY(-2px)' }}

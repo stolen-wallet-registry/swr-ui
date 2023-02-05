@@ -17,7 +17,7 @@ interface FeaturesProps {
 
 const BUTTON_PROPS = {
 	boxShadow: 'md',
-	_hover: { transform: 'scale(1.1)', bgColor: 'blackAlpha.800' },
+	_hover: { transform: 'scale(1.1)', bgColor: 'gray.800' },
 };
 
 interface BoldProps {
@@ -40,7 +40,7 @@ const CrossChainContent: React.FC = () => {
 	return (
 		<>
 			<Box pb={3}>
-				<Heading size="lg" color="blackAlpha.800" textAlign="left">
+				<Heading size="lg" color="gray.800" textAlign="left">
 					Cross Chain transactions
 				</Heading>
 				<Text fontSize="md" textAlign="left" fontStyle="italic">
@@ -77,7 +77,7 @@ const OptimismContent: React.FC = () => {
 	return (
 		<>
 			<Box pb={3}>
-				<Heading size="lg" color="blackAlpha.800" textAlign="right">
+				<Heading size="lg" color="gray.800" textAlign="right">
 					One Registry hosted on Optimism
 				</Heading>
 				<Text fontSize="md" textAlign="right" fontStyle="italic">
@@ -125,7 +125,7 @@ const MetaTxContent: React.FC = () => {
 	return (
 		<>
 			<Box pb={3}>
-				<Heading size="lg" color="blackAlpha.800" textAlign="center">
+				<Heading size="lg" color="gray.800" textAlign="center">
 					Meta Transactions
 				</Heading>
 				<Text fontSize="md" textAlign="center" fontStyle="italic">
@@ -171,7 +171,7 @@ const PublicGoodsContent: React.FC = () => {
 	return (
 		<>
 			<Box pb={3}>
-				<Heading size="lg" color="blackAlpha.800" textAlign="center">
+				<Heading size="lg" color="gray.800" textAlign="center">
 					Public Goods are Good
 				</Heading>
 				<Text fontSize="md" textAlign="center" fontStyle="italic">
@@ -210,7 +210,7 @@ const FeesWtfContent: React.FC = () => {
 	return (
 		<>
 			<Box pb={3}>
-				<Heading size="lg" color="blackAlpha.800" textAlign="center">
+				<Heading size="lg" color="gray.800" textAlign="center">
 					Fees WTF?
 				</Heading>
 				<Text fontSize="md" textAlign="center" fontStyle="italic">
@@ -260,7 +260,7 @@ const SupportedChainsContent: React.FC = () => {
 	return (
 		<>
 			<Box pb={3}>
-				<Heading size="lg" color="blackAlpha.800" textAlign="center">
+				<Heading size="lg" color="gray.800" textAlign="center">
 					Meta Transactions
 				</Heading>
 				<Text fontSize="md" textAlign="center" fontStyle="italic">

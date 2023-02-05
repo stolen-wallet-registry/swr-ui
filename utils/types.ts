@@ -1,8 +1,8 @@
-import { off } from 'process';
-
+export type String0x = `0x${string}` | undefined;
 export type RegistrationTypes = 'standardRelay' | 'selfRelay' | 'p2pRelay';
 
 // TODO do these need requirements?
+// TODO convert enums to interger values
 export enum StandardSteps {
 	AcknowledgeAndPay = 'acknowledge-and-pay',
 	GracePeriod = 'grace-period',

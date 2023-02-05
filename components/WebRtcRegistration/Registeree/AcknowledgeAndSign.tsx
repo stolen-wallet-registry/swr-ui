@@ -1,6 +1,6 @@
 import { Flex, Button, Text, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { buildAcknowledgementStruct } from '@hooks/use712Signature';
+import { buildAcknowledgementStruct } from '@utils/signature';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { BigNumber, ethers } from 'ethers';
 import { useState, useEffect } from 'react';
@@ -65,7 +65,7 @@ const AcknowledgeAndSign: React.FC<AcknowledgeAndSignProps> = ({
 		setTempRelayer(e.target.value);
 	};
 
-	const handleSignature = async () => {
+	const handleSign = async () => {
 		try {
 			const { domain, types, value } = await buildAcknowledgementStruct({
 				signer,
@@ -130,7 +130,7 @@ const AcknowledgeAndSign: React.FC<AcknowledgeAndSignProps> = ({
 				</Button>
 				<Button
 					m={5}
-					onClick={handleSignature}
+					onClick={handleSign}
 					disabled={localState.registrationType !== 'standardRelay' && !relayerIsValid}
 				>
 					Sign

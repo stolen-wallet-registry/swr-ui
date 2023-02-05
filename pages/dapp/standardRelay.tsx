@@ -5,7 +5,7 @@ import GracePeriod from '@components/SharedRegistration/GracePeriod';
 import RegisterAndPay from '@components/StandardRegistration/RegisterAndPay';
 import DappLayout from '@components/DappLayout';
 import { StandardSteps } from '@utils/types';
-import { Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react';
+import { Flex, useColorMode, useDisclosure, useMediaQuery } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { KEY_REF_TYPES } from '@utils/signature';
 import StandardAckowledgement from '@components/StandardRegistration/StandardAckowledgement';
@@ -18,6 +18,7 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ keyRef 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { address } = useAccount();
 	const { data: signer } = useSigner();
+	const { setColorMode } = useColorMode();
 
 	const [localState, setLocalState] = useLocalStorage();
 
@@ -32,6 +33,12 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ keyRef 
 
 	useEffect(() => {
 		setLocalState({ trustedRelayer: localState.address });
+	}, []);
+
+	useEffect(() => {
+		if (localState.step === StandardSteps.RegisterAndPay) {
+			setColorMode('dark');
+		}
 	}, []);
 
 	if (!signer) {

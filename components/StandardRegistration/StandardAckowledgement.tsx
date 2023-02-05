@@ -1,6 +1,6 @@
 import { Flex, Spacer, CheckboxGroup, Checkbox, Button, Text } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { buildAcknowledgementStruct } from '@hooks/use712Signature';
+import { buildAcknowledgementStruct } from '@utils/signature';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { CONTRACT_ADDRESSES } from '@utils/constants';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
@@ -26,8 +26,10 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
 	const [localState, setLocalState] = useLocalStorage();
+	const [loading, setLoading] = useState(false);
 
 	const handleSign = async () => {
+		setLoading(true);
 		try {
 			const { domain, types, value } = await buildAcknowledgementStruct({
 				signer,
@@ -39,31 +41,41 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 			setNonce(value.nonce);
 
 			await typedSignature.signTypedDataAsync({ domain, types, value });
+			setLoading(false);
 		} catch (error) {
 			console.log(error);
+			setLoading(false);
 		}
 	};
 
-	const handleSignAndPay = async ({ signature }: { signature: string }) => {
+	const handleSignAndPay = async () => {
+		setLoading(true);
 		console.log(CONTRACT_ADDRESSES);
 		const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
 			CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
 		);
-		const { v, r, s } = ethers.utils.splitSignature(signature);
-		// deadline
-		const tx = await registryContract.acknowledgementOfRegistry(
-			deadline!,
-			nonce!,
-			localState.address!,
-			v,
-			r,
-			s
-		);
-		const receipt = await tx.wait();
 
-		setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
-		console.log(receipt);
-		setNextStep();
+		try {
+			const { v, r, s } = ethers.utils.splitSignature(typedSignature.data!);
+			// deadline
+			const tx = await registryContract.acknowledgementOfRegistry(
+				deadline!,
+				nonce!,
+				localState.address!,
+				v,
+				r,
+				s
+			);
+			const receipt = await tx.wait();
+
+			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
+			console.log(receipt);
+			setNextStep();
+			setLoading(false);
+		} catch (e) {
+			console.log(e);
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {
@@ -139,7 +151,8 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 				{typedSignature.data ? (
 					<Button
 						m={5}
-						onClick={() => handleSignAndPay({ signature: typedSignature.data! })}
+						isLoading={loading}
+						onClick={handleSignAndPay}
 						disabled={
 							localState.includeWalletNFT === null ||
 							localState.includeSupportNFT === null ||

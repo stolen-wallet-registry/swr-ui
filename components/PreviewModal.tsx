@@ -77,7 +77,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ isOpen, onClose }) => {
 					</Container>
 					<Flex flexDirection="row" justifyContent="center">
 						<Select
-							colorScheme="blackAlpha"
+							colorScheme="gray.800"
 							variant="filled"
 							fontWeight="bolder"
 							width="fit-content"

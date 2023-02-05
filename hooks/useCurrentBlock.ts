@@ -33,7 +33,7 @@ const useCurrentBlock = (expiryBlock: BigNumber) => {
 		if (expiryBlock.gt(blockNumber)) {
 			const timeLeft = expiryBlock.sub(blockNumber).mul(avgBlockTime);
 			setExpiry(timeLeft);
-			setEstimatedBlocksLeft(expiryBlock.sub(blockNumber));
+			setEstimatedBlocksLeft(expiryBlock.sub(blockNumber).add(1));
 			setTimerExpiry(addSeconds(new Date(), timeLeft.toNumber()).getTime());
 		} else {
 			setIsExpired(true);

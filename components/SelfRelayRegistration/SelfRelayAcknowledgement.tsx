@@ -10,7 +10,7 @@ import {
 	InputLeftElement,
 } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
-import { buildAcknowledgementStruct } from '@hooks/use712Signature';
+import { buildAcknowledgementStruct } from '@utils/signature';
 import useDebounce from '@hooks/useDebounce';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { ACKNOWLEDGEMENT_KEY, setSignatureWithExpiry } from '@utils/signature';
@@ -52,7 +52,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 		setTempRelayer(e.target.value);
 	};
 
-	const handleSignature = async () => {
+	const handleSign = async () => {
 		try {
 			const { domain, types, value } = await buildAcknowledgementStruct({
 				signer,
@@ -172,7 +172,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				</Button>
 				<Button
 					m={5}
-					onClick={handleSignature}
+					onClick={handleSign}
 					disabled={
 						localState.includeWalletNFT === null ||
 						localState.includeSupportNFT === null ||

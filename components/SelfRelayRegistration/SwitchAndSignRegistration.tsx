@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import RegistrationSection from '@components/RegistrationSection';
 import { Timer } from '@components/Timer';
-import { buildRegistrationStruct } from '@hooks/use712Signature';
+import { buildRegistrationStruct } from '@utils/signature';
 import useDebounce from '@hooks/useDebounce';
 import useLocalStorage from '@hooks/useLocalStorage';
 import useRegBlocksLeft from '@hooks/useRegBlocksLeft';
@@ -48,7 +48,7 @@ const SwitchAndSignRegistration: React.FC<RegistrationProps> = ({
 		return address?.split('.')?.at(-1) === 'eth';
 	};
 
-	const handleSignature = async () => {
+	const handleSign = async () => {
 		try {
 			const { domain, types, value } = await buildRegistrationStruct({
 				signer,
@@ -159,7 +159,7 @@ const SwitchAndSignRegistration: React.FC<RegistrationProps> = ({
 				</Button>
 				<Button
 					m={5}
-					onClick={handleSignature}
+					onClick={handleSign}
 					disabled={localState.includeWalletNFT === null || localState.includeSupportNFT === null}
 				>
 					Sign Registration
