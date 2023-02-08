@@ -1,5 +1,5 @@
 import { OrderedList, ListItem, Highlight, Button, Box, Text } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import RegistrationSection from '@components/RegistrationSection';
 import { HIGHLIGHT_STYLE, nativeTokenList } from '@utils/helpers';
@@ -11,6 +11,7 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import { RegistrationValues, StandardSteps, SelfRelaySteps, RegistrationTypes } from '@utils/types';
 import router from 'next/router';
 import WebRTCStarInstructions from '@components/WebRtcRegistration/WebRTCStarInstructions';
+import Loader from '@components/Loader';
 
 interface RequirementProps {
 	address: string;
@@ -21,11 +22,13 @@ interface RequirementProps {
 const Requirements: React.FC<RequirementProps> = ({ address, isConnected, registrationType }) => {
 	const [localState, setLocalState] = useLocalStorage();
 	const { chain } = useNetwork();
+	const [loading, setLoading] = useState(false);
 	const minPayment = '0.01';
 
 	const nativeToken = nativeTokenList?.[`0x${chain?.id?.toString(16)}`] || 'Native Token';
 
 	const handleBegin = (step: RegistrationValues) => {
+		setLoading(true);
 		setLocalState({ step: step });
 		router.push(`/dapp/${localState?.registrationType}`, undefined, { shallow: true });
 	};
@@ -57,6 +60,9 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 	);
 
 	const StandardRequirements = () => {
+		useEffect(() => {
+			setLoading(false);
+		});
 		return (
 			<>
 				<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">
@@ -75,6 +81,7 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 					</ListItem>
 				</OrderedList>
 				<Button
+					isLoading={loading}
 					alignSelf="flex-end"
 					width={[200, 250]}
 					m={5}
@@ -87,6 +94,9 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 	};
 
 	const SelfRelayRequirements = () => {
+		useEffect(() => {
+			setLoading(false);
+		});
 		return (
 			<>
 				<OrderedList ml={10} mt={2} spacing={2} fontWeight="bold">

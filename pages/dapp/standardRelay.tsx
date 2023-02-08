@@ -59,7 +59,7 @@ const StandardRegistration: React.FC<StandardRegistrationInterface> = ({ keyRef 
 				gap={5}
 				flexDirection={isSmallerThan1000 ? 'column' : 'row'}
 				justifyContent="center"
-				alignItems="center"
+				minHeight="40vh"
 			>
 				<CompletionSteps />
 				{localState.step === StandardSteps.AcknowledgeAndPay && (
