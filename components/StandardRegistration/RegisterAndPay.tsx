@@ -28,6 +28,7 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 	const [localState, _] = useLocalStorage();
 	const typedSignature = useSignTypedData();
 	const { chain } = useNetwork();
+	const [loading, setLoading] = useState(false);
 
 	const [expired, setExpired] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
@@ -35,6 +36,7 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 	const { expiryBlock } = useRegBlocksLeft(localState.address!, signer);
 
 	const handleSign = async () => {
+		setLoading(true);
 		try {
 			const { domain, types, value } = await buildRegistrationStruct({
 				signer,
@@ -47,32 +49,40 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 
 			//@ts-ignore
 			await typedSignature.signTypedDataAsync({ domain, types, value });
+			setLoading(false);
 		} catch (error) {
+			setLoading(false);
 			console.log(error);
 		}
 	};
 
 	const handleSignAndPay = async () => {
-		const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
-			CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
-		);
+		setLoading(true);
+		try {
+			const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
+				CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
+			);
 
-		const { v, r, s } = ethers.utils.splitSignature(typedSignature.data!);
+			const { v, r, s } = ethers.utils.splitSignature(typedSignature.data!);
 
-		const tx = await registryContract.walletRegistration(
-			deadline!,
-			nonce!,
-			localState.address!,
-			v,
-			r,
-			s
-		);
+			const tx = await registryContract.walletRegistration(
+				deadline!,
+				nonce!,
+				localState.address!,
+				v,
+				r,
+				s
+			);
 
-		const receipt = await tx.wait();
+			const receipt = await tx.wait();
 
-		setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
-		console.log(receipt);
-		setNextStep();
+			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
+			console.log(receipt);
+			setNextStep();
+		} catch (error) {
+			setLoading(false);
+			console.log(error);
+		}
 	};
 
 	return (
@@ -140,6 +150,7 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 				</Button>
 				{typedSignature.data ? (
 					<Button
+						isLoading={loading}
 						m={5}
 						onClick={handleSignAndPay}
 						disabled={localState.includeWalletNFT === null || localState.includeSupportNFT === null}
@@ -148,6 +159,7 @@ const RegisterAndPay: React.FC<GracePeriodInterface> = ({
 					</Button>
 				) : (
 					<Button
+						isLoading={loading}
 						m={5}
 						onClick={handleSign}
 						disabled={localState.includeWalletNFT === null || localState.includeSupportNFT === null}
