@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Button, Spinner, Center } from '@chakra-ui/react';
+import { Flex, SimpleGrid, Button } from '@chakra-ui/react';
 import { RegistrationTypes, String0x } from '@utils/types';
 import CompletionSteps from './SharedRegistration/CompletionSteps';
 import Requirements from './SharedRegistration/Requirements';

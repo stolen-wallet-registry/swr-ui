@@ -19,7 +19,35 @@ import {
 } from '@rainbow-me/rainbowkit/wallets';
 import appLightTheme from '../../theme/rainbowkit-themes/light';
 
-import { chain, createClient, configureChains, WagmiConfig } from 'wagmi';
+import {
+	mainnet,
+	arbitrum,
+	avalanche,
+	bsc,
+	evmos,
+	fantom,
+	gnosis,
+	optimism,
+	polygon,
+	moonbeam,
+	moonriver,
+	sepolia,
+	zkSync,
+	foundry,
+	goerli,
+	filecoinCalibration,
+	moonbaseAlpha,
+	arbitrumGoerli,
+	avalancheFuji,
+	bscTestnet,
+	evmosTestnet,
+	fantomTestnet,
+	optimismGoerli,
+	polygonMumbai,
+	zkSyncTestnet,
+} from 'wagmi/chains';
+
+import { createClient, configureChains, WagmiConfig } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -32,28 +60,39 @@ import customChains from './customChains';
 const APP_NAME = 'The Stollen Wallet Registry';
 
 const testnets = [
-	chain.foundry,
-	chain.goerli,
-	chain.optimismGoerli,
-	chain.polygonMumbai,
-	customChains.evmosTestnet,
+	foundry,
+	arbitrumGoerli,
+	avalancheFuji,
+	bscTestnet,
+	evmosTestnet,
+	fantomTestnet,
+	moonbaseAlpha,
+	optimismGoerli,
+	polygonMumbai,
+	zkSyncTestnet,
+	filecoinCalibration,
+	goerli,
+	customChains.celoTestnet,
 	customChains.binanceTestnet,
 	customChains.mooorockTestnet,
-	customChains.moonbaseAlphaTestnet,
-	customChains.celoTestnet,
 	customChains.cronosTestnet,
-	customChains.fantomTestnet,
 	customChains.gatherTestnet,
 	customChains.bobaTestnet,
 ];
 
 const supporttedChains = [
-	// chain.mainnet,
-	// chain.optimism,
-	// customChains.gnosisChain,
-	// chain.arbitrum,
+	// mainnet,
+	// arbitrum,
+	// avalanche,
+	// bsc,
+	// evmos,
+	// fantom,
+	// gnosis,
+	// optimism,
+	// polygon,
+	// sepolia,
+	// zkSync,
 	// customChains.arbitrumNovaChain,
-	// chain.polygon,
 	// customChains.gnosisChain,
 	// customChains.evmosChain,
 	// customChains.binanceChain,
@@ -67,7 +106,7 @@ const supporttedChains = [
 	...testnets,
 ];
 
-const { chains, provider } = configureChains(supporttedChains, [
+const { chains, provider, webSocketProvider } = configureChains(supporttedChains, [
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID! }),
 	publicProvider(),
 ]);
@@ -125,6 +164,7 @@ const wagmiClient = createClient({
 	autoConnect: true,
 	connectors,
 	provider,
+	webSocketProvider,
 });
 
 type RainbowKitWagmiProviderProps = {

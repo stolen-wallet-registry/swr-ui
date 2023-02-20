@@ -1,53 +1,5 @@
 import { Chain } from '@rainbow-me/rainbowkit';
 
-// chain.mainnet
-// chain.ropsten
-// chain.rinkeby
-// chain.goerli
-// chain.kovan
-// chain.sepolia
-// chain.optimism
-// chain.optimismGoerli
-// chain.optimismKovan
-// chain.polygon
-// chain.polygonMumbai
-// chain.arbitrum
-// chain.arbitrumRinkeby
-// chain.localhost
-// chain.hardhat
-
-// declare type Chain = {
-//   id: number;
-//   name: string;
-//   network: string;
-//   nativeCurrency?: AddEthereumChainParameter['nativeCurrency'];
-//   rpcUrls: {
-//       [key: 'alchemy' | 'infura' | 'public']: string;
-//       default: string;
-//   };
-//   blockExplorers?: {
-//       [key in BlockExplorerName]?: BlockExplorer;
-//   } & {
-//       [key: string]: BlockExplorer;
-//       default: BlockExplorer;
-//   };
-//   ens?: {
-//       address: Address;
-//   };
-//   /**
-//    * Chain [multicall3 contract](https://github.com/mds1/multicall)
-//    */
-//   multicall?: {
-//       address: Address;
-//       blockCreated: number;
-//   };
-//   testnet?: boolean;
-
-// id: number;
-// iconUrl?: string | (() => Promise<string>) | null;
-// iconBackground?: string;
-// };
-
 const arbitrumNovaChain: Chain = {
 	name: 'Arbitrum Nova',
 	id: 42170,
@@ -57,7 +9,10 @@ const arbitrumNovaChain: Chain = {
 		symbol: 'ETH',
 		decimals: 18,
 	},
-	rpcUrls: { default: 'https://nova.arbitrum.io/rpc' },
+	rpcUrls: {
+		default: { http: ['https://nova.arbitrum.io/rpc'] },
+		public: { http: ['https://nova.arbitrum.io/rpc'] },
+	},
 	iconUrl: 'https://defillama.com/chain-icons/rsz_arbitrum.jpg',
 	blockExplorers: {
 		default: {
@@ -70,7 +25,8 @@ const arbitrumNovaChain: Chain = {
 const avalancheTestnet: Chain = {
 	name: 'Avalanche Fuji Testnet',
 	rpcUrls: {
-		default: 'https://api.avax-test.network/ext/bc/C/rpc',
+		default: { http: ['https://api.avax-test.network/ext/bc/C/rpc'] },
+		public: { http: ['https://api.avax-test.network/ext/bc/C/rpc'] },
 	},
 	nativeCurrency: {
 		name: 'Avalanche',
@@ -91,7 +47,8 @@ const avalancheTestnet: Chain = {
 const avalancheMainnet: Chain = {
 	name: 'Avalanche C-Chain',
 	rpcUrls: {
-		default: 'https://api.avax.network/ext/bc/C/rpc',
+		default: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
+		public: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
 	},
 	nativeCurrency: {
 		name: 'Avalanche',
@@ -112,7 +69,8 @@ const avalancheMainnet: Chain = {
 const evmosChain: Chain = {
 	name: 'Evmos',
 	rpcUrls: {
-		default: 'https://eth.bd.evmos.org:8545',
+		default: { http: ['https://eth.bd.evmos.org:8545'] },
+		public: { http: ['https://eth.bd.evmos.org:8545'] },
 	},
 	nativeCurrency: {
 		name: 'Evmos',
@@ -137,7 +95,8 @@ const evmosChain: Chain = {
 const evmosTestnet: Chain = {
 	name: 'Evmos Testnet',
 	rpcUrls: {
-		default: 'https://eth.bd.evmos.dev:8545',
+		default: { http: ['https://eth.bd.evmos.dev:8545'] },
+		public: { http: ['https://eth.bd.evmos.dev:8545'] },
 	},
 	nativeCurrency: {
 		name: 'test-Evmos',
@@ -162,7 +121,8 @@ const evmosTestnet: Chain = {
 const binanceChain: Chain = {
 	name: 'Binance Chain',
 	rpcUrls: {
-		default: 'https://bsc-dataseed1.binance.org',
+		default: { http: ['https://bsc-dataseed1.binance.org'] },
+		public: { http: ['https://bsc-dataseed1.binance.org'] },
 		// "https://bsc-dataseed2.binance.org",
 		// "https://bsc-dataseed3.binance.org",
 		// "https://bsc-dataseed4.binance.org",
@@ -173,8 +133,7 @@ const binanceChain: Chain = {
 		// "https://bsc-dataseed1.ninicoin.io",
 		// "https://bsc-dataseed2.ninicoin.io",
 		// "https://bsc-dataseed3.ninicoin.io",
-		// "https://bsc-dataseed4.ninicoin.io",
-		public: 'wss://bsc-ws-node.nariox.org',
+		// "https://bsc-dataseed4.ninicoin.io, webSocket: ['wss://bsc-ws-node.nariox.org']",
 	},
 	nativeCurrency: {
 		name: 'Binance Chain Native Token',
@@ -194,7 +153,8 @@ const binanceChain: Chain = {
 const moonBeam: Chain = {
 	name: 'Moonbeam',
 	rpcUrls: {
-		default: 'https://rpc.api.moonbeam.network',
+		default: { http: ['https://rpc.api.moonbeam.network'] },
+		public: { http: ['https://rpc.api.moonbeam.network'] },
 	},
 	nativeCurrency: {
 		name: 'Glimmer',
@@ -214,7 +174,8 @@ const moonBeam: Chain = {
 const moonRiver: Chain = {
 	name: 'Moonriver',
 	rpcUrls: {
-		default: 'https://rpc.api.moonriver.moonbeam.network',
+		default: { http: ['https://rpc.api.moonriver.moonbeam.network'] },
+		public: { http: ['https://rpc.api.moonriver.moonbeam.network'] },
 	},
 	nativeCurrency: {
 		name: 'Moonriver',
@@ -234,8 +195,13 @@ const moonRiver: Chain = {
 const bobaTestnet: Chain = {
 	name: 'Boba Network Bobabase',
 	rpcUrls: {
-		default: 'https://bobabase.boba.network',
-		public: 'wss://replica-wss.bobabase.boba.network',
+		default: {
+			http: ['https://bobabase.boba.network'],
+			webSocket: ['wss://replica-wss.bobabase.boba.network'],
+		},
+		public: {
+			http: ['https://bobabase.boba.network'],
+		},
 	},
 	nativeCurrency: {
 		name: 'Boba Token',
@@ -263,8 +229,11 @@ const celoChain: Chain = {
 	},
 	iconUrl: 'https://defillama.com/chain-icons/rsz_celo.jpg',
 	rpcUrls: {
-		default: 'https://forno.celo.org',
-		public: 'wss://forno.celo.org/ws',
+		default: {
+			http: ['https://forno.celo.org'],
+			webSocket: ['wss://forno.celo.org/ws'],
+		},
+		public: { http: ['https://bobabase.boba.network'] },
 	},
 	blockExplorers: {
 		default: {
@@ -286,8 +255,11 @@ const celoTestnet: Chain = {
 	},
 	iconUrl: 'https://defillama.com/chain-icons/rsz_celo.jpg',
 	rpcUrls: {
-		default: 'https://alfajores-forno.celo-testnet.org',
-		public: 'wss://alfajores-forno.celo-testnet.org/ws',
+		default: {
+			http: ['https://alfajores-forno.celo-testnet.org'],
+			webSocket: ['wss://alfajores-forno.celo-testnet.org/ws'],
+		},
+		public: { http: ['https://alfajores-forno.celo-testnet.org'] },
 	},
 	blockExplorers: {
 		default: {
@@ -301,7 +273,9 @@ const cronosChain: Chain = {
 	name: 'Cronos',
 	network: 'CRO',
 	rpcUrls: {
-		default: 'https://evm.cronos.org',
+		default: { http: ['https://evm.cronos.org'] },
+		publidefault: { http: ['https://evm.cronos.org'] },
+		public: { http: ['https://evm.cronos.org'] },
 	},
 	nativeCurrency: {
 		name: 'Cronos',
@@ -323,8 +297,11 @@ const cronosTestnet: Chain = {
 	network: 'CRO',
 	testnet: true,
 	rpcUrls: {
-		default: 'https://cronos-testnet-3.crypto.org:8545',
-		public: 'wss://cronos-testnet-3.crypto.org:8546',
+		default: {
+			http: ['https://cronos-testnet-3.crypto.org:8545'],
+			webSocket: ['wss://cronos-testnet-3.crypto.org:8546'],
+		},
+		public: { http: ['https://cronos-testnet-3.crypto.org:8545'] },
 	},
 	nativeCurrency: {
 		name: 'Crypto.org Test Coin',
@@ -348,8 +325,11 @@ const gnosisChain: Chain = {
 		// "https://rpc.ankr.com/gnosis",
 		// "https://gnosischain-rpc.gateway.pokt.network",
 		// "https://gnosis-mainnet.public.blastapi.io",
-		default: 'https://rpc.gnosischain.com',
-		public: 'wss://rpc.gnosischain.com/wss',
+		default: {
+			http: ['https://rpc.gnosischain.com'],
+			webSocket: ['wss://rpc.gnosischain.com/wss'],
+		},
+		public: { http: ['https://rpc.gnosischain.com'] },
 	},
 	nativeCurrency: {
 		name: 'xDAI',
@@ -368,7 +348,11 @@ const gnosisChain: Chain = {
 
 const fantomChian: Chain = {
 	name: 'Fantom',
-	rpcUrls: { default: 'https://rpc.ftm.tools' },
+	rpcUrls: {
+		default: { http: ['https://rpc.ftm.tools'] },
+		public: { http: ['https://rpc.ftm.tools'] },
+	},
+
 	nativeCurrency: {
 		name: 'Fantom',
 		symbol: 'FTM',
@@ -387,7 +371,10 @@ const fantomChian: Chain = {
 
 const fantomTestnet: Chain = {
 	name: 'Fantom Testnet',
-	rpcUrls: { default: 'https://rpc.testnet.fantom.network' },
+	rpcUrls: {
+		default: { http: ['https://rpc.testnet.fantom.network'] },
+		public: { http: ['https://rpc.testnet.fantom.network'] },
+	},
 	nativeCurrency: {
 		name: 'Fantom',
 		symbol: 'FTM',
@@ -406,7 +393,10 @@ const fantomTestnet: Chain = {
 
 const fuseChain: Chain = {
 	name: 'Fuse Mainnet',
-	rpcUrls: { default: 'https://rpc.fuse.io' },
+	rpcUrls: {
+		default: { http: ['https://rpc.fuse.io'] },
+		public: { http: ['https://rpc.fuse.io'] },
+	},
 	nativeCurrency: {
 		name: 'Fuse',
 		symbol: 'FUSE',
@@ -419,7 +409,10 @@ const fuseChain: Chain = {
 
 const fuseTestnet: Chain = {
 	name: 'Fuse Sparknet',
-	rpcUrls: { default: 'https://rpc.fusespark.io' },
+	rpcUrls: {
+		default: { http: ['https://rpc.fusespark.io'] },
+		public: { http: ['https://rpc.fusespark.io'] },
+	},
 	nativeCurrency: {
 		name: 'Spark',
 		symbol: 'SPARK',
@@ -432,7 +425,10 @@ const fuseTestnet: Chain = {
 
 const gatherChain: Chain = {
 	name: 'Gather Network',
-	rpcUrls: { default: 'https://mainnet.gather.network' },
+	rpcUrls: {
+		default: { http: ['https://mainnet.gather.network'] },
+		public: { http: ['https://mainnet.gather.network'] },
+	},
 	nativeCurrency: {
 		name: 'Gather',
 		symbol: 'GTH',
@@ -451,7 +447,10 @@ const gatherChain: Chain = {
 
 const gatherTestnet: Chain = {
 	name: 'Gather Testnet Network',
-	rpcUrls: { default: 'https://testnet.gather.network' },
+	rpcUrls: {
+		default: { http: ['https://testnet.gather.network'] },
+		public: { http: ['https://testnet.gather.network'] },
+	},
 	nativeCurrency: {
 		name: 'Test Gather',
 		symbol: 'tGTH',
@@ -471,7 +470,8 @@ const gatherTestnet: Chain = {
 const binanceTestnet: Chain = {
 	name: 'Binance Smart Chain Testnet',
 	rpcUrls: {
-		default: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+		default: { http: ['https://data-seed-prebsc-1-s1.binance.org:8545'] },
+		public: { http: ['https://data-seed-prebsc-1-s1.binance.org:8545'] },
 		// "https://data-seed-prebsc-2-s1.binance.org:8545",
 		// "https://data-seed-prebsc-1-s2.binance.org:8545",
 		// "https://data-seed-prebsc-2-s2.binance.org:8545",
@@ -497,8 +497,11 @@ const binanceTestnet: Chain = {
 const mooorockTestnet: Chain = {
 	name: 'Moonrock',
 	rpcUrls: {
-		default: 'https://rpc.api.moonrock.moonbeam.network',
-		public: 'wss://wss.api.moonrock.moonbeam.network',
+		default: {
+			http: ['https://rpc.api.moonrock.moonbeam.network'],
+			webSocket: ['wss://wss.api.moonrock.moonbeam.network'],
+		},
+		public: { http: ['https://rpc.api.moonrock.moonbeam.network'] },
 	},
 	iconUrl: 'https://defillama.com/chain-icons/rsz_moonbeam.jpg',
 	nativeCurrency: {
@@ -513,8 +516,11 @@ const mooorockTestnet: Chain = {
 const moonbaseAlphaTestnet: Chain = {
 	name: 'Moonbase Alpha',
 	rpcUrls: {
-		default: 'https://rpc.api.moonbase.moonbeam.network',
-		public: 'wss://wss.api.moonbase.moonbeam.network',
+		default: {
+			http: ['https://rpc.api.moonbase.moonbeam.network'],
+			webSocket: ['wss://wss.api.moonbase.moonbeam.network'],
+		},
+		public: { http: ['https://rpc.api.moonbase.moonbeam.network'] },
 	},
 	nativeCurrency: {
 		name: 'Dev',
@@ -534,7 +540,10 @@ const moonbaseAlphaTestnet: Chain = {
 
 const bobaChain: Chain = {
 	name: 'Boba Network',
-	rpcUrls: { default: 'https://mainnet.boba.network/' },
+	rpcUrls: {
+		default: { http: ['https://mainnet.boba.network/'] },
+		public: { http: ['https://mainnet.boba.network/'] },
+	},
 	nativeCurrency: {
 		name: 'Ether',
 		symbol: 'ETH',

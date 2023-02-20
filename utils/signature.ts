@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers';
+import { TypedDataDomain } from 'abitype';
 import { Chain } from '@rainbow-me/rainbowkit';
 import { StolenWalletRegistryFactory } from '@wallet-hygiene/swr-contracts';
 import { Signer } from 'ethers';
@@ -145,11 +146,11 @@ interface Domain712 {
 	name: string;
 	version: string;
 	chainId: number;
-	verifyingContract: String0x;
+	verifyingContract: string;
   salt: String0x;
 }
 export interface signTypedDataProps {
-	domain: Domain712;
+	domain: TypedDataDomain;
 	types: any;
 	value: any;
 	primaryType: string;
@@ -171,9 +172,8 @@ export const buildAcknowledgementStruct = async ({
 	address,
 }: AcknowledgementValues): Promise<signTypedDataProps> => {
 	const localState: StateConfig = accessLocalStorage();
-
 	const stollenWalletRegistry = new StolenWalletRegistryFactory(signer as Signer).attach(
-		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
+		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry as string
 	);
 
 	if (!chain?.id) {
@@ -221,7 +221,7 @@ export const buildRegistrationStruct = async ({
 	const localState: StateConfig = accessLocalStorage();
 
 	const stollenWalletRegistry = new StolenWalletRegistryFactory(signer as Signer).attach(
-		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
+		CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry as string
 	);
 
 	if (!chain?.id) {

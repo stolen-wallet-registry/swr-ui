@@ -35,6 +35,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 	setNextStep,
 }) => {
 	const [localState, setLocalState] = useLocalStorage();
+	const [loading, setLoading] = useState(false);
 	const [relayerIsValid, setRelayerIsValid] = useState(false);
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
 	const [nonce, setNonce] = useState<BigNumber | null>(null);
@@ -53,6 +54,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 	};
 
 	const handleSign = async () => {
+		setLoading(true);
 		try {
 			const { domain, types, value } = await buildAcknowledgementStruct({
 				signer,
@@ -63,8 +65,10 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 			setDeadline(value.deadline);
 			setNonce(value.nonce);
 			await typedSignature.signTypedDataAsync({ domain, types, value });
+			setLoading(false);
 		} catch (error) {
 			console.log(error);
+			setLoading(false);
 		}
 	};
 
@@ -172,6 +176,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({
 				</Button>
 				<Button
 					m={5}
+					isLoading={loading}
 					onClick={handleSign}
 					disabled={
 						localState.includeWalletNFT === null ||

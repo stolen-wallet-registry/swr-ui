@@ -23,6 +23,7 @@ const SwitchAndPayRegistration: React.FC<SwitchAndPayRegistrationProps> = ({
 	signer,
 }) => {
 	const [localState, setLocalState] = useLocalStorage();
+	const [loading, setLoading] = useState(false);
 	const { address, isConnected } = useAccount();
 	const { chain } = useNetwork();
 	const { expiryBlock } = useRegBlocksLeft(localState.address!, signer);
@@ -30,11 +31,12 @@ const SwitchAndPayRegistration: React.FC<SwitchAndPayRegistrationProps> = ({
 	const [isMounted, setIsMounted] = useState(false);
 
 	const registryContract = StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry as string,
 		signer!
 	);
 
 	const signAndPay = async () => {
+		setLoading(true);
 		try {
 			const storedSignature = getSignatureWithExpiry({
 				keyRef: REGISTRATION_KEY,
@@ -57,8 +59,10 @@ const SwitchAndPayRegistration: React.FC<SwitchAndPayRegistrationProps> = ({
 
 			setLocalState({ registrationReceipt: JSON.stringify(receipt) });
 			console.log(receipt);
+			setLoading(false);
 		} catch (error) {
 			console.error(error);
+			setLoading(false);
 		}
 	};
 
@@ -93,7 +97,9 @@ const SwitchAndPayRegistration: React.FC<SwitchAndPayRegistrationProps> = ({
 				<Text mb={5}>Sign and Pay for Registration from {localState.address}</Text>
 			</Flex>
 			<Flex justifyContent="flex-end" gap={5}>
-				<Button onClick={signAndPay}>Sign and Pay</Button>
+				<Button isLoading={loading} onClick={signAndPay}>
+					Sign and Pay
+				</Button>
 			</Flex>
 		</RegistrationSection>
 	);

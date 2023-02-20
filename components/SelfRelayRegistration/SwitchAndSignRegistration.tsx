@@ -39,6 +39,7 @@ const SwitchAndSignRegistration: React.FC<RegistrationProps> = ({
 	const [localState, setLocalState] = useLocalStorage();
 	const [deadline, setDeadline] = useState<BigNumber | null>(null);
 	const [nonce, setNonce] = useState<BigNumber | null>(null);
+	const [loading, setLoading] = useState(false);
 
 	const { expiryBlock } = useRegBlocksLeft(localState.address!, signer);
 	const typedSignature = useSignTypedData();
@@ -49,6 +50,7 @@ const SwitchAndSignRegistration: React.FC<RegistrationProps> = ({
 	};
 
 	const handleSign = async () => {
+		setLoading(true);
 		try {
 			const { domain, types, value } = await buildRegistrationStruct({
 				signer,
@@ -60,8 +62,10 @@ const SwitchAndSignRegistration: React.FC<RegistrationProps> = ({
 			setNonce(value.nonce);
 
 			await typedSignature.signTypedDataAsync({ domain, types, value });
+			setLoading(false);
 		} catch (error) {
 			console.log(error);
+			setLoading(false);
 			throw error;
 		}
 	};
@@ -158,6 +162,7 @@ const SwitchAndSignRegistration: React.FC<RegistrationProps> = ({
 					View NFT
 				</Button>
 				<Button
+					isLoading={loading}
 					m={5}
 					onClick={handleSign}
 					disabled={localState.includeWalletNFT === null || localState.includeSupportNFT === null}

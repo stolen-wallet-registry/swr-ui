@@ -53,7 +53,7 @@ const StandardAckowledgement: React.FC<StandardAcknowledgementProps> = ({
 		console.log(CONTRACT_ADDRESSES);
 		try {
 			const registryContract = new StolenWalletRegistryFactory(signer as Signer).attach(
-				CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry
+				CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry as string
 			);
 			const { v, r, s } = ethers.utils.splitSignature(typedSignature.data!);
 			// deadline

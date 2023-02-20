@@ -92,7 +92,7 @@ const Home: NextPage<HomeProps> = ({ initialColor }) => {
 		return (
 			<>
 				<SectionTitle title="About" selectedColor={color}>
-					<p>this is a paramgraph</p>
+					<p>this is a paragraph</p>
 				</SectionTitle>
 				<SectionBody selectedColor={color}>
 					<p>this is the body</p>
@@ -105,7 +105,7 @@ const Home: NextPage<HomeProps> = ({ initialColor }) => {
 		return (
 			<>
 				<SectionTitle title="Why?" selectedColor={color}>
-					<p>this is a paramgraph</p>
+					<p>this is a paragraph</p>
 				</SectionTitle>
 				<SectionBody selectedColor={color}>
 					<p>this is the body</p>
@@ -118,7 +118,7 @@ const Home: NextPage<HomeProps> = ({ initialColor }) => {
 		return (
 			<>
 				<SectionTitle title="How?" selectedColor={color}>
-					<p>this is a paramgraph</p>
+					<p>this is a paragraph</p>
 				</SectionTitle>
 				<SectionBody selectedColor={color}>
 					<p>this is the body</p>
@@ -131,13 +131,13 @@ const Home: NextPage<HomeProps> = ({ initialColor }) => {
 		return (
 			<>
 				<SectionTitle title="Home" selectedColor={color}>
-					<p>this is a paramgraph</p>
+					<p>this is a paragraph</p>
 				</SectionTitle>
 				<SectionTitle title="Home" selectedColor={color}>
-					<p>this is a paramgraph</p>
+					<p>this is a paragraph</p>
 				</SectionTitle>
 				<SectionTitle title="Home" selectedColor={color}>
-					<p>this is a paramgraph</p>
+					<p>this is a paragraph</p>
 				</SectionTitle>
 			</>
 		);

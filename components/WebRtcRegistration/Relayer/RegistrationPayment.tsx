@@ -37,7 +37,7 @@ const RegistrationPayment: React.FC<RegistrationProps> = ({
 	const handleSignAndPay = async () => {
 		try {
 			const registryContract = StolenWalletRegistryFactory.connect(
-				CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+				CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry as string,
 				signer!
 			);
 

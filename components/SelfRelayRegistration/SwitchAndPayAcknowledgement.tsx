@@ -16,7 +16,7 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 	setNextStep,
 }) => {
 	const { address, isConnected } = useAccount();
-
+	const [loading, setLoading] = useState(false);
 	const { data: signer } = useSigner();
 	const { chain } = useNetwork();
 	const [localState, setLocalState] = useLocalStorage();
@@ -24,11 +24,12 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 	console.log(signer);
 
 	const registryContract = StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry as string,
 		signer!
 	);
 
 	const signAndPay = async () => {
+		setLoading(true);
 		try {
 			const storedSignature = getSignatureWithExpiry({
 				keyRef: ACKNOWLEDGEMENT_KEY,
@@ -51,8 +52,10 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 
 			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
 			console.log(receipt);
+			setLoading(false);
 		} catch (error) {
 			console.error(error);
+			setLoading(false);
 		}
 	};
 
@@ -86,7 +89,9 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 				<Text mb={5}>Sign and Pay for Acknowledgement from {localState.address}</Text>
 			</Flex>
 			<Flex justifyContent="flex-end" gap={5}>
-				<Button onClick={signAndPay}>Sign and Pay</Button>
+				<Button isLoading={loading} onClick={signAndPay}>
+					Sign and Pay
+				</Button>
 			</Flex>
 		</RegistrationSection>
 	);

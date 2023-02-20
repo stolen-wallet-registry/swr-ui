@@ -27,7 +27,7 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p,
 	const [isMounted, setIsMounted] = useState(false);
 
 	const registryContract = StolenWalletRegistryFactory.connect(
-		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry,
+		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry as string,
 		signer!
 	);
 
