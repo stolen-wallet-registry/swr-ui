@@ -52,6 +52,7 @@ export const setSignatureLocalStorage = ({
 	deadline,
 	nonce,
 }: setLocalStorageProps) => {
+	console.log(keyRef, chainId, address, value, deadline, nonce);
 	const item = {
 		value,
 		deadline,
@@ -147,7 +148,7 @@ interface Domain712 {
 	version: string;
 	chainId: number;
 	verifyingContract: string;
-  salt: String0x;
+	salt: String0x;
 }
 export interface signTypedDataProps {
 	domain: TypedDataDomain;
@@ -202,7 +203,7 @@ export const buildAcknowledgementStruct = async ({
 			version: '4',
 			chainId: chain?.id!,
 			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
-      salt: "0xe7e338c8a96606d405ae49875289174c38181bda641043e953b12964ad115f49"
+			salt: '0xe7e338c8a96606d405ae49875289174c38181bda641043e953b12964ad115f49',
 		},
 		value: {
 			owner: address,
@@ -250,7 +251,7 @@ export const buildRegistrationStruct = async ({
 			version: '4',
 			chainId: chain?.id!,
 			verifyingContract: CONTRACT_ADDRESSES[chain?.name!].StolenWalletRegistry,
-      salt: "0x86fdecd3151a18dd477feb379432be4107d347c2ee6bc63ca6212c6d674c17f9"
+			salt: '0x86fdecd3151a18dd477feb379432be4107d347c2ee6bc63ca6212c6d674c17f9',
 		},
 		value: {
 			owner: address,

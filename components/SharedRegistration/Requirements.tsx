@@ -8,7 +8,13 @@ import { useNetwork } from 'wagmi';
 
 import capitalize from 'lodash/capitalize';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { RegistrationValues, StandardSteps, SelfRelaySteps, RegistrationTypes } from '@utils/types';
+import {
+	RegistrationValues,
+	StandardSteps,
+	SelfRelaySteps,
+	RegistrationTypes,
+	registrationTitles,
+} from '@utils/types';
 import router from 'next/router';
 import WebRTCStarInstructions from '@components/WebRtcRegistration/WebRTCStarInstructions';
 import Loader from '@components/Loader';
@@ -125,7 +131,7 @@ const Requirements: React.FC<RequirementProps> = ({ address, isConnected, regist
 	};
 
 	return (
-		<RegistrationSection title={`${capitalize(registrationType)} Registration`}>
+		<RegistrationSection title={`${registrationTitles[registrationType]} Registration`}>
 			<Box pb={10}>Requirements:</Box>
 			{registrationType === 'standardRelay' && <StandardRequirements />}
 			{registrationType === 'selfRelay' && <SelfRelayRequirements />}

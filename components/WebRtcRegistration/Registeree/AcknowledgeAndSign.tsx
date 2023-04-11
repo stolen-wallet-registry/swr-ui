@@ -43,7 +43,7 @@ const AcknowledgeAndSign: React.FC<AcknowledgeAndSignProps> = ({
 		}
 
 		const signatureData = {
-			signature: typedSignature?.data!,
+			value: typedSignature?.data!,
 			deadline,
 			nonce,
 			address: localState.address,

@@ -85,7 +85,7 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 	return (
 		<RegistrationSection title="Pay for Acknowledgement">
 			<Flex flexDirection="column">
-				<Text>Sign and Pay for Acknowledgement from {localState.trustedRelayer}</Text>
+				{/* <Text>Sign and Pay for Acknowledgement from {localState.trustedRelayer}</Text> */}
 				<Text mb={5}>Sign and Pay for Acknowledgement from {localState.address}</Text>
 			</Flex>
 			<Flex justifyContent="flex-end" gap={5}>

@@ -1,6 +1,12 @@
 export type String0x = `0x${string}` | undefined;
 export type RegistrationTypes = 'standardRelay' | 'selfRelay' | 'p2pRelay';
 
+export const registrationTitles = {
+	standardRelay: 'Standard Relay',
+	selfRelay: 'Self Relay',
+	p2pRelay: 'P2P Relay',
+};
+
 // TODO do these need requirements?
 // TODO convert enums to interger values
 export enum StandardSteps {

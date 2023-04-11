@@ -32,6 +32,7 @@ const SelfRelayRegistration: React.FC<SelfRelayRegistrationInterface> = () => {
 
 	const setNextStep = () => {
 		setLocalState({
+			address: address!,
 			trustedRelayer: tempRelayer,
 			step: SelfRelaySteps.SwitchAndPayOne,
 		});

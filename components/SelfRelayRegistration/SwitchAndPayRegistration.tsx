@@ -94,7 +94,7 @@ const SwitchAndPayRegistration: React.FC<SwitchAndPayRegistrationProps> = ({
 			{expiryBlock && <Timer expiryBlock={expiryBlock} setExpiryStep={setExpiryStep} />}
 			<Flex flexDirection="column">
 				<Text>Sign and Pay for Registration from {localState.trustedRelayer}</Text>
-				<Text mb={5}>Sign and Pay for Registration from {localState.address}</Text>
+				{/* <Text mb={5}>Sign and Pay for Registration from {localState.address}</Text> */}
 			</Flex>
 			<Flex justifyContent="flex-end" gap={5}>
 				<Button isLoading={loading} onClick={signAndPay}>

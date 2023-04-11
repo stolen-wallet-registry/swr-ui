@@ -43,7 +43,7 @@ const RegisterAndSign: React.FC<RegisterAndSignProps> = ({
 		}
 
 		const streamData = {
-			signature: typedSignature?.data!,
+			value: typedSignature?.data!,
 			deadline,
 			nonce,
 		};

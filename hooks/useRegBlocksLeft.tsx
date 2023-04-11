@@ -16,14 +16,13 @@ const useRegBlocksLeft = (address: string, signer: Signer) => {
 
 	const fetchDeadlineBlocks = async () => {
 		try {
-			const [currentBlock, expiry, start, graceBlcoks, deadlineBlcoks, isExpired] =
+			const [currentBlock, expiry, start, graceBlocks, deadlineBlcoks, isExpired] =
 				await registryContract.getDeadlines(address);
 
 			setExpiryBlock(expiry);
 			setStartBlock(start);
 			setExpired(isExpired);
-
-			const nums = [currentBlock, expiry, start, graceBlcoks, deadlineBlcoks].map((n) =>
+			const nums = [currentBlock, expiry, start, graceBlocks, deadlineBlcoks].map((n) =>
 				n.toNumber()
 			);
 

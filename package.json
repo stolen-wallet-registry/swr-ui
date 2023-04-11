@@ -30,7 +30,7 @@
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@svgr/webpack": "^6.5.0",
     "@wagmi/core": "^0.9.5",
-    "@wallet-hygiene/swr-contracts": "^0.0.84",
+    "@wallet-hygiene/swr-contracts": "^0.0.85",
     "axios": "^0.26.1",
     "date-fns": "^2.29.3",
     "ethers": "^5.7.2",

@@ -81,6 +81,7 @@ export const Connection = () => {
 				}
 
 				const parsedData: RelayerMessageProps = JSON.parse(data);
+				console.log(parsedData);
 				switch (stream.stat.protocol) {
 					case PROTOCOLS.CONNECT:
 						handleRelayerCallback({ ...parsedData, step: P2PRegistereeSteps.AcknowledgeAndSign });
@@ -164,6 +165,7 @@ export const Connection = () => {
 
 						break;
 					case PROTOCOLS.ACK_SIG:
+						console.log(parsedData);
 						setSignatureLocalStorage(parsedData as setLocalStorageProps);
 
 						setLocalStorage({
