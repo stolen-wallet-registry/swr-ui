@@ -90,7 +90,6 @@ export const setSignatureWithExpiry = ({
 	const time = ttl; // .toNumber() + oneHour;
 	const item = {
 		value: value,
-
 		deadline: time,
 		startTime: new Date(Date.now() + 1 * 60 * 1000), // TODO come  back to this and insert startTime.
 		deadlineDate: new Date(Date.now() + 6 * 60 * 1000), // TODO come  back to this and insert deadline.

@@ -21,7 +21,6 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 	const { chain } = useNetwork();
 	const [localState, setLocalState] = useLocalStorage();
 	const [isMounted, setIsMounted] = useState(false);
-	console.log(signer);
 
 	const registryContract = StolenWalletRegistryFactory.connect(
 		CONTRACT_ADDRESSES?.[chain?.name!].StolenWalletRegistry as string,
@@ -38,7 +37,6 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 			});
 
 			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
-
 			const tx = await registryContract.acknowledgementOfRegistry(
 				storedSignature.deadline,
 				storedSignature.nonce,
@@ -49,7 +47,6 @@ const SwitchAndPayAcknowledgement: React.FC<SwitchAndPayAcknowledgementProps> = 
 			);
 
 			const receipt = await tx.wait();
-
 			setLocalState({ acknowledgementReceipt: JSON.stringify(receipt) });
 			console.log(receipt);
 			setLoading(false);

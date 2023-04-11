@@ -185,7 +185,7 @@ export const Connection = () => {
 						break;
 					case PROTOCOLS.REG_SIG:
 						setSignatureLocalStorage(parsedData as setLocalStorageProps);
-
+						const data = accessLocalStorage();
 						// TODO - resolve window.libp2p for libp2p instance
 						await passStreamData({
 							libp2p: window.libp2p,

@@ -50,7 +50,6 @@ const AcknowledgementPayment: React.FC<AcknowledgementPaymentProps> = ({ libp2p,
 			const deadline = ethers.BigNumber.from(storedSignature.deadline);
 			const nonce = ethers.BigNumber.from(storedSignature.nonce);
 			const { v, r, s } = ethers.utils.splitSignature(storedSignature.value);
-
 			const tx = await registryContract.acknowledgementOfRegistry(
 				deadline,
 				nonce,

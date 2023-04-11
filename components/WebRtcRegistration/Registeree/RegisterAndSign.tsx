@@ -43,6 +43,9 @@ const RegisterAndSign: React.FC<RegisterAndSignProps> = ({
 		}
 
 		const streamData = {
+			keyRef: REGISTRATION_KEY,
+			chainId: chain?.id!,
+			address: address!,
 			value: typedSignature?.data!,
 			deadline,
 			nonce,
